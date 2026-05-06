@@ -262,6 +262,17 @@ Route::middleware(['auth', 'admin'])
 });
 
 // ============================================================
+// SISWA PAGE ROUTE
+// ============================================================
+Route::middleware(['auth'])->group(function () {
+
+    Route::get('/siswa', function () {
+        return view('Home.siswa');
+    })->name('siswa.home');
+
+});
+
+// ============================================================
 // FALLBACK
 // ============================================================
 Route::fallback(function () {

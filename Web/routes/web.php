@@ -4,6 +4,19 @@
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
+// ADMIN CONTROLLERS    
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\BookingController;
+use App\Http\Controllers\Admin\FasilitasController;
+use App\Http\Controllers\Admin\JadwalController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\EvaluasiController;
+use App\Http\Controllers\Admin\KategoriController;
+use App\Http\Controllers\Admin\LaporanController;
+
+// HOME CONTROLLER
+use App\Http\Controllers\HomeController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -262,3 +275,4 @@ Route::fallback(function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+

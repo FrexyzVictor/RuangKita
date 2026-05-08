@@ -13,7 +13,7 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\EvaluasiController;
 use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\LaporanController;
-
+use App\Http\Controllers\GuruController;
 // HOME CONTROLLER
 use App\Http\Controllers\HomeController;
 
@@ -276,3 +276,8 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
+//==== GURU ======
+
+Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
+Route::get('/guru/rooms', [GuruController::class, 'rooms']);
+Route::get('/guru/booking', [GuruController::class, 'booking']);

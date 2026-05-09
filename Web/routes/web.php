@@ -15,7 +15,8 @@ use App\Http\Controllers\Admin\KategoriController;
 use App\Http\Controllers\Admin\LaporanController;
 use App\Http\Controllers\GuruController;
 // HOME CONTROLLER
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Siswa\HomeController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -264,14 +265,23 @@ Route::middleware(['auth', 'admin'])
 // ============================================================
 // SISWA PAGE ROUTE
 // ============================================================
-Route::middleware(['auth'])->group(function () {
+// Route::middleware(['auth'])->group(function () {
 
-    Route::get('/siswa', function () {
-        return view('Home.siswa');
-    })->name('siswa.home');
+//     Route::get('/siswa', function () {
+//         return view('Home.siswa');
+//     })->name('siswa.home');
 
-});
+// });
+Route::get('/home-siswa', [HomeController::class, 'index'])
+    ->name('home.siswa');
+    
+Route::get('/booking-search', function () {
+    return 'Halaman Search Booking';
+})->name('siswa.booking.search');
 
+Route::get('/booking/{id}', function ($id) {
+    return 'Booking fasilitas ID: ' . $id;
+})->name('booking.create');
 // ============================================================
 // FALLBACK
 // ============================================================

@@ -56,47 +56,7 @@
 <body>
 
 {{-- ================= HEADER ================= --}}
-<header class="absolute top-0 left-0 w-full z-50">
-
-    <div class="max-w-7xl mx-auto px-6 py-5">
-
-        <div class="flex justify-between items-center">
-
-            {{-- Logo --}}
-            <h1 class="text-white text-2xl font-bold tracking-wide">
-                RUANGKITA
-            </h1>
-
-            {{-- Menu --}}
-            <nav class="hidden md:flex items-center gap-10 text-white text-sm font-medium">
-
-                <a href="#" class="hover:text-cyan-300 transition">
-                    Home
-                </a>
-
-                <a href="#" class="hover:text-cyan-300 transition">
-                    Facility
-                </a>
-
-                <a href="#" class="hover:text-cyan-300 transition">
-                    Jadwal
-                </a>
-
-                <a href="#" class="hover:text-cyan-300 transition">
-                    Booking
-                </a>
-
-                <a href="#" class="hover:text-cyan-300 transition">
-                    Contact
-                </a>
-
-            </nav>
-
-        </div>
-
-    </div>
-
-</header>
+@include('components.navbar')
 
 {{-- ================= HERO ================= --}}
 <section class="relative h-[520px] overflow-hidden">
@@ -379,11 +339,14 @@
 
                 </p>
 
-                <button class="bg-white text-sky-600 w-fit px-8 py-3 rounded-full font-semibold">
+                <a href="{{ route('fasilitas') }}"
+   class="hidden md:flex items-center gap-2 text-sky-500 font-semibold">
 
-                    View All
+    View All
 
-                </button>
+    <i class="fas fa-arrow-right"></i>
+
+</a>
 
             </div>
 

@@ -11,9 +11,9 @@ class GuruController extends Controller
         return view('guru.dashboard');
     }
 
-    public function rooms()
+    public function status()
     {
-        return view('guru.rooms');
+        return view('guru.status');
     }
 
     public function booking()

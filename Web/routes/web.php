@@ -290,6 +290,5 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 //==== GURU ======
 
 Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
-Route::get('/guru/rooms', [GuruController::class, 'rooms']);
+Route::get('/guru/status', [GuruController::class, 'status']);
 Route::get('/guru/booking', [GuruController::class, 'booking']);
-aa

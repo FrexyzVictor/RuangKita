@@ -292,4 +292,3 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/guru/dashboard', [GuruController::class, 'dashboard']);
 Route::get('/guru/rooms', [GuruController::class, 'rooms']);
 Route::get('/guru/booking', [GuruController::class, 'booking']);
-aa

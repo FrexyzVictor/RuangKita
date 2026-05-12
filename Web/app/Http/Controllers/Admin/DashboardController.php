@@ -7,7 +7,9 @@ use App\Http\Controllers\Controller;
 class DashboardController extends Controller
 {
     public function index()
-    {
-        return view('admin.dashboard');
-    }
+{
+    $bookings = collect();
+
+    return view('Admin.Dashboard', compact('bookings'));
+}
 }

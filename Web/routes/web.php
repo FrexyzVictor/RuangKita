@@ -39,16 +39,22 @@ Route::get('/', function () {
 // ============================================================
 // AUTH ROUTES
 // ============================================================
-Auth::routes(['register' => false]);
-
-// ============================================================
-// ADMIN ROUTES
-// ============================================================
-Route::middleware(['auth', 'admin'])
-    ->prefix('admin')
-    ->name('admin.')
+Route::name('admin.')
     ->group(function () {
 
+    // ================= DASHBOARD =================
+    Route::get('/dashboard', [
+        \App\Http\Controllers\Admin\DashboardController::class,
+        'index'
+    ])->name('dashboard');
+
+    // ================= BOOKING =================
+    Route::prefix('bookings')->name('bookings.')->group(function () {
+
+        
+    });
+
+    // route lain
     // ================= DASHBOARD =================
     Route::get('/dashboard', [
         \App\Http\Controllers\Admin\DashboardController::class,

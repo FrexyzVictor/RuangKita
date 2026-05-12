@@ -7,6 +7,10 @@ export default defineConfig({
             input: [
                 'resources/sass/app.scss',
                 'resources/js/app.js',
+
+                'resources/css/admin/admin.css',
+                'resources/js/admin.js'
+
             ],
             refresh: true,
         }),

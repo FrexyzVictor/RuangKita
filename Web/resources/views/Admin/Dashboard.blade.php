@@ -13,7 +13,7 @@
         <span class="breadcrumb-current">Booking</span>
     </div>
     <h1 class="page-header-title">Daftar Booking</h1>
-    <p class="page-header-sub">{{ $bookings->total() ?? 0 }} total booking terdaftar</p>
+    <p class="page-header-sub">0 total booking terdaftar</p>
 </div>
 
 {{-- Filter Bar --}}
@@ -186,14 +186,14 @@
             </tbody>
         </table>
     </div>
-    @if($bookings->hasPages())
+    {{-- @if($bookings->hasPages())
     <div class="card-body" style="padding-top:0;border-top:1px solid var(--gray-100)">
         <div class="pagination-wrapper">
             {{ $bookings->withQueryString()->links('admin.pagination') }}
         </div>
     </div>
     @endif
-</div>
+</div> --}}
 
 {{-- Hidden form for actions --}}
 <form id="action-form" method="POST" style="display:none">

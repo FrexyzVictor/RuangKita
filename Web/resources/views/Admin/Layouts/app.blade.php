@@ -7,7 +7,7 @@
     <title>@yield('title', 'Dashboard') — RuangKita Admin</title>
 
     {{-- Fonts & Vite Assets --}}
-    @vite(['resources/css/admin.css', 'resources/js/admin.js'])
+    @vite(['resources/css/admin/admin.css', 'resources/js/admin.js'])
 </head>
 <body>
 <div class="layout-wrapper">

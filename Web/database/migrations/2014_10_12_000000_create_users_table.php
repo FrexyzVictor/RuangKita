@@ -13,11 +13,12 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('user');
+            $table->string('role')->default('tamu');   // default 'tamu'
             $table->string('no_hp')->nullable();
             $table->text('alamat')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->timestamp('phone_verified_at')->nullable();
+            $table->rememberToken();                   // fitur "ingat saya"
             $table->timestamps();
         });
     }

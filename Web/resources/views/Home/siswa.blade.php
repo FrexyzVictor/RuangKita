@@ -5,20 +5,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>RuangKita - Booking Fasilitas Sekolah</title>
+    <title>RuangKita</title>
 
     {{-- Tailwind --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
-    {{-- Font Awesome --}}
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     {{-- Font --}}
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
           rel="stylesheet">
+
+    {{-- Font Awesome --}}
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
 
@@ -26,14 +25,19 @@
             font-family: 'Inter', sans-serif;
         }
 
-        .gradient-bg{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        body{
+            background: #f8fafc;
         }
 
-        .gradient-text{
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .hero-overlay{
+            background: linear-gradient(to bottom,
+            rgba(0,0,0,.45),
+            rgba(0,0,0,.2));
+        }
+
+        .search-shadow{
+            box-shadow:
+            0 10px 25px rgba(0,0,0,.08);
         }
 
         .card-hover{
@@ -41,105 +45,52 @@
         }
 
         .card-hover:hover{
-            transform: translateY(-8px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,.1);
-        }
-
-        @keyframes fadeInUp {
-            from{
-                opacity:0;
-                transform: translateY(30px);
-            }
-
-            to{
-                opacity:1;
-                transform: translateY(0);
-            }
-        }
-
-        .animate-fadeInUp{
-            animation: fadeInUp .8s ease-out;
-        }
-
-        .hero-pattern{
-            background-image: url('data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="%239C92AC" fill-opacity="0.05"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z"/%3E%3C/g%3E%3C/svg%3E');
+            transform: translateY(-6px);
+            box-shadow: 0 20px 25px rgba(0,0,0,.08);
         }
 
     </style>
 
 </head>
 
-<body class="bg-gray-50">
+<body>
 
 {{-- ================= HEADER ================= --}}
-<header class="bg-white shadow-md sticky top-0 z-50">
+<header class="absolute top-0 left-0 w-full z-50">
 
-    <div class="container mx-auto px-4 md:px-6">
+    <div class="max-w-7xl mx-auto px-6 py-5">
 
-        <div class="flex justify-between items-center py-4">
+        <div class="flex justify-between items-center">
 
             {{-- Logo --}}
-            <div class="flex items-center gap-3">
-
-                <div class="w-11 h-11 gradient-bg rounded-2xl flex items-center justify-center">
-
-                    <i class="fas fa-school text-white text-xl"></i>
-
-                </div>
-
-                <div>
-                    <h1 class="text-2xl font-extrabold gradient-text">
-                        RuangKita
-                    </h1>
-                </div>
-
-            </div>
+            <h1 class="text-white text-2xl font-bold tracking-wide">
+                RUANGKITA
+            </h1>
 
             {{-- Menu --}}
-            <nav class="hidden md:flex items-center gap-8">
+            <nav class="hidden md:flex items-center gap-10 text-white text-sm font-medium">
 
-                <a href="#"
-                   class="font-medium text-gray-700 hover:text-purple-600 transition">
-                    Beranda
+                <a href="#" class="hover:text-cyan-300 transition">
+                    Home
                 </a>
 
-                <a href="#fasilitas"
-                   class="font-medium text-gray-700 hover:text-purple-600 transition">
-                    Fasilitas
+                <a href="#" class="hover:text-cyan-300 transition">
+                    Facility
                 </a>
 
-                <a href="#"
-                   class="font-medium text-gray-700 hover:text-purple-600 transition">
-                    Booking Saya
+                <a href="#" class="hover:text-cyan-300 transition">
+                    Jadwal
                 </a>
 
-                <a href="#"
-                   class="font-medium text-gray-700 hover:text-purple-600 transition">
-                    Tentang
+                <a href="#" class="hover:text-cyan-300 transition">
+                    Booking
+                </a>
+
+                <a href="#" class="hover:text-cyan-300 transition">
+                    Contact
                 </a>
 
             </nav>
-
-            {{-- User --}}
-            <div class="flex items-center gap-3">
-
-                <div class="w-10 h-10 rounded-full bg-purple-600 flex items-center justify-center">
-
-                    <i class="fas fa-user text-white"></i>
-
-                </div>
-
-                <div class="hidden md:block">
-                    <p class="text-sm text-gray-500">
-                        Selamat Datang
-                    </p>
-
-                    <h4 class="font-semibold text-gray-800">
-                        {{ Auth::user()->nama ?? Auth::user()->name ?? 'Siswa' }}
-                    </h4>
-                </div>
-
-            </div>
 
         </div>
 
@@ -148,137 +99,177 @@
 </header>
 
 {{-- ================= HERO ================= --}}
-<section class="hero-pattern relative overflow-hidden">
+<section class="relative h-[520px] overflow-hidden">
 
-    <div class="absolute top-0 right-0 w-96 h-96 bg-purple-100 rounded-full blur-3xl opacity-30"></div>
+    {{-- Background --}}
+    <img src="https://images.unsplash.com/photo-1719159381981-1327b22aff9b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+         class="w-full h-full object-cover">
 
-    <div class="absolute bottom-0 left-0 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30"></div>
+    {{-- Overlay --}}
+    <div class="absolute inset-0 hero-overlay"></div>
 
-    <div class="container mx-auto px-4 md:px-6 py-16 md:py-24 relative z-10">
+</section>
 
-        <div class="max-w-5xl mx-auto text-center animate-fadeInUp">
+{{-- ================= SEARCH BOX ================= --}}
+<section class="relative -mt-32 z-30 px-4">
 
-            {{-- Badge --}}
-            <div class="inline-flex items-center gap-2 bg-white/80 backdrop-blur-sm shadow-sm rounded-full px-5 py-2 mb-6">
+    <div class="max-w-5xl mx-auto bg-white rounded-[30px] p-8 search-shadow">
 
-                <i class="fas fa-bolt text-yellow-500"></i>
+        {{-- Title --}}
+        <div class="mb-7">
 
-                <span class="text-gray-700 font-medium">
-                    Sistem Booking Fasilitas Sekolah Modern
-                </span>
+            <h1 class="text-4xl font-extrabold text-sky-500 mb-2">
 
-            </div>
-
-            {{-- Title --}}
-            <h1 class="text-5xl md:text-7xl font-extrabold mb-6 leading-tight">
-
-                <span class="gradient-text">
-                    Good Morning
-                </span>
-
-                <span class="text-gray-800">
-                    {{ Auth::user()->nama ?? Auth::user()->name ?? 'Siswa' }}
-                </span>
+                Good Morning!
 
             </h1>
 
-            <p class="text-lg md:text-xl text-gray-500 max-w-3xl mx-auto mb-10">
+            <p class="text-gray-500 text-lg">
 
-                Booking ruangan, lapangan, studio, dan fasilitas sekolah
-                jadi lebih mudah, cepat, dan modern bersama RuangKita.
+                sistem booking ruangan dan lapangan
 
             </p>
 
-            {{-- Search Box --}}
-            <div class="bg-white rounded-3xl shadow-2xl p-6 md:p-8 max-w-5xl mx-auto">
+        </div>
 
-                <form action="{{ route('siswa.booking.search') }}"
-                      method="GET"
-                      class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        {{-- Search --}}
+        <form class="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-                    {{-- Jenis --}}
-                    <div class="relative">
+            {{-- Search --}}
+            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
 
-                        <i class="fas fa-building absolute left-4 top-4 text-purple-400"></i>
+                <i class="fas fa-search text-gray-400"></i>
 
-                        <select name="tipe"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-purple-500 outline-none">
+                <input type="text"
+                       placeholder="Search"
+                       class="bg-transparent w-full outline-none text-sm">
 
-                            <option value="">
-                                Pilih Fasilitas
-                            </option>
+            </div>
 
-                            <option value="lapangan">
-                                Lapangan
-                            </option>
+            {{-- Category --}}
+            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
 
-                            <option value="ruangan">
-                                Ruangan
-                            </option>
+                <i class="fas fa-building text-gray-400"></i>
 
-                            <option value="studio">
-                                Studio
-                            </option>
+                <select class="bg-transparent w-full outline-none text-sm">
 
-                        </select>
+                    <option>Category</option>
+                    <option>Lapangan</option>
+                    <option>Ruangan</option>
+                    <option>Studio</option>
 
-                    </div>
+                </select>
 
-                    {{-- Tanggal --}}
-                    <div class="relative">
+            </div>
 
-                        <i class="fas fa-calendar absolute left-4 top-4 text-purple-400"></i>
+            {{-- Date --}}
+            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
 
-                        <input type="date"
-                               name="tanggal"
-                               min="{{ date('Y-m-d') }}"
-                               class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-purple-500 outline-none">
+                <i class="fas fa-calendar text-gray-400"></i>
 
-                    </div>
+                <input type="date"
+                       class="bg-transparent w-full outline-none text-sm">
 
-                    {{-- Jam --}}
-                    <div class="relative">
+            </div>
 
-                        <i class="fas fa-clock absolute left-4 top-4 text-purple-400"></i>
+            {{-- Time --}}
+            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
 
-                        <select name="jam"
-                                class="w-full bg-gray-50 border border-gray-200 rounded-xl py-3 pl-11 pr-4 focus:ring-2 focus:ring-purple-500 outline-none">
+                <i class="fas fa-clock text-gray-400"></i>
 
-                            <option value="">
-                                Pilih Jam
-                            </option>
+                <select class="bg-transparent w-full outline-none text-sm">
 
-                            <option value="07:00">
-                                07:00 - 08:00
-                            </option>
+                    <option>08:00</option>
+                    <option>09:00</option>
+                    <option>10:00</option>
 
-                            <option value="08:00">
-                                08:00 - 09:00
-                            </option>
+                </select>
 
-                            <option value="09:00">
-                                09:00 - 10:00
-                            </option>
+            </div>
 
-                            <option value="10:00">
-                                10:00 - 11:00
-                            </option>
+            {{-- Button --}}
+            <button class="bg-sky-500 hover:bg-sky-600 text-white rounded-xl">
 
-                        </select>
+                <i class="fas fa-arrow-right"></i>
 
-                    </div>
+            </button>
 
-                    {{-- Button --}}
-                    <button type="submit"
-                            class="gradient-bg text-white rounded-xl py-3 px-6 font-semibold hover:shadow-xl transition flex items-center justify-center gap-2">
+        </form>
 
-                        <i class="fas fa-search"></i>
+    </div>
 
-                        Cari Sekarang
+</section>
 
-                    </button>
+{{-- ================= WHY US ================= --}}
+<section class="py-20 px-4">
 
-                </form>
+    <div class="max-w-6xl mx-auto text-center">
+
+        <h2 class="text-3xl font-bold text-gray-800 mb-14">
+
+            Kenapa Menggunakan Sistem Kami?
+
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+            {{-- Item --}}
+            <div>
+
+                <div class="w-16 h-16 bg-sky-100 rounded-full mx-auto flex items-center justify-center mb-5">
+
+                    <i class="fas fa-bolt text-sky-500 text-xl"></i>
+
+                </div>
+
+                <h3 class="font-bold text-lg mb-3">
+                    Jadwal Real-Time
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Booking fasilitas jadi lebih mudah
+                    dan cepat secara online.
+                </p>
+
+            </div>
+
+            {{-- Item --}}
+            <div>
+
+                <div class="w-16 h-16 bg-sky-100 rounded-full mx-auto flex items-center justify-center mb-5">
+
+                    <i class="fas fa-calendar-check text-sky-500 text-xl"></i>
+
+                </div>
+
+                <h3 class="font-bold text-lg mb-3">
+                    Booking Online
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Sistem booking modern dan mudah
+                    digunakan semua siswa.
+                </p>
+
+            </div>
+
+            {{-- Item --}}
+            <div>
+
+                <div class="w-16 h-16 bg-sky-100 rounded-full mx-auto flex items-center justify-center mb-5">
+
+                    <i class="fas fa-shield-alt text-sky-500 text-xl"></i>
+
+                </div>
+
+                <h3 class="font-bold text-lg mb-3">
+                    Persetujuan Cepat
+                </h3>
+
+                <p class="text-gray-500 text-sm leading-relaxed">
+                    Pengajuan booking diverifikasi
+                    dengan cepat dan aman.
+                </p>
 
             </div>
 
@@ -288,89 +279,63 @@
 
 </section>
 
-{{-- ================= FASILITAS ================= --}}
-<section id="fasilitas" class="py-20">
+{{-- ================= TOP BOOK ================= --}}
+<section class="pb-24 px-4">
 
-    <div class="container mx-auto px-4 md:px-6">
+    <div class="max-w-7xl mx-auto">
 
-        <div class="text-center mb-14">
+        <div class="text-center mb-10">
 
-            <h2 class="text-4xl font-bold text-gray-800 mb-3">
-                Fasilitas Populer
+            <h2 class="text-3xl font-bold text-gray-800">
+
+                TOP BOOK NOW
+
             </h2>
-
-            <p class="text-gray-500">
-                Fasilitas yang paling sering digunakan siswa
-            </p>
 
         </div>
 
-        {{-- CARD --}}
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {{-- Grid --}}
+        <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
 
             @foreach($fasilitas as $item)
 
-            <div class="bg-white rounded-3xl overflow-hidden shadow-lg card-hover">
+            <div class="bg-white rounded-2xl overflow-hidden card-hover">
 
-                {{-- Gambar --}}
-                <div class="relative">
-
-                    <img src="{{ asset('storage/' . $item->gambar) }}"
-                         class="w-full h-60 object-cover">
-
-                    <div class="absolute top-4 right-4 bg-white px-3 py-1 rounded-full shadow text-sm font-semibold text-purple-600">
-
-                        Rp {{ number_format($item->harga) }}
-
-                    </div>
-
-                </div>
+                {{-- Image --}}
+                <img src="{{ asset('storage/' . $item->gambar) }}"
+                     class="w-full h-40 object-cover">
 
                 {{-- Content --}}
-                <div class="p-6">
+                <div class="p-4">
 
-                    <div class="flex justify-between items-start mb-3">
+                    <div class="flex justify-between items-start mb-2">
 
-                        <div>
+                        <h3 class="font-semibold text-gray-800 text-sm">
 
-                            <h3 class="text-2xl font-bold text-gray-800">
-                                {{ $item->nama }}
-                            </h3>
+                            {{ $item->nama }}
 
-                            <p class="text-sm text-gray-500 mt-1">
+                        </h3>
 
-                                <i class="fas fa-location-dot text-red-400"></i>
+                        <span class="text-sky-500 font-bold text-sm">
 
-                                {{ $item->lokasi }}
+                            Rp {{ number_format($item->harga) }}
 
-                            </p>
-
-                        </div>
+                        </span>
 
                     </div>
 
-                    <p class="text-gray-500 text-sm mb-5">
-                        {{ $item->deskripsi }}
+                    <p class="text-xs text-gray-500 mb-4">
+
+                        {{ $item->lokasi }}
+
                     </p>
 
-                    <div class="flex justify-between items-center">
+                    <a href="#"
+                       class="text-sm bg-sky-500 hover:bg-sky-600 text-white px-4 py-2 rounded-xl inline-block">
 
-                        <div class="flex items-center gap-2 text-sm text-gray-500">
+                        Book
 
-                            <i class="fas fa-users text-blue-500"></i>
-
-                            {{ $item->kapasitas }} Orang
-
-                        </div>
-
-                        <a href="{{ route('booking.create', $item->id) }}"
-                           class="gradient-bg text-white px-5 py-2 rounded-xl font-semibold hover:shadow-lg transition">
-
-                            Booking
-
-                        </a>
-
-                    </div>
+                    </a>
 
                 </div>
 
@@ -384,34 +349,158 @@
 
 </section>
 
-{{-- ================= CTA ================= --}}
-<section class="py-20">
+{{-- ================= EXPLORE ================= --}}
+<section class="px-4 pb-24">
 
-    <div class="container mx-auto px-4 md:px-6">
+    <div class="max-w-7xl mx-auto">
 
-        <div class="gradient-bg rounded-[40px] p-10 md:p-16 text-center text-white">
+        <div class="relative rounded-[40px] overflow-hidden">
 
-            <h2 class="text-4xl font-bold mb-4">
+            {{-- Background --}}
+            <<img src="https://images.unsplash.com/photo-1521587760476-6c12a4b040da?q=80&w=1600"
+                 class="w-full h-[500px] object-cover">
 
-                Siap Booking Sekarang?
+            {{-- Overlay --}}
+            <div class="absolute inset-0 bg-black/45"></div>
+
+            {{-- Content --}}
+            <div class="absolute inset-0 flex flex-col justify-center px-10 md:px-20">
+
+                <h1 class="text-white text-5xl md:text-6xl font-extrabold mb-5">
+
+                    EXPLORE FACILITIES
+
+                </h1>
+
+                <p class="text-white/80 max-w-xl mb-8">
+
+                    Temukan berbagai fasilitas sekolah terbaik
+                    untuk kegiatan belajar dan aktivitas siswa.
+
+                </p>
+
+                <button class="bg-white text-sky-600 w-fit px-8 py-3 rounded-full font-semibold">
+
+                    View All
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{{-- ================= NEWS ================= --}}
+<section class="pb-24 px-4">
+
+    <div class="max-w-7xl mx-auto">
+
+        <div class="flex justify-between items-center mb-8">
+
+            <h2 class="text-2xl font-bold text-gray-800">
+
+                Feature News
 
             </h2>
 
-            <p class="text-white/80 max-w-2xl mx-auto mb-8">
+            <div class="flex gap-3">
 
-                Gunakan RuangKita untuk mempermudah booking fasilitas sekolah
-                secara online dan real-time.
+                <button class="w-10 h-10 rounded-full bg-gray-100">
 
-            </p>
+                    <i class="fas fa-chevron-left"></i>
 
-            <a href="#fasilitas"
-               class="bg-white text-purple-700 px-8 py-4 rounded-2xl font-bold inline-flex items-center gap-3 hover:shadow-2xl transition">
+                </button>
 
-                <i class="fas fa-calendar-check"></i>
+                <button class="w-10 h-10 rounded-full bg-sky-500 text-white">
 
-                Mulai Booking
+                    <i class="fas fa-chevron-right"></i>
 
-            </a>
+                </button>
+
+            </div>
+
+        </div>
+
+        {{-- News Grid --}}
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            {{-- Card --}}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+
+                <img src="https://media.istockphoto.com/id/1366711474/photo/low-angle-generation-z-asian-chinese-teenage-boy-challenge-players-and-taking-a-shot-playing.webp?a=1&b=1&s=612x612&w=0&k=20&c=8QihTWSbt2z3HgoJn2VAcVz0BaajM-7eTLr1fymLbPE="
+                     class="w-full h-56 object-cover">
+
+                <div class="p-5">
+
+                    <h3 class="font-bold text-lg mb-3">
+
+                        Fasilitas Baru Untuk Siswa
+
+                    </h3>
+
+                    <p class="text-gray-500 text-sm">
+
+                        Ruang belajar dan lapangan terbaru
+                        kini tersedia untuk semua siswa.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            {{-- Card --}}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+
+                <img src="https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=1200"
+                     class="w-full h-56 object-cover">
+
+                <div class="p-5">
+
+                    <h3 class="font-bold text-lg mb-3">
+
+                        Top 10 Most Booked Facility
+
+                    </h3>
+
+                    <p class="text-gray-500 text-sm">
+
+                        Lapangan dan ruangan yang paling
+                        sering digunakan siswa.
+
+                    </p>
+
+                </div>
+
+            </div>
+
+            {{-- Card --}}
+            <div class="bg-white rounded-2xl overflow-hidden shadow-sm">
+
+                <img src="https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=600&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8Y29tcHV0ZXIlMjBsYWJ8ZW58MHx8MHx8fDA%3D"
+                     class="w-full h-56 object-cover">
+
+                <div class="p-5">
+
+                    <h3 class="font-bold text-lg mb-3">
+
+                        New Innovation System
+
+                    </h3>
+
+                    <p class="text-gray-500 text-sm">
+
+                        Sistem booking modern untuk
+                        meningkatkan efisiensi sekolah.
+
+                    </p>
+
+                </div>
+
+            </div>
 
         </div>
 
@@ -420,33 +509,25 @@
 </section>
 
 {{-- ================= FOOTER ================= --}}
-<footer class="bg-gray-900 text-white py-12">
+<footer class="bg-slate-950 text-white py-12">
 
-    <div class="container mx-auto px-4 md:px-6">
+    <div class="max-w-7xl mx-auto px-4">
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-10">
+        <div class="flex flex-col md:flex-row justify-between gap-10">
 
             {{-- Logo --}}
             <div>
 
-                <div class="flex items-center gap-3 mb-4">
+                <h1 class="text-3xl font-bold mb-4">
 
-                    <div class="w-10 h-10 rounded-xl gradient-bg flex items-center justify-center">
+                    RUANGKITA
 
-                        <i class="fas fa-school text-white"></i>
+                </h1>
 
-                    </div>
+                <p class="text-gray-400 max-w-md">
 
-                    <h2 class="text-2xl font-bold">
-                        RuangKita
-                    </h2>
-
-                </div>
-
-                <p class="text-gray-400 text-sm leading-relaxed">
-
-                    Platform booking fasilitas sekolah modern untuk siswa,
-                    guru, dan kegiatan sekolah.
+                    Sistem booking fasilitas sekolah modern
+                    untuk mendukung kegiatan belajar dan aktivitas siswa.
 
                 </p>
 
@@ -455,58 +536,33 @@
             {{-- Menu --}}
             <div>
 
-                <h4 class="font-bold mb-4">
-                    Navigasi
-                </h4>
+                <h3 class="font-semibold mb-4">
+                    Navigation
+                </h3>
 
-                <ul class="space-y-3 text-gray-400">
+                <div class="space-y-3 text-gray-400">
 
-                    <li><a href="#" class="hover:text-white">Beranda</a></li>
-                    <li><a href="#" class="hover:text-white">Fasilitas</a></li>
-                    <li><a href="#" class="hover:text-white">Booking</a></li>
-                    <li><a href="#" class="hover:text-white">Tentang</a></li>
+                    <p>Home</p>
+                    <p>Facilities</p>
+                    <p>Booking</p>
+                    <p>Contact</p>
 
-                </ul>
-
-            </div>
-
-            {{-- Bantuan --}}
-            <div>
-
-                <h4 class="font-bold mb-4">
-                    Bantuan
-                </h4>
-
-                <ul class="space-y-3 text-gray-400">
-
-                    <li>Pusat Bantuan</li>
-                    <li>Panduan Booking</li>
-                    <li>Kebijakan Privasi</li>
-
-                </ul>
+                </div>
 
             </div>
 
-            {{-- Sosial --}}
+            {{-- Social --}}
             <div>
 
-                <h4 class="font-bold mb-4">
-                    Sosial Media
-                </h4>
+                <h3 class="font-semibold mb-4">
+                    Social Media
+                </h3>
 
                 <div class="flex gap-4 text-2xl">
 
-                    <a href="#" class="hover:text-purple-400">
-                        <i class="fab fa-instagram"></i>
-                    </a>
-
-                    <a href="#" class="hover:text-purple-400">
-                        <i class="fab fa-whatsapp"></i>
-                    </a>
-
-                    <a href="#" class="hover:text-purple-400">
-                        <i class="fab fa-facebook"></i>
-                    </a>
+                    <i class="fab fa-instagram"></i>
+                    <i class="fab fa-facebook"></i>
+                    <i class="fab fa-whatsapp"></i>
 
                 </div>
 
@@ -514,7 +570,7 @@
 
         </div>
 
-        <div class="border-t border-gray-800 mt-10 pt-6 text-center text-gray-500 text-sm">
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-gray-500">
 
             © 2026 RuangKita. All Rights Reserved.
 

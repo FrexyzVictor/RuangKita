@@ -18,66 +18,47 @@
 </head>
 <body>
 
-<nav class="navbar navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
     <div class="container">
-        <a class="navbar-brand fw-bold">
+
+        <a class="navbar-brand fw-bold" href="/guru/dashboard">
             Dashboard Guru
         </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+
+            <ul class="navbar-nav ms-auto">
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/guru/rooms">
+                        Data Ruangan
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/guru/booking">
+                        Booking
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="/guru/status">
+                        Cek Status
+                    </a>
+                </li>
+
+            </ul>
+
+        </div>
     </div>
 </nav>
 
 <div class="container mt-5">
-
-    <h1 class="mb-4">
-        Selamat Datang Guru 👨‍🏫
-    </h1>
-
-    <div class="row g-4">
-
-        <div class="col-md-4">
-            <div class="card shadow border-0 rounded-4 p-4">
-                <h3>📚 Data Ruangan</h3>
-
-                <p>
-                    Melihat daftar ruangan sekolah.
-                </p>
-
-                <a href="/guru/rooms" class="btn btn-primary">
-                    Lihat Ruangan
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow border-0 rounded-4 p-4">
-                <h3>📝 Booking</h3>
-
-                <p>
-                    Ajukan booking ruangan.
-                </p>
-
-                <a href="/guru/booking" class="btn btn-success">
-                    Booking
-                </a>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow border-0 rounded-4 p-4">
-                <h3>📄 Status</h3>
-
-                <p>
-                    Cek status pengajuan booking.
-                </p>
-
-                <button class="btn btn-warning">
-                    Status
-                </button>
-            </div>
-        </div>
-
-    </div>
-
+    @yield('content')
 </div>
 
 </body>

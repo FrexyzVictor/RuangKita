@@ -113,7 +113,7 @@
                     <div class="sidebar-user-role">{{ ucfirst(auth()->user()->role ?? 'admin') }}</div>
                 </div>
             </div>
-            <form method="POST" action="{{ route('logout') }}">
+            {{-- <form method="POST" action="{{ route('logout') }}">
                 @csrf
                 <button type="submit" class="logout-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -124,7 +124,7 @@
                 </button>
             </form>
         </div>
-    </aside>
+    </aside> --}}
 
     {{-- ===== MAIN CONTENT ===== --}}
     <div class="main-content">

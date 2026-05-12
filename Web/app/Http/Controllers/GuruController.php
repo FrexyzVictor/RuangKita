@@ -20,4 +20,9 @@ class GuruController extends Controller
     {
         return view('guru.booking');
     }
+
+     public function fasilitas()
+    {
+        return view('guru.fasilitas');
+    }
 }

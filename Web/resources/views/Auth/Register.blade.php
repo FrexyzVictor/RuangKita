@@ -49,18 +49,6 @@
             flex-direction: column;
             justify-content: center;
         }
-
-        .form-header {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-header h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.3rem;
-        }
-
         .form-header p {
             font-size: 0.85rem;
             color: var(--text-muted);

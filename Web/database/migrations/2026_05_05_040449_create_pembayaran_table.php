@@ -8,23 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-      Schema::create('pembayaran', function (Blueprint $table) {
+        Schema::create('evaluasi_booking', function (Blueprint $table) {
 
-    $table->id('id_evaluasi');
+            $table->id('id_evaluasi');
 
-    $table->unsignedBigInteger('id_booking')->unique();
+            $table->unsignedBigInteger('id_booking');
 
-    $table->integer('rating');
+            $table->integer('rating');
 
-    $table->text('komentar')->nullable();
+            $table->text('komentar')->nullable();
 
-    $table->timestamps();
+            $table->timestamps();
 
-    $table->foreign('id_booking')
-        ->references('id_booking')
-        ->on('bookings')
-        ->onDelete('cascade');
-});
+            $table->foreign('id_booking')
+                ->references('id_booking')
+                ->on('bookings')
+                ->onDelete('cascade');
+        });
     }
 
     public function down(): void

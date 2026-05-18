@@ -20,26 +20,75 @@ class Booking extends Model
         'tanggal_selesai',
         'total_harga',
         'status',
-        'catatan'
+        'catatan',
     ];
+
+    protected $casts = [
+        'tanggal_booking'  => 'date',
+        'tanggal_mulai'    => 'datetime',
+        'tanggal_selesai'  => 'datetime',
+        'total_harga'      => 'decimal:2',
+    ];
+
+    /* ─── RELATIONSHIPS ─── */
 
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
     }
 
-    public function bookingDetails()
+    public function details()
     {
         return $this->hasMany(BookingDetail::class, 'id_booking');
     }
 
-    public function pembayaran()
-    {
-        return $this->hasMany(Pembayaran::class, 'id_booking');
-    }
-
     public function evaluasi()
     {
-        return $this->hasMany(EvaluasiBooking::class, 'id_booking');
+        return $this->hasOne(EvaluasiBooking::class, 'id_booking');
+    }
+
+    /* ─── SCOPES ─── */
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeSelesai($query)
+    {
+        return $query->where('status', 'selesai');
+    }
+
+    /* ─── ACCESSORS ─── */
+
+    public function getDurasiAttribute()
+    {
+        if (!$this->tanggal_mulai || !$this->tanggal_selesai) return null;
+        $minutes = $this->tanggal_mulai->diffInMinutes($this->tanggal_selesai);
+        $h = intdiv($minutes, 60);
+        $m = $minutes % 60;
+        return ($h > 0 ? "{$h} jam " : '') . ($m > 0 ? "{$m} menit" : '');
+    }
+
+    public function getStatusLabelAttribute()
+    {
+        return match($this->status) {
+            'pending'    => 'Pending',
+            'dibayar'    => 'Sudah Dibayar',
+            'selesai'    => 'Selesai',
+            'dibatalkan' => 'Dibatalkan',
+            default      => ucfirst($this->status),
+        };
+    }
+
+    public function getStatusClassAttribute()
+    {
+        return match($this->status) {
+            'pending'    => 'status-warning',
+            'dibayar'    => 'status-info',
+            'selesai'    => 'status-success',
+            'dibatalkan' => 'status-danger',
+            default      => 'status-default',
+        };
     }
 }

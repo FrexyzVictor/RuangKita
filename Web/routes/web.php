@@ -61,13 +61,23 @@ Route::prefix('admin')
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // ================= BOOKING =================
-    Route::prefix('bookings')->name('bookings.')->group(function () {
-        Route::get('/',                [BookingController::class, 'index'])->name('index');
-        Route::get('/{id}',            [BookingController::class, 'show'])->name('show');
-        Route::patch('/{id}/approve',  [BookingController::class, 'approve'])->name('approve');
-        Route::patch('/{id}/cancel',   [BookingController::class, 'cancel'])->name('cancel');
-        Route::delete('/{id}',         [BookingController::class, 'destroy'])->name('destroy');
-    });
+Route::prefix('bookings')->name('bookings.')->group(function () {
+
+    Route::get('/',                [BookingController::class, 'index'])->name('index');
+
+    Route::get('/create',          [BookingController::class, 'create'])->name('create');
+
+    Route::post('/',               [BookingController::class, 'store'])->name('store');
+
+    Route::get('/{id}',            [BookingController::class, 'show'])->name('show');
+
+    Route::patch('/{id}/approve',  [BookingController::class, 'approve'])->name('approve');
+
+    Route::patch('/{id}/cancel',   [BookingController::class, 'cancel'])->name('cancel');
+
+    Route::delete('/{id}',         [BookingController::class, 'destroy'])->name('destroy');
+
+});
 
     // ================= FASILITAS =================
     Route::prefix('fasilitas')->name('fasilitas.')->group(function () {

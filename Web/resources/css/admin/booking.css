@@ -1,410 +1,25 @@
 /* ============================================================
-   RuangKita Admin CSS — resources/css/admin/admin.css
-   Vite build entry: resources/css/admin/admin.css
+   RuangKita — booking.css
+   Hanya berisi komponen KHUSUS halaman booking.
+   Layout, sidebar, topbar, reset, dan variabel sudah ada
+   di admin.css — jangan didefinisikan ulang di sini.
    ============================================================ */
 
-/* ── GOOGLE FONTS ── */
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap');
-
-/* ── CSS VARIABLES ── */
+/* ── EXTRA VARIABLES (tambahan, tidak menimpa admin.css) ── */
 :root {
-    /* Brand */
-    --blue-primary: #2563EB;
-    --blue-light: #EFF6FF;
-    --blue-mid: #BFDBFE;
-    --blue-dark: #1D4ED8;
-    --blue-glow: rgba(37, 99, 235, .18);
-
-    /* Neutral */
-    --white: #FFFFFF;
-    --gray-50: #F8FAFC;
-    --gray-100: #F1F5F9;
-    --gray-200: #E2E8F0;
-    --gray-300: #CBD5E1;
-    --gray-400: #94A3B8;
-    --gray-500: #64748B;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-800: #1E293B;
-    --gray-900: #0F172A;
-
-    /* Status */
-    --green: #10B981;
-    --green-light: #ECFDF5;
-    --orange: #F59E0B;
-    --orange-light: #FFFBEB;
-    --red: #EF4444;
-    --red-light: #FEF2F2;
     --cyan: #06B6D4;
     --cyan-light: #ECFEFF;
     --purple: #8B5CF6;
     --purple-light: #F5F3FF;
-
-    /* Layout */
-    --sidebar-w: 260px;
-    --topbar-h: 64px;
-    --radius-sm: 6px;
-    --radius-md: 10px;
-    --radius-lg: 16px;
-    --radius-xl: 20px;
-
-    /* Shadows */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, .05);
-    --shadow-sm: 0 1px 3px rgba(0, 0, 0, .08), 0 1px 2px rgba(0, 0, 0, .04);
-    --shadow-md: 0 4px 6px rgba(0, 0, 0, .07), 0 2px 4px rgba(0, 0, 0, .04);
-    --shadow-lg: 0 10px 15px rgba(0, 0, 0, .08), 0 4px 6px rgba(0, 0, 0, .04);
-    --shadow-xl: 0 20px 25px rgba(0, 0, 0, .10), 0 8px 10px rgba(0, 0, 0, .04);
-    --shadow-blue: 0 4px 14px rgba(37, 99, 235, .25);
-
-    /* Transitions */
     --ease-out: cubic-bezier(.16, 1, .3, 1);
     --ease-spring: cubic-bezier(.34, 1.56, .64, 1);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, .05);
+    --shadow-xl: 0 20px 25px rgba(0, 0, 0, .10), 0 8px 10px rgba(0, 0, 0, .04);
+    --topbar-h: var(--topbar-height);
+    /* alias agar booking.css pakai var admin */
 }
 
-/* ── RESET & BASE ── */
-*,
-*::before,
-*::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-}
-
-html {
-    font-size: 16px;
-    -webkit-text-size-adjust: 100%;
-}
-
-body {
-    font-family: 'Plus Jakarta Sans', sans-serif;
-    background: var(--gray-50);
-    color: var(--gray-800);
-    line-height: 1.5;
-    -webkit-font-smoothing: antialiased;
-}
-
-a {
-    color: inherit;
-    text-decoration: none;
-}
-
-button {
-    font-family: inherit;
-    cursor: pointer;
-    border: none;
-}
-
-input,
-select,
-textarea {
-    font-family: inherit;
-}
-
-svg {
-    display: block;
-    flex-shrink: 0;
-}
-
-/* ── LAYOUT ── */
-.layout-wrapper {
-    display: flex;
-    min-height: 100vh;
-}
-
-/* ── SIDEBAR ── */
-.sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: var(--sidebar-w);
-    height: 100vh;
-    background: var(--gray-900);
-    display: flex;
-    flex-direction: column;
-    z-index: 100;
-    overflow: hidden;
-}
-
-.sidebar::before {
-    content: '';
-    position: absolute;
-    top: -80px;
-    right: -80px;
-    width: 220px;
-    height: 220px;
-    background: radial-gradient(circle, rgba(37, 99, 235, .35) 0%, transparent 70%);
-    pointer-events: none;
-}
-
-/* Logo */
-.sidebar-logo {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 20px 18px;
-    border-bottom: 1px solid rgba(255, 255, 255, .06);
-}
-
-.sidebar-logo-icon {
-    width: 38px;
-    height: 38px;
-    background: linear-gradient(135deg, var(--blue-primary), #4F46E5);
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, .4);
-}
-
-.sidebar-logo-icon svg {
-    width: 20px;
-    height: 20px;
-    fill: white;
-}
-
-.sidebar-logo-text {
-    font-size: .95rem;
-    font-weight: 800;
-    color: var(--white);
-    letter-spacing: -.3px;
-}
-
-.sidebar-logo-sub {
-    font-size: .65rem;
-    color: var(--gray-400);
-    margin-top: 1px;
-    letter-spacing: .3px;
-    text-transform: uppercase;
-}
-
-/* Nav */
-.sidebar-nav {
-    flex: 1;
-    overflow-y: auto;
-    padding: 16px 12px;
-    scrollbar-width: none;
-}
-
-.sidebar-nav::-webkit-scrollbar {
-    display: none;
-}
-
-.nav-section-label {
-    font-size: .62rem;
-    font-weight: 700;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    color: var(--gray-500);
-    padding: 10px 8px 6px;
-}
-
-.nav-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    border-radius: var(--radius-md);
-    color: var(--gray-400);
-    font-size: .83rem;
-    font-weight: 500;
-    transition: all .2s ease;
-    position: relative;
-    margin-bottom: 2px;
-}
-
-.nav-item svg {
-    width: 17px;
-    height: 17px;
-    opacity: .7;
-    transition: opacity .2s;
-}
-
-.nav-item:hover {
-    background: rgba(255, 255, 255, .06);
-    color: var(--white);
-}
-
-.nav-item:hover svg {
-    opacity: 1;
-}
-
-.nav-item.active {
-    background: linear-gradient(135deg, rgba(37, 99, 235, .25), rgba(79, 70, 229, .15));
-    color: var(--white);
-    box-shadow: inset 0 0 0 1px rgba(37, 99, 235, .3);
-}
-
-.nav-item.active svg {
-    opacity: 1;
-}
-
-.nav-item.active::before {
-    content: '';
-    position: absolute;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 3px;
-    height: 60%;
-    background: var(--blue-primary);
-    border-radius: 0 2px 2px 0;
-}
-
-.nav-badge {
-    margin-left: auto;
-    background: var(--orange);
-    color: white;
-    font-size: .62rem;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 100px;
-    animation: pulse-badge 2s infinite;
-}
-
-@keyframes pulse-badge {
-
-    0%,
-    100% {
-        box-shadow: 0 0 0 0 rgba(245, 158, 11, .5);
-    }
-
-    50% {
-        box-shadow: 0 0 0 5px rgba(245, 158, 11, 0);
-    }
-}
-
-/* Sidebar Footer */
-.sidebar-footer {
-    padding: 14px 12px;
-    border-top: 1px solid rgba(255, 255, 255, .06);
-}
-
-.sidebar-user {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    border-radius: var(--radius-md);
-    transition: background .2s;
-    cursor: default;
-}
-
-.sidebar-user:hover {
-    background: rgba(255, 255, 255, .05);
-}
-
-.sidebar-avatar {
-    width: 34px;
-    height: 34px;
-    background: linear-gradient(135deg, var(--blue-primary), #4F46E5);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: .72rem;
-    font-weight: 700;
-    color: white;
-    flex-shrink: 0;
-}
-
-.sidebar-user-name {
-    font-size: .8rem;
-    font-weight: 600;
-    color: var(--white);
-}
-
-.sidebar-user-role {
-    font-size: .68rem;
-    color: var(--gray-500);
-    text-transform: capitalize;
-}
-
-/* ── MAIN CONTENT ── */
-.main-content {
-    margin-left: var(--sidebar-w);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
-}
-
-/* ── TOPBAR ── */
-.topbar {
-    position: sticky;
-    top: 0;
-    height: var(--topbar-h);
-    background: rgba(255, 255, 255, .85);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--gray-200);
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 0 24px;
-    z-index: 50;
-}
-
-.topbar-title-area {
-    line-height: 1.3;
-}
-
-.topbar-greeting {
-    font-size: .9rem;
-    font-weight: 700;
-    color: var(--gray-800);
-}
-
-.topbar-subtitle {
-    font-size: .72rem;
-    color: var(--gray-400);
-}
-
-.topbar-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.topbar-date {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: .75rem;
-    color: var(--gray-500);
-    background: var(--gray-100);
-    padding: 5px 10px;
-    border-radius: 100px;
-}
-
-.topbar-date svg {
-    width: 13px;
-    height: 13px;
-}
-
-.topbar-icon-btn {
-    width: 36px;
-    height: 36px;
-    background: transparent;
-    border-radius: var(--radius-md);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gray-500);
-    position: relative;
-    transition: all .2s;
-}
-
-.topbar-icon-btn:hover {
-    background: var(--gray-100);
-    color: var(--gray-700);
-}
-
-.topbar-icon-btn svg {
-    width: 18px;
-    height: 18px;
-}
-
+/* ── TOPBAR EXTRAS (komponen yang tidak ada di admin.css) ── */
 .notif-dot {
     position: absolute;
     top: 7px;
@@ -471,26 +86,8 @@ svg {
     margin-bottom: 24px;
 }
 
-.breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    font-size: .72rem;
-    color: var(--gray-400);
-    margin-bottom: 8px;
-}
-
 .breadcrumb a:hover {
     color: var(--blue-primary);
-}
-
-.breadcrumb-sep {
-    opacity: .5;
-}
-
-.breadcrumb-current {
-    color: var(--gray-600);
-    font-weight: 500;
 }
 
 .page-header-title {
@@ -662,7 +259,7 @@ svg {
     padding: 20px;
 }
 
-/* ── SEARCH ROOMS (Booking create page) ── */
+/* ── SEARCH HERO ── */
 .search-hero {
     background: linear-gradient(135deg, var(--gray-900) 0%, #1a2744 50%, #0f172a 100%);
     border-radius: var(--radius-xl);
@@ -794,7 +391,7 @@ svg {
     font-size: .83rem;
     outline: none;
     transition: all .2s;
-    colorscheme: dark;
+    color-scheme: dark;
 }
 
 .search-date:focus {
@@ -822,7 +419,7 @@ svg {
 .room-card:hover {
     transform: translateY(-4px);
     box-shadow: var(--shadow-xl);
-    border-color: var(--blue-mid);
+    border-color: var(--blue-medium);
 }
 
 .room-card.selected {
@@ -944,11 +541,7 @@ svg {
     text-align: center;
 }
 
-.room-card.selected .room-select-btn {
-    background: var(--blue-primary);
-    color: white;
-}
-
+.room-card.selected .room-select-btn,
 .room-card:hover .room-select-btn {
     background: var(--blue-primary);
     color: white;
@@ -1057,13 +650,13 @@ svg {
     gap: 4px;
 }
 
-/* Order Summary Card */
+/* ── ORDER SUMMARY CARD ── */
 .summary-card {
     background: var(--gray-900);
     border-radius: var(--radius-lg);
     padding: 20px;
     position: sticky;
-    top: calc(var(--topbar-h) + 16px);
+    top: calc(var(--topbar-height) + 16px);
     color: white;
 }
 
@@ -1393,7 +986,7 @@ svg {
     padding: 8px 0;
 }
 
-/* ── MODAL ── */
+/* ── MODAL (booking-specific) ── */
 .modal-overlay {
     position: fixed;
     inset: 0;
@@ -1482,7 +1075,7 @@ svg {
     justify-content: flex-end;
 }
 
-/* ── TOAST ── */
+/* ── TOAST (booking-specific style) ── */
 .toast-container {
     position: fixed;
     top: 20px;
@@ -1607,7 +1200,7 @@ svg {
 .kategori-card:hover {
     transform: translateY(-2px);
     box-shadow: var(--shadow-md);
-    border-color: var(--blue-mid);
+    border-color: var(--blue-medium);
 }
 
 .kategori-icon {
@@ -1675,16 +1268,6 @@ svg {
     }
 }
 
-@keyframes shimmer {
-    from {
-        background-position: -200% 0;
-    }
-
-    to {
-        background-position: 200% 0;
-    }
-}
-
 .animate-fadein {
     animation: fadeIn .4s ease both;
 }
@@ -1713,48 +1296,8 @@ svg {
     animation: fadeSlideUp .4s var(--ease-out) .25s both;
 }
 
-/* Skeleton */
-.skeleton {
-    background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-200) 50%, var(--gray-100) 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1.5s infinite;
-    border-radius: var(--radius-sm);
-}
-
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-}
-
-::-webkit-scrollbar-track {
-    background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-    background: var(--gray-200);
-    border-radius: 100px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--gray-300);
-}
-
-/* ── RESPONSIVE ── */
+/* ── RESPONSIVE (booking-specific) ── */
 @media (max-width: 768px) {
-    .sidebar {
-        transform: translateX(-100%);
-        transition: transform .3s ease;
-    }
-
-    .sidebar.open {
-        transform: translateX(0);
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-
     .page-content {
         padding: 16px;
     }
@@ -1763,23 +1306,13 @@ svg {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
     }
-
-    .topbar {
-        padding: 0 14px;
-    }
 }
 
 /* ── PRINT ── */
 @media print {
 
-    .sidebar,
-    .topbar,
     .btn,
     .filter-bar {
         display: none;
-    }
-
-    .main-content {
-        margin: 0;
     }
 }

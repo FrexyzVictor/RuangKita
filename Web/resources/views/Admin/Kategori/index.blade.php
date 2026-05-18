@@ -19,33 +19,36 @@
         </div>
         <a href="{{ route('admin.kategori.create') }}" class="btn btn-primary">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
-                <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                <line x1="12" y1="5" x2="12" y2="19"/>
+                <line x1="5" y1="12" x2="19" y2="12"/>
             </svg>
             Tambah Kategori
         </a>
     </div>
 </div>
 
-{{-- Kategori Grid --}}
+{{-- Grid Kategori --}}
 <div class="kategori-list animate-up-1">
     @forelse($kategoris as $kategori)
     <div class="kategori-card" style="animation-delay:{{ $loop->index * 0.06 }}s">
         <div class="kategori-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="8" y1="6" x2="21" y2="6"/>
-                <line x1="8" y1="12" x2="21" y2="12"/>
-                <line x1="8" y1="18" x2="21" y2="18"/>
-                <line x1="3" y1="6" x2="3.01" y2="6"/>
-                <line x1="3" y1="12" x2="3.01" y2="12"/>
-                <line x1="3" y1="18" x2="3.01" y2="18"/>
+                <line x1="8"  y1="6"  x2="21"   y2="6"/>
+                <line x1="8"  y1="12" x2="21"   y2="12"/>
+                <line x1="8"  y1="18" x2="21"   y2="18"/>
+                <line x1="3"  y1="6"  x2="3.01" y2="6"/>
+                <line x1="3"  y1="12" x2="3.01" y2="12"/>
+                <line x1="3"  y1="18" x2="3.01" y2="18"/>
             </svg>
         </div>
+
         <div style="flex:1">
             <div class="kategori-name">{{ $kategori->nama_kategori }}</div>
             <div class="kategori-desc">
                 {{ $kategori->deskripsi ?? 'Tidak ada deskripsi' }}
             </div>
             <div style="margin-top:10px;display:flex;gap:8px">
+                {{-- Tombol Edit --}}
                 <a href="{{ route('admin.kategori.edit', $kategori->id_kategori) }}"
                    class="btn btn-sm btn-outline">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
@@ -54,16 +57,24 @@
                     </svg>
                     Edit
                 </a>
-                <button class="btn btn-sm btn-outline" style="border-color:var(--red-light);color:var(--red)"
-                        onclick="RuangKita.confirmAction('Hapus kategori <strong>{{ $kategori->nama_kategori }}</strong>?', '{{ route('admin.kategori.destroy', $kategori->id_kategori) }}', 'DELETE')">
+
+                {{-- Tombol Hapus — trigger confirm modal --}}
+                <button class="btn btn-sm btn-outline"
+                        style="border-color:var(--red-light);color:var(--red)"
+                        onclick="confirmHapus(
+                            '{{ addslashes($kategori->nama_kategori) }}',
+                            '{{ route('admin.kategori.destroy', $kategori->id_kategori) }}'
+                        )">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="12" height="12">
                         <polyline points="3 6 5 6 21 6"/>
                         <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                        <path d="M10 11v6M14 11v6"/>
                     </svg>
                     Hapus
                 </button>
             </div>
         </div>
+
         <div style="text-align:right;flex-shrink:0">
             <div style="font-size:1.3rem;font-weight:800;color:var(--blue-primary)">
                 {{ $kategori->fasilitas_count ?? 0 }}
@@ -75,8 +86,9 @@
     <div style="grid-column:1/-1">
         <div class="empty-state">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/>
-                <line x1="8" y1="18" x2="21" y2="18"/>
+                <line x1="8"  y1="6"  x2="21" y2="6"/>
+                <line x1="8"  y1="12" x2="21" y2="12"/>
+                <line x1="8"  y1="18" x2="21" y2="18"/>
             </svg>
             <p>Belum ada kategori</p>
             <a href="{{ route('admin.kategori.create') }}" class="btn btn-primary btn-sm">
@@ -87,9 +99,68 @@
     @endforelse
 </div>
 
-<form id="action-form" method="POST" style="display:none">
+{{-- Form hidden untuk DELETE --}}
+<form id="delete-form" method="POST" style="display:none">
     @csrf
-    <input type="hidden" name="_method" value="DELETE">
+    @method('DELETE')
 </form>
 
+{{-- Confirm Modal --}}
+<div class="modal-overlay" id="confirm-modal">
+    <div class="modal" style="max-width:380px;padding:28px">
+        <div class="modal-icon danger">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="3 6 5 6 21 6"/>
+                <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                <path d="M10 11v6M14 11v6"/>
+            </svg>
+        </div>
+        <div class="modal-title">Hapus Kategori?</div>
+        <div class="modal-body" id="confirm-modal-msg">
+            Yakin ingin menghapus kategori ini?
+        </div>
+        <div class="modal-actions">
+            <button type="button" class="btn btn-ghost" onclick="tutupModal()">Batal</button>
+            <button type="button" class="btn btn-danger" id="confirm-hapus-btn">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                </svg>
+                Ya, Hapus
+            </button>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+    function confirmHapus(nama, url) {
+        document.getElementById('confirm-modal-msg').innerHTML =
+            'Kategori <strong>"' + nama + '"</strong> akan dihapus permanen. Lanjutkan?';
+
+        document.getElementById('confirm-hapus-btn').onclick = function () {
+            const form = document.getElementById('delete-form');
+            form.action = url;
+            form.submit();
+        };
+
+        document.getElementById('confirm-modal').classList.add('open');
+    }
+
+    function tutupModal() {
+        document.getElementById('confirm-modal').classList.remove('open');
+    }
+
+    // Klik backdrop → tutup
+    document.getElementById('confirm-modal').addEventListener('click', function (e) {
+        if (e.target === this) tutupModal();
+    });
+
+    // Tekan Escape → tutup
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') tutupModal();
+    });
+</script>
+@endpush

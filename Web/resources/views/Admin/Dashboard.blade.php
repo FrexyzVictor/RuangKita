@@ -16,6 +16,22 @@
     <p class="page-header-sub">0 total booking terdaftar</p>
 </div>
 
+<div class="card" style="margin-bottom:20px;">
+    <div class="card-body" style="text-align:center;">
+
+        <h3 style="margin-bottom:15px;">
+            QR Login Admin
+        </h3>
+
+        {!! QrCode::size(200)->generate(auth()->user()->qr_code) !!}
+
+        <p style="margin-top:12px;color:#6b7280;font-size:.85rem;">
+            Scan QR untuk login otomatis
+        </p>
+
+    </div>
+</div>
+
 {{-- Filter Bar --}}
 <div class="card" style="margin-bottom:20px; animation: fadeSlideUp 0.4s ease both;">
     <div class="card-body">

@@ -14,6 +14,69 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
+<<<<<<< HEAD:Web/database/seeders/AdminSeeder.php
+
+            [
+                'nama' => 'RuangKita',
+                'email' => 'ruangkitasmkn64@gmail.com',
+                'password' => Hash::make('adminruangkita'),
+                'role' => 'admin',
+                'anggota' => null,
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'ADMIN-RUANGKITA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'nama' => 'Guru RuangKita',
+                'email' => 'guru@ruangkita.com',
+                'password' => Hash::make('guru'),
+                'role' => 'user',
+                'anggota' => 'MPK',
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'GURU-RUANGKITA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'nama' => 'Siswa RuangKita',
+                'email' => 'siswa@ruangkita.com',
+                'password' => Hash::make('siswa'),
+                'role' => 'user',
+                'anggota' => 'OSIS',
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'SISWA-RUANGKITA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
+            [
+                'nama' => 'Pengunjung RuangKita',
+                'email' => 'pengunjung@ruangkita.com',
+                'password' => Hash::make('pengunjung'),
+                'role' => 'user',
+                'anggota' => 'PMR',
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'PENGUNJUNG-RUANGKITA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]
+
+=======
             'nama' => 'Admin RuangKita',
             'email' => 'admin@gmail.com',
             'password' => Hash::make('admin'),
@@ -28,7 +91,7 @@ class UserSeeder extends Seeder
         DB::table('users')->insert([
             'nama' => 'Guru RuangKita',
             'email' => 'guru@gmail.com',
-            'password' => Hash::make('guru'),
+            'password' => Hash::make('Guru'),
             'role' => 'Guru',
             'no_hp' => '085220007279',
             'alamat' => 'none',
@@ -47,6 +110,7 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'created_at' => now(),
             'updated_at' => now(),
+>>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b:Web/database/seeders/UserSeeder.php
         ]);
     }
 }

@@ -10,27 +10,39 @@ class FasilitasController extends Controller
 {
     public function index()
     {
-        // ambil semua data fasilitas + kategori
         $fasilitas = DB::table('fasilitas')
-            ->leftJoin('kategori_fasilitas', 'fasilitas.id_kategori', '=', 'kategori_fasilitas.id_kategori')
+            ->leftJoin(
+                'kategori_fasilitas',
+                'fasilitas.id_kategori',
+                '=',
+                'kategori_fasilitas.id_kategori'
+            )
             ->select(
                 'fasilitas.*',
                 'kategori_fasilitas.nama_kategori'
             )
             ->get();
 
-        return view('admin.fasilitas-index', compact('fasilitas'));
+        return view('admin.fasilitas.index', compact('fasilitas'));
     }
 
     public function create()
     {
         $kategori = DB::table('kategori_fasilitas')->get();
 
-        return view('admin.fasilitas-create', compact('kategori'));
+        return view('admin.fasilitas.create', compact('kategori'));
     }
 
     public function store(Request $request)
     {
+        $request->validate([
+            'id_kategori'    => 'required',
+            'nama_fasilitas' => 'required',
+            'harga'          => 'required',
+            'lokasi'         => 'required',
+            'status'         => 'required',
+        ]);
+    
         DB::table('fasilitas')->insert([
             'id_kategori'     => $request->id_kategori,
             'nama_fasilitas'  => $request->nama_fasilitas,
@@ -42,22 +54,27 @@ class FasilitasController extends Controller
             'created_at'      => now(),
             'updated_at'      => now(),
         ]);
-
+    
         return redirect()->route('admin.fasilitas.index');
     }
 
     public function show($id)
     {
         $fasilitas = DB::table('fasilitas')
-            ->leftJoin('kategori_fasilitas', 'fasilitas.id_kategori', '=', 'kategori_fasilitas.id_kategori')
+            ->leftJoin(
+                'kategori_fasilitas',
+                'fasilitas.id_kategori',
+                '=',
+                'kategori_fasilitas.id_kategori'
+            )
             ->select(
                 'fasilitas.*',
                 'kategori_fasilitas.nama_kategori'
             )
-            ->where('id_fasilitas', $id)
+            ->where('fasilitas.id_fasilitas', $id)
             ->first();
 
-        return view('admin.fasilitas-show', compact('fasilitas'));
+        return view('admin.fasilitas.show', compact('fasilitas'));
     }
 
     public function edit($id)
@@ -68,7 +85,10 @@ class FasilitasController extends Controller
 
         $kategori = DB::table('kategori_fasilitas')->get();
 
-        return view('admin.fasilitas-edit', compact('fasilitas', 'kategori'));
+        return view(
+            'admin.fasilitas.edit',
+            compact('fasilitas', 'kategori')
+        );
     }
 
     public function update(Request $request, $id)
@@ -86,7 +106,9 @@ class FasilitasController extends Controller
                 'updated_at'      => now(),
             ]);
 
-        return redirect()->route('admin.fasilitas.index');
+        return redirect()
+            ->route('admin.fasilitas.index')
+            ->with('success', 'Fasilitas berhasil diupdate');
     }
 
     public function destroy($id)
@@ -95,7 +117,9 @@ class FasilitasController extends Controller
             ->where('id_fasilitas', $id)
             ->delete();
 
-        return back();
+        return redirect()
+            ->route('admin.fasilitas.index')
+            ->with('success', 'Fasilitas berhasil dihapus');
     }
 
     public function toggleStatus($id)
@@ -104,6 +128,10 @@ class FasilitasController extends Controller
             ->where('id_fasilitas', $id)
             ->first();
 
+        if (!$fasilitas) {
+            return back()->with('error', 'Fasilitas tidak ditemukan');
+        }
+
         $statusBaru = $fasilitas->status == 'tersedia'
             ? 'maintenance'
             : 'tersedia';
@@ -111,9 +139,10 @@ class FasilitasController extends Controller
         DB::table('fasilitas')
             ->where('id_fasilitas', $id)
             ->update([
-                'status' => $statusBaru
+                'status' => $statusBaru,
+                'updated_at' => now(),
             ]);
 
-        return back();
+        return back()->with('success', 'Status fasilitas berhasil diubah');
     }
 }

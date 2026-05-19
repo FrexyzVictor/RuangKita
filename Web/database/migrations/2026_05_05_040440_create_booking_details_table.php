@@ -16,22 +16,18 @@ return new class extends Migration
             $table->unsignedBigInteger('id_fasilitas');
 
             $table->integer('qty')->default(1);
-
             $table->decimal('harga_satuan', 12, 2);
-
             $table->decimal('subtotal', 12, 2);
 
             $table->timestamps();
 
             $table->foreign('id_booking')
-                ->references('id_booking')
-                ->on('bookings')
-                ->onDelete('cascade');
+                  ->references('id_booking')->on('bookings')
+                  ->onDelete('cascade');
 
             $table->foreign('id_fasilitas')
-                ->references('id_fasilitas')
-                ->on('fasilitas')
-                ->onDelete('cascade');
+                  ->references('id_fasilitas')->on('fasilitas')
+                  ->onDelete('cascade');
         });
     }
 

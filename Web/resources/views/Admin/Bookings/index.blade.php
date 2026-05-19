@@ -1,363 +1,329 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Buat Booking Baru')
-@section('topbar-title', 'Buat Booking')
-@section('topbar-subtitle', 'Cari ruangan dan buat booking baru')
+@section('title', 'Daftar Booking')
+@section('topbar-title', 'Manajemen Booking')
+@section('topbar-subtitle', 'Kelola semua pemesanan fasilitas')
 
 @section('content')
+
+{{-- Toast container --}}
+<div id="toast-container" class="toast-container"></div>
+
+{{-- Flash Messages --}}
+@if(session('success'))
+<script>document.addEventListener('DOMContentLoaded',()=>RuangKita.toast(@json(session('success')),'success'));</script>
+@endif
+@if(session('error'))
+<script>document.addEventListener('DOMContentLoaded',()=>RuangKita.toast(@json(session('error')),'error'));</script>
+@endif
 
 {{-- Page Header --}}
 <div class="page-header animate-up">
     <div class="breadcrumb">
         <a href="{{ route('admin.dashboard') }}">Dashboard</a>
         <span class="breadcrumb-sep">›</span>
-        <a href="{{ route('admin.bookings.index') }}">Booking</a>
-        <span class="breadcrumb-sep">›</span>
-        <span class="breadcrumb-current">Buat Baru</span>
+        <span class="breadcrumb-current">Booking</span>
     </div>
-    <h1 class="page-header-title">Buat Booking Baru</h1>
-    <p class="page-header-sub">Pilih ruangan lalu isi detail pemesanan</p>
-</div>
-
-{{-- SEARCH HERO ── step 1 --}}
-<div class="search-hero animate-up-1">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;position:relative;z-index:1">
-        <div style="width:26px;height:26px;background:rgba(37,99,235,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:white;flex-shrink:0">1</div>
-        <div class="search-hero-title" style="margin:0">Cari Ruangan / Lapangan</div>
-    </div>
-    <p class="search-hero-sub">Temukan fasilitas yang tersedia sesuai kebutuhan Anda</p>
-
-    <div class="search-bar">
-        {{-- Text Search --}}
-        <div class="search-input-wrap">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <input type="text" id="room-search-input" placeholder="Cari nama ruangan atau lokasi...">
-        </div>
-
-        {{-- Category Filter --}}
-        <select id="room-category-filter" class="search-select">
-            <option value="">Semua Kategori</option>
-            @foreach($kategoris as $kategori)
-            <option value="{{ $kategori->id_kategori }}">{{ $kategori->nama_kategori }}</option>
-            @endforeach
-        </select>
-
-        {{-- Date --}}
-        <input type="date" id="room-date-filter" class="search-date"
-               min="{{ date('Y-m-d') }}" value="{{ date('Y-m-d') }}">
-
-        <button type="button" class="btn btn-primary" onclick="document.getElementById('room-search-input').dispatchEvent(new Event('input'))">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            Cari
-        </button>
-    </div>
-</div>
-
-{{-- ROOMS GRID --}}
-<div class="animate-up-2" style="margin-bottom:28px">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
-        <div style="font-size:.82rem;font-weight:600;color:var(--gray-500)">
-            {{ $fasilitasList->count() }} Fasilitas Tersedia
-        </div>
-        <div style="display:flex;gap:8px;font-size:.75rem;color:var(--gray-400)">
-            <span style="display:inline-flex;align-items:center;gap:5px">
-                <span style="width:8px;height:8px;background:var(--green);border-radius:50%;display:inline-block"></span>Tersedia
-            </span>
-            <span style="display:inline-flex;align-items:center;gap:5px">
-                <span style="width:8px;height:8px;background:var(--red);border-radius:50%;display:inline-block"></span>Terpakai
-            </span>
-            <span style="display:inline-flex;align-items:center;gap:5px">
-                <span style="width:8px;height:8px;background:var(--orange);border-radius:50%;display:inline-block"></span>Maintenance
-            </span>
-        </div>
-    </div>
-
-    <div class="rooms-grid" id="rooms-grid">
-        @forelse($fasilitasList as $fasilitas)
-        <div class="room-card animate-up"
-             style="animation-delay:{{ $loop->index * 0.06 }}s"
-             data-id="{{ $fasilitas->id_fasilitas }}"
-             data-name="{{ $fasilitas->nama_fasilitas }}"
-             data-price="{{ $fasilitas->harga }}"
-             data-category="{{ $fasilitas->id_kategori }}"
-             data-status="{{ $fasilitas->status }}"
-             data-capacity="{{ $fasilitas->kapasitas }}">
-
-            <div class="room-card-img">
-                @if($fasilitas->gambar ?? null)
-                    <img src="{{ asset('storage/'.$fasilitas->gambar) }}"
-                         alt="{{ $fasilitas->nama_fasilitas }}"
-                         style="width:100%;height:100%;object-fit:cover">
-                @else
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                        <polyline points="9 22 9 12 15 12 15 22" style="fill:none"/>
-                    </svg>
-                @endif
-
-                <span class="room-status-pill {{ $fasilitas->status }}">
-                    @switch($fasilitas->status)
-                        @case('tersedia') Tersedia @break
-                        @case('dibooking') Terpakai @break
-                        @case('maintenance') Maintenance @break
-                        @default {{ ucfirst($fasilitas->status) }}
-                    @endswitch
-                </span>
-            </div>
-
-            <div class="room-card-body">
-                <div class="room-name">{{ $fasilitas->nama_fasilitas }}</div>
-                <div class="room-location">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-                        <circle cx="12" cy="10" r="3"/>
-                    </svg>
-                    {{ $fasilitas->lokasi ?? 'Sekolah' }}
-                    @if($fasilitas->kategori)
-                        &middot; {{ $fasilitas->kategori->nama_kategori }}
-                    @endif
-                </div>
-
-                <div style="font-size:.75rem;color:var(--gray-500);margin-bottom:10px;line-height:1.5">
-                    {{ Str::limit($fasilitas->deskripsi ?? '', 70) }}
-                </div>
-
-                <div class="room-meta">
-                    <div class="room-cap">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
-                            <circle cx="9" cy="7" r="4"/>
-                        </svg>
-                        {{ $fasilitas->kapasitas ?? '—' }} orang
-                    </div>
-                    <div class="room-price">
-                        Rp {{ number_format($fasilitas->harga, 0, ',', '.') }}
-                        <span>/jam</span>
-                    </div>
-                </div>
-
-                <div class="room-select-btn" style="{{ $fasilitas->status !== 'tersedia' ? 'opacity:.4;cursor:not-allowed' : '' }}">
-                    @if($fasilitas->status === 'tersedia')
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="display:inline-block;vertical-align:-2px;margin-right:5px">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        Pilih Ruangan Ini
-                    @else
-                        Tidak Tersedia
-                    @endif
-                </div>
-            </div>
-        </div>
-        @empty
-        <div style="grid-column:1/-1" id="rooms-empty">
-            <div class="empty-state">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                </svg>
-                <p>Tidak ada fasilitas ditemukan</p>
-            </div>
-        </div>
-        @endforelse
-    </div>
-
-    {{-- Empty message (hidden by default, shown by JS) --}}
-    <div id="rooms-empty" style="display:none;grid-column:1/-1">
-        <div class="empty-state" style="padding:32px">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:40px;height:40px;margin:0 auto 12px;opacity:.3">
-                <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
-            </svg>
-            <p>Tidak ada fasilitas yang sesuai pencarian</p>
-        </div>
-    </div>
-</div>
-
-{{-- BOOKING FORM ── step 2 --}}
-<div id="booking-form-section">
-    <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px">
-        <div style="width:26px;height:26px;background:var(--blue-primary);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:800;color:white;flex-shrink:0">2</div>
-        <div style="font-size:1rem;font-weight:700;color:var(--gray-800)">Isi Detail Booking</div>
-    </div>
-
-    <form id="booking-submit-form" method="POST" action="{{ route('admin.bookings.store') }}"
-          class="booking-form-wrap">
-        @csrf
-        <input type="hidden" id="selected-room-id" name="id_fasilitas">
-
-        {{-- Left: Form --}}
-        <div class="card animate-up-3">
-            <div class="card-body">
-
-                {{-- User --}}
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                            <circle cx="12" cy="7" r="4"/>
-                        </svg>
-                        Data Pemesan
-                    </div>
-
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Nama Pengguna <span style="color:var(--red)">*</span></label>
-                            <select name="id_user" class="form-select" required>
-                                <option value="">-- Pilih Pengguna --</option>
-                                @foreach($users as $user)
-                                <option value="{{ $user->id_user }}" {{ old('id_user')==$user->id_user?'selected':'' }}>
-                                    {{ $user->nama }} ({{ ucfirst($user->role) }})
-                                </option>
-                                @endforeach
-                            </select>
-                            @error('id_user')<div class="form-error">{{ $message }}</div>@enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Tanggal Booking <span style="color:var(--red)">*</span></label>
-                            <input type="date" name="tanggal_booking" class="form-input"
-                                   value="{{ old('tanggal_booking', date('Y-m-d')) }}"
-                                   min="{{ date('Y-m-d') }}" required>
-                            @error('tanggal_booking')<div class="form-error">{{ $message }}</div>@enderror
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Waktu --}}
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
-                        </svg>
-                        Waktu Penggunaan
-                    </div>
-
-                    <div class="form-grid-2">
-                        <div class="form-group">
-                            <label class="form-label">Waktu Mulai <span style="color:var(--red)">*</span></label>
-                            <input type="datetime-local" id="input-start" name="tanggal_mulai"
-                                   class="form-input"
-                                   value="{{ old('tanggal_mulai') }}" required>
-                            @error('tanggal_mulai')<div class="form-error">{{ $message }}</div>@enderror
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Waktu Selesai <span style="color:var(--red)">*</span></label>
-                            <input type="datetime-local" id="input-end" name="tanggal_selesai"
-                                   class="form-input"
-                                   value="{{ old('tanggal_selesai') }}" required>
-                            @error('tanggal_selesai')<div class="form-error">{{ $message }}</div>@enderror
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Catatan --}}
-                <div class="form-section">
-                    <div class="form-section-title">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
-                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
-                            <polyline points="14 2 14 8 20 8"/>
-                        </svg>
-                        Catatan Tambahan
-                    </div>
-
-                    <textarea name="catatan" class="form-textarea"
-                              placeholder="Keperluan atau catatan khusus... (opsional)"
-                              rows="3">{{ old('catatan') }}</textarea>
-                </div>
-
-                <div style="display:flex;gap:10px;margin-top:4px">
-                    <a href="{{ route('admin.bookings.index') }}" class="btn btn-ghost">
-                        Batal
-                    </a>
-                    <button type="submit" class="btn btn-primary btn-lg" style="flex:1">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                            <polyline points="20 6 9 17 4 12"/>
-                        </svg>
-                        Simpan Booking
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        {{-- Right: Summary --}}
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-top:6px">
         <div>
-            <div class="summary-card animate-up-4">
-                <div class="summary-title">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
-                        <rect x="3" y="4" width="18" height="18" rx="2"/>
-                        <line x1="16" y1="2" x2="16" y2="6"/>
-                        <line x1="8" y1="2" x2="8" y2="6"/>
-                        <line x1="3" y1="10" x2="21" y2="10"/>
-                    </svg>
-                    Ringkasan Booking
-                </div>
-
-                {{-- Selected room --}}
-                <div id="summary-room-preview" style="display:none" class="selected-room-preview">
-                    <div class="selected-room-icon">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <div class="selected-room-name" id="summary-room-name">—</div>
-                        <div class="selected-room-price" id="summary-room-price">—</div>
-                    </div>
-                </div>
-
-                {{-- No room selected placeholder --}}
-                <div id="summary-no-room" style="background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.1);border-radius:var(--radius-md);padding:16px;text-align:center;margin-bottom:16px">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="width:32px;height:32px;opacity:.2;margin:0 auto 8px">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
-                    </svg>
-                    <div style="font-size:.75rem;color:rgba(255,255,255,.3)">Belum ada ruangan dipilih</div>
-                </div>
-
-                <div class="summary-line">
-                    <span class="summary-line-label">Durasi</span>
-                    <span class="summary-line-value" id="summary-duration">—</span>
-                </div>
-                <div class="summary-line">
-                    <span class="summary-line-label">Harga/jam</span>
-                    <span class="summary-line-value" id="summary-price-per-hour">—</span>
-                </div>
-                <div class="summary-line">
-                    <span class="summary-line-label">Status Awal</span>
-                    <span class="summary-line-value">
-                        <span class="status-badge status-warning" style="font-size:.65rem">Pending</span>
-                    </span>
-                </div>
-                <div class="summary-total">
-                    <span class="summary-total-label">Total Harga</span>
-                    <span class="summary-total-value" id="summary-total-value">Rp 0</span>
-                </div>
-
-                <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin-top:14px;line-height:1.5">
-                    * Harga dihitung berdasarkan durasi pemakaian. Konfirmasi pembayaran dilakukan secara terpisah.
-                </p>
-            </div>
+            <h1 class="page-header-title">Daftar Booking</h1>
+            <p class="page-header-sub">Total {{ $bookings->total() }} pemesanan ditemukan</p>
         </div>
-    </form>
+        <div style="display:flex;gap:8px;align-items:center">
+            <a href="{{ route('admin.bookings.create') }}" class="btn btn-primary">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="15" height="15">
+                    <line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+                Buat Booking
+            </a>
+        </div>
+    </div>
 </div>
+
+{{-- STAT CARDS --}}
+<div class="stats-grid animate-up-1">
+    <div class="stat-card">
+        <div class="stat-icon orange">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>
+            </svg>
+        </div>
+        <div>
+            <div class="stat-value" data-count="{{ $stats['pending'] }}">{{ $stats['pending'] }}</div>
+            <div class="stat-label">Menunggu Konfirmasi</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon red">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/>
+            </svg>
+        </div>
+        <div>
+            <div class="stat-value" data-count="{{ $stats['belum_lunas'] }}">{{ $stats['belum_lunas'] }}</div>
+            <div class="stat-label">Belum Lunas</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon green">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"/>
+            </svg>
+        </div>
+        <div>
+            <div class="stat-value" data-count="{{ $stats['lunas'] }}">{{ $stats['lunas'] }}</div>
+            <div class="stat-label">Lunas</div>
+        </div>
+    </div>
+    <div class="stat-card">
+        <div class="stat-icon blue">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+        </div>
+        <div>
+            <div class="stat-value" data-count="{{ $stats['hari_ini'] }}">{{ $stats['hari_ini'] }}</div>
+            <div class="stat-label">Booking Hari Ini</div>
+        </div>
+    </div>
+</div>
+
+{{-- FILTER CARD --}}
+<div class="card animate-up-2" style="margin-bottom:20px">
+    <div class="card-body" style="padding:16px 20px">
+        <form method="GET" action="{{ route('admin.bookings.index') }}">
+            <div class="filter-bar">
+                {{-- Search --}}
+                <div style="position:relative;flex:1;min-width:220px">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         style="position:absolute;left:12px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--gray-400);pointer-events:none">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" name="search" id="live-search"
+                           class="form-input" placeholder="Cari nama, email, fasilitas..."
+                           value="{{ request('search') }}"
+                           style="padding-left:38px">
+                </div>
+
+                {{-- Status --}}
+                <select name="status" class="form-select" style="min-width:160px">
+                    <option value="">Semua Status</option>
+                    @foreach([
+                        'pending'      => 'Pending',
+                        'dikonfirmasi' => 'Dikonfirmasi',
+                        'dp_dibayar'   => 'DP Dibayar',
+                        'belum_lunas'  => 'Belum Lunas',
+                        'lunas'        => 'Lunas',
+                        'selesai'      => 'Selesai',
+                        'dibatalkan'   => 'Dibatalkan',
+                    ] as $val => $label)
+                    <option value="{{ $val }}" {{ request('status') === $val ? 'selected' : '' }}>{{ $label }}</option>
+                    @endforeach
+                </select>
+
+                {{-- Role --}}
+                <select name="role" class="form-select" style="min-width:130px">
+                    <option value="">Semua Role</option>
+                    <option value="siswa" {{ request('role')==='siswa'?'selected':'' }}>Siswa</option>
+                    <option value="guru" {{ request('role')==='guru'?'selected':'' }}>Guru</option>
+                    <option value="tamu" {{ request('role')==='tamu'?'selected':'' }}>Tamu</option>
+                </select>
+
+                {{-- Tanggal --}}
+                <input type="date" name="tanggal" class="form-input"
+                       style="min-width:140px"
+                       value="{{ request('tanggal') }}">
+
+                <button type="submit" class="btn btn-primary">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    Filter
+                </button>
+
+                @if(request()->hasAny(['search','status','tanggal','role']))
+                <a href="{{ route('admin.bookings.index') }}" class="btn btn-ghost">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                        <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                    </svg>
+                    Reset
+                </a>
+                @endif
+            </div>
+        </form>
+    </div>
+</div>
+
+{{-- TABLE --}}
+<div class="card animate-up-3">
+    <div class="card-header">
+        <div class="card-title">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                <line x1="16" y1="2" x2="16" y2="6"/>
+                <line x1="8" y1="2" x2="8" y2="6"/>
+                <line x1="3" y1="10" x2="21" y2="10"/>
+            </svg>
+            Semua Booking
+        </div>
+        <span style="font-size:.75rem;color:var(--gray-400)">{{ $bookings->total() }} total</span>
+    </div>
+
+    <div style="overflow-x:auto">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>#ID</th>
+                    <th>Pemesan</th>
+                    <th>Fasilitas</th>
+                    <th>Tgl Booking</th>
+                    <th>Waktu Pakai</th>
+                    <th>Total</th>
+                    <th>Pembayaran</th>
+                    <th>Status</th>
+                    <th style="text-align:right">Aksi</th>
+                </tr>
+            </thead>
+            <tbody>
+                @forelse($bookings as $booking)
+                @php
+                    $statusMap = [
+                        'pending'      => 'status-warning',
+                        'dikonfirmasi' => 'status-info',
+                        'dp_dibayar'   => 'status-dp',
+                        'belum_lunas'  => 'status-danger',
+                        'lunas'        => 'status-success',
+                        'selesai'      => 'status-selesai',
+                        'dibatalkan'   => 'status-canceled',
+                    ];
+                    $badgeClass = $statusMap[$booking->status] ?? 'status-default';
+                @endphp
+                <tr data-searchable>
+                    <td>
+                        <span style="font-family:'DM Mono',monospace;font-size:.78rem;color:var(--blue-primary);font-weight:700">
+                            #{{ str_pad($booking->id_booking, 4, '0', STR_PAD_LEFT) }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:9px">
+                            <div style="width:32px;height:32px;background:linear-gradient(135deg,var(--blue-primary),#4F46E5);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;font-weight:700;color:white;flex-shrink:0">
+                                {{ strtoupper(substr($booking->user->nama ?? 'U', 0, 2)) }}
+                            </div>
+                            <div>
+                                <div style="font-weight:600;font-size:.82rem;color:var(--gray-800)">{{ $booking->user->nama ?? '-' }}</div>
+                                <div style="font-size:.7rem;color:var(--gray-400)">{{ ucfirst($booking->user->role ?? '') }}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-size:.82rem;font-weight:500;color:var(--gray-700)">
+                            {{ $booking->details->first()?->fasilitas?->nama_fasilitas ?? '—' }}
+                        </div>
+                        @if($booking->details->count() > 1)
+                        <div style="font-size:.7rem;color:var(--gray-400)">+{{ $booking->details->count()-1 }} lainnya</div>
+                        @endif
+                    </td>
+                    <td style="font-size:.8rem;color:var(--gray-600)">
+                        {{ \Carbon\Carbon::parse($booking->tanggal_booking)->locale('id')->isoFormat('D MMM YYYY') }}
+                    </td>
+                    <td>
+                        <div style="font-size:.78rem;color:var(--gray-700)">
+                            {{ \Carbon\Carbon::parse($booking->tanggal_mulai)->format('H:i') }}
+                            –
+                            {{ \Carbon\Carbon::parse($booking->tanggal_selesai)->format('H:i') }}
+                        </div>
+                        <div style="font-size:.7rem;color:var(--gray-400)">
+                            {{ \Carbon\Carbon::parse($booking->tanggal_mulai)->locale('id')->isoFormat('D MMM') }}
+                        </div>
+                    </td>
+                    <td>
+                        <div style="font-weight:700;font-size:.82rem;color:var(--gray-800)">
+                            Rp {{ number_format($booking->total_harga, 0, ',', '.') }}
+                        </div>
+                        @if($booking->isFree())
+                        <div style="font-size:.68rem;color:var(--green);font-weight:600">Gratis</div>
+                        @endif
+                    </td>
+                    <td>
+                        @if($booking->isTamu() && $booking->total_harga > 0)
+                        @php $persen = $booking->persenLunas(); @endphp
+                        <div style="width:80px">
+                            <div style="height:4px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-bottom:3px">
+                                <div style="height:100%;width:{{ $persen }}%;background:{{ $persen >= 100 ? 'var(--green)' : 'var(--blue-primary)' }};border-radius:inherit;transition:width .6s"></div>
+                            </div>
+                            <div style="font-size:.68rem;color:var(--gray-400)">{{ $persen }}% lunas</div>
+                        </div>
+                        @else
+                        <span style="font-size:.7rem;color:var(--gray-300)">—</span>
+                        @endif
+                    </td>
+                    <td>
+                        <span class="status-badge {{ $badgeClass }}">
+                            {{ $booking->statusLabel() }}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display:flex;gap:4px;justify-content:flex-end">
+                            <a href="{{ route('admin.bookings.show', $booking->id_booking) }}"
+                               class="btn btn-sm btn-ghost" title="Detail">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </a>
+                            @if(!in_array($booking->status, ['selesai','dibatalkan']))
+                            <a href="{{ route('admin.bookings.edit', $booking->id_booking) }}"
+                               class="btn btn-sm btn-ghost" title="Edit">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                            </a>
+                            @endif
+                            <button class="btn btn-sm btn-ghost"
+                                    style="color:var(--red)"
+                                    title="Hapus"
+                                    onclick="RuangKita.confirmAction('Hapus Booking #{{ str_pad($booking->id_booking,4,'0',STR_PAD_LEFT) }} secara permanen?','{{ route('admin.bookings.destroy',$booking->id_booking) }}','DELETE')">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                @empty
+                <tr>
+                    <td colspan="9">
+                        <div class="empty-state">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2">
+                                <rect x="3" y="4" width="18" height="18" rx="2"/>
+                                <line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/>
+                                <line x1="3" y1="10" x2="21" y2="10"/>
+                            </svg>
+                            <p>Belum ada data booking</p>
+                            <a href="{{ route('admin.bookings.create') }}" class="btn btn-primary btn-sm">Buat Booking Pertama</a>
+                        </div>
+                    </td>
+                </tr>
+                @endforelse
+            </tbody>
+        </table>
+    </div>
+
+    @if($bookings->hasPages())
+    <div style="padding:16px 20px;border-top:1px solid var(--gray-100)">
+        {{ $bookings->links('admin.partials.pagination') }}
+    </div>
+    @endif
+</div>
+
+{{-- Hidden action form --}}
+<form id="action-form" method="POST" style="display:none">
+    @csrf
+    <input type="hidden" name="_method" value="DELETE">
+</form>
 
 @endsection
-
-@push('scripts')
-<script>
-// Hide no-room placeholder when room selected
-document.addEventListener('DOMContentLoaded', () => {
-    const observer = new MutationObserver(() => {
-        const preview = document.getElementById('summary-room-preview');
-        const noRoom  = document.getElementById('summary-no-room');
-        if (preview && noRoom) {
-            noRoom.style.display = preview.style.display === 'none' ? '' : 'none';
-        }
-    });
-    const preview = document.getElementById('summary-room-preview');
-    if (preview) observer.observe(preview, { attributes: true, attributeFilter: ['style'] });
-});
-</script>
-@endpush

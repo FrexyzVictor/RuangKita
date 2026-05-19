@@ -3,27 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Pembayaran extends Model
 {
-    use HasFactory;
-
-    protected $table = 'pembayaran';
-
     protected $primaryKey = 'id_pembayaran';
 
     protected $fillable = [
         'id_booking',
-        'metode_pembayaran',
-        'jumlah_bayar',
-        'bukti_pembayaran',
-        'status_pembayaran',
-        'tanggal_bayar'
+        'jenis',
+        'jumlah',
+        'metode',
+        'bukti_transfer',
+        'dicatat_oleh',
+        'keterangan',
     ];
 
-    public function booking()
+    protected $casts = [
+        'jumlah' => 'decimal:2',
+    ];
+
+    public function booking(): BelongsTo
     {
-        return $this->belongsTo(Booking::class, 'id_booking');
+        return $this->belongsTo(Booking::class, 'id_booking', 'id_booking');
+    }
+
+    public function pencatat(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'dicatat_oleh', 'id_user');
     }
 }

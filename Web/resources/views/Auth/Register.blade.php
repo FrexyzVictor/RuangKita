@@ -318,7 +318,7 @@
                     <option value="admin"  {{ old('role') == 'admin'  ? 'selected' : '' }}>Admin</option>
                     <option value="guru"   {{ old('role') == 'guru'   ? 'selected' : '' }}>Guru</option>
                     <option value="siswa"  {{ old('role') == 'siswa'  ? 'selected' : '' }}>Siswa</option>
-                    <option value="tamu"   {{ old('role') == 'tamu'   ? 'selected' : '' }}>Tamu</option>
+                    <option value="pengunjung"   {{ old('role') == 'pengunjung'   ? 'selected' : '' }}>Pengunjung</option>
                 </select>
                 @error('role')
                     <div class="invalid-feedback">{{ $message }}</div>

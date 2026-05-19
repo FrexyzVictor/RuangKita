@@ -376,7 +376,7 @@
 
             <div class="role-badge">
                 <span class="role-dot"></span>
-                Tamu — akses terbatas
+                Pengunjung — akses terbatas
             </div>
         </div>
 

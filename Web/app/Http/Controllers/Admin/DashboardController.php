@@ -12,4 +12,4 @@ class DashboardController extends Controller
 
     return view('Admin.Dashboard', compact('bookings'));
 }
-}
+} //aa

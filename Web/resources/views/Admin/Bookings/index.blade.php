@@ -128,7 +128,7 @@
                     <option value="">Semua Role</option>
                     <option value="siswa" {{ request('role')==='siswa'?'selected':'' }}>Siswa</option>
                     <option value="guru" {{ request('role')==='guru'?'selected':'' }}>Guru</option>
-                    <option value="tamu" {{ request('role')==='tamu'?'selected':'' }}>Tamu</option>
+                    <option value="pengunjung" {{ request('role')==='pengunjung'?'selected':'' }}>Pengunjung</option>
                 </select>
 
                 {{-- Tanggal --}}
@@ -247,7 +247,7 @@
                         @endif
                     </td>
                     <td>
-                        @if($booking->isTamu() && $booking->total_harga > 0)
+                        @if($booking->isPengunjung() && $booking->total_harga > 0)
                         @php $persen = $booking->persenLunas(); @endphp
                         <div style="width:80px">
                             <div style="height:4px;background:var(--gray-100);border-radius:999px;overflow:hidden;margin-bottom:3px">

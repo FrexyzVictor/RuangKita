@@ -19,33 +19,22 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div>
-
-            <div class="small text-muted mb-1"
-                 style="font-size: 12px;">
-
-                <a href="/dashboard"
-                   class="text-decoration-none text-secondary">
-
-                    Dashboard
-
-                </a>
-
-                <span class="mx-1">›</span>
-
-                <span class="text-dark">
-                    Fasilitas
-                </span>
-
-            </div>
-
-            <h2 class="fw-bold mb-1">
+    <div class="page-header">
+    <div class="breadcrumb">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Fasilitas</span>
+</div>
+     <h2 class="fw-bold mb-1">
                 Daftar Fasilitas
             </h2>
 
-            <p class="text-muted mb-0">
+            <p class="page-header-sub">
                 Total {{ $fasilitas->count() }} fasilitas ditemukan
             </p>
+</div>
+
+           
 
         </div>
 
@@ -71,6 +60,7 @@
                         <tr>
 
                             <th>ID</th>
+                            <th>Gambar</th>
                             <th>Nama Fasilitas</th>
                             <th>Kategori</th>
                             <th>Harga</th>
@@ -94,7 +84,17 @@
                                 <td class="fw-semibold text-muted">
                                     #{{ $loop->iteration }}
                                 </td>
-
+                                <td>
+                                 @if($item->gambar)
+                                         <img src="{{ asset('storage/' . $item->gambar) }}"
+                                              alt="gambar fasilitas"
+                                              class="facility-image">
+                                     @else
+                                         <div class="no-image">
+                                             No Image
+                                         </div>
+                                     @endif
+                                    </td>
                                 <td>
 
                                     <div class="fw-semibold text-dark mb-1">
@@ -342,6 +342,25 @@ body {
     justify-content: center;
 }
 
+.facility-image{
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+}
+
+.no-image{
+    width: 80px;
+    height: 60px;
+    background: #f3f4f6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #9ca3af;
+}
 </style>
 
 <script>

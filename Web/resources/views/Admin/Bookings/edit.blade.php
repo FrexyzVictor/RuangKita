@@ -360,8 +360,8 @@
                     </div>
                 </div>
 
-                {{-- Progress pembayaran (khusus tamu) --}}
-                @if($booking->isTamu() && $booking->total_harga > 0)
+                {{-- Progress pembayaran (khusus pengunj) --}}
+                @if($booking->isPengunjung() && $booking->total_harga > 0)
                 <div class="detail-field">
                     <div class="detail-label">Progres Bayar</div>
                     <div style="margin-top:4px">
@@ -477,7 +477,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const roleMsg = {
         siswa : { text:'✓ Siswa mendapatkan fasilitas secara gratis.', color:'var(--green)',  bg:'var(--green-light)',  tc:'#065F46' },
         guru  : { text:'✓ Guru mendapatkan fasilitas secara gratis.',  color:'var(--green)',  bg:'var(--green-light)',  tc:'#065F46' },
-        tamu  : { text:'💳 Tamu dikenakan tarif sesuai durasi pemakaian.', color:'var(--orange)', bg:'var(--orange-light)', tc:'#92400E' },
+        pengunjung  : { text:'💳 Pengunjung dikenakan tarif sesuai durasi pemakaian.', color:'var(--orange)', bg:'var(--orange-light)', tc:'#92400E' },
     };
 
     function updateRoleUI() {
@@ -495,7 +495,7 @@ document.addEventListener('DOMContentLoaded', () => {
             roleInfoBox.style.display = 'none';
         }
 
-        const labels = { siswa:'Siswa (Gratis)', guru:'Guru (Gratis)', tamu:'Tamu (Berbayar)' };
+        const labels = { siswa:'Siswa (Gratis)', guru:'Guru (Gratis)', pengunjung:'Pengunjung (Berbayar)' };
         const el = document.getElementById('edit-summary-role');
         if (el) el.textContent = labels[role] ?? (role ? role.charAt(0).toUpperCase()+role.slice(1) : '—');
 

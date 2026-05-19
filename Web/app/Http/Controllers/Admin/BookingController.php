@@ -158,6 +158,57 @@ class BookingController extends Controller
         return view('admin.bookings.show', compact('booking'));
     }
 
+        /* ═══════════════════════════════════════════════════════════
+     * EDIT — form edit booking
+     * ═══════════════════════════════════════════════════════════ */
+    public function edit($id)
+    {
+        $booking = Booking::with([
+            'user',
+            'details.fasilitas'
+        ])->findOrFail($id);
+
+        $fasilitasList = Fasilitas::with('kategori')
+            ->orderBy('nama_fasilitas')
+            ->get();
+
+        $users = User::whereIn('role', ['siswa', 'guru', 'tamu'])
+            ->orderBy('nama')
+            ->get();
+
+        return view('admin.bookings.edit', compact(
+            'booking',
+            'fasilitasList',
+            'users'
+        ));
+    }
+
+    /* ═══════════════════════════════════════════════════════════
+     * UPDATE — simpan perubahan booking
+     * ═══════════════════════════════════════════════════════════ */
+    public function update(Request $request, $id)
+    {
+        $booking = Booking::findOrFail($id);
+
+        $validated = $request->validate([
+            'tanggal_booking' => 'required|date',
+            'tanggal_mulai'   => 'required|date',
+            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
+            'catatan'         => 'nullable|string|max:1000',
+        ]);
+
+        $booking->update([
+            'tanggal_booking' => $validated['tanggal_booking'],
+            'tanggal_mulai'   => $validated['tanggal_mulai'],
+            'tanggal_selesai' => $validated['tanggal_selesai'],
+            'catatan'         => $validated['catatan'] ?? null,
+        ]);
+
+        return redirect()
+            ->route('admin.bookings.show', $booking->id_booking)
+            ->with('success', 'Booking berhasil diperbarui.');
+    }
+    
     /* ═══════════════════════════════════════════════════════════
      * APPROVE — konfirmasi booking (pending → dikonfirmasi/lunas)
      * ═══════════════════════════════════════════════════════════ */

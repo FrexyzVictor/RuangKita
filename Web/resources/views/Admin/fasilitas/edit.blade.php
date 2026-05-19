@@ -6,27 +6,37 @@
 
 <div class="container-fluid py-4">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<div>
+        <div>
 
-    <div class="small text-muted mb-1"
-         style="font-size: 12px;">
+            <div class="small text-muted mb-1"
+                 style="font-size: 12px;">
 
-        <a href="/dashboard"
-           class="text-decoration-none text-secondary">
+                <a href="/dashboard"
+                   class="text-decoration-none text-secondary">
 
-            Dashboard
+                    Dashboard
 
-        </a>
+                </a>
 
-        <span class="mx-1">›</span>
+                <span class="mx-1">›</span>
 
-        <span class="text-dark">
-            Fasilitas
-        </span>
+                <span class="text-dark">
+                   Edit Fasilitas
+                </span>
 
-    </div>
+            </div>
+
+            <h2 class="fw-bold mb-1">
+                Edit Fasilitas
+            </h2>
+
+            <p class="text-muted mb-0">
+                Perbarui data fasilitas
+            </p>
+
+        </div>
 
         <a href="{{ route('admin.fasilitas.index') }}"
            class="btn btn-light border rounded-3 px-4">
@@ -42,7 +52,8 @@
         <div class="card-body p-4">
 
             <form action="{{ route('admin.fasilitas.update', $fasilitas->id_fasilitas) }}"
-                  method="POST">
+                  method="POST"
+                  enctype="multipart/form-data">
 
                 @csrf
                 @method('PUT')
@@ -167,6 +178,39 @@
 
                     </div>
 
+                    <!-- Upload Gambar -->
+                    <div class="col-md-12 mb-4">
+
+                        <label class="modern-label">
+                            Gambar Fasilitas
+                        </label>
+
+                        <input type="file"
+                               name="gambar"
+                               class="form-control modern-input"
+                               accept="image/*"
+                               onchange="previewImage(event)">
+
+                        <div class="mt-3">
+
+                            @if($fasilitas->gambar)
+
+                                <img id="preview"
+                                     src="{{ asset('storage/' . $fasilitas->gambar) }}"
+                                     class="preview-image">
+
+                            @else
+
+                                <img id="preview"
+                                     src=""
+                                     class="preview-image d-none">
+
+                            @endif
+
+                        </div>
+
+                    </div>
+
                     <div class="col-12 mb-4">
 
                         <label class="modern-label">
@@ -205,25 +249,19 @@
 <style>
 
 body {
-
     background: #f5f7fb;
 }
 
 .card {
-
     background: #ffffff;
 }
 
 .modern-label {
 
     font-size: 14px;
-
     font-weight: 600;
-
     color: #374151;
-
     margin-bottom: 10px;
-
     display: block;
 }
 
@@ -231,26 +269,18 @@ body {
 .modern-textarea {
 
     border: 1px solid #e5e7eb !important;
-
     border-radius: 14px !important;
-
     background: #ffffff !important;
-
     min-height: 52px;
-
     padding: 12px 16px !important;
-
     font-size: 14px !important;
-
     transition: all 0.25s ease;
-
     box-shadow: none !important;
 }
 
 .modern-textarea {
 
     min-height: 140px;
-
     resize: none;
 }
 
@@ -261,35 +291,49 @@ body {
 
     box-shadow:
         0 0 0 4px rgba(37,99,235,0.10) !important;
-
 }
 
 .modern-select-small {
-
     max-width: 260px;
-
 }
 
 .modern-button {
 
     height: 50px;
-
     border-radius: 14px;
-
     font-weight: 600;
-
     font-size: 15px;
-
     background: #2563eb;
-
     border: none;
 }
 
 .modern-button:hover {
-
     background: #1d4ed8;
 }
 
+/* Preview Gambar */
+.preview-image{
+    width: 240px;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 2px solid #e5e7eb;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
 </style>
+
+<script>
+
+function previewImage(event){
+
+    const preview = document.getElementById('preview');
+
+    preview.src = URL.createObjectURL(event.target.files[0]);
+
+    preview.classList.remove('d-none');
+}
+
+</script>
 
 @endsection

@@ -4,9 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk — RuangKita</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --primary: #1a56db;
@@ -42,7 +48,6 @@
             box-shadow: 0 4px 24px rgba(0,0,0,0.08);
         }
 
-        /* LEFT PANEL */
         .panel-left {
             background: linear-gradient(135deg, #1347bf 0%, #1a56db 50%, #2563eb 100%);
             padding: 3rem 2.5rem;
@@ -56,8 +61,10 @@
         .panel-left::before {
             content: '';
             position: absolute;
-            top: -60px; right: -60px;
-            width: 240px; height: 240px;
+            top: -60px;
+            right: -60px;
+            width: 240px;
+            height: 240px;
             border-radius: 50%;
             background: rgba(255,255,255,0.07);
         }
@@ -65,8 +72,10 @@
         .panel-left::after {
             content: '';
             position: absolute;
-            bottom: -40px; left: -40px;
-            width: 180px; height: 180px;
+            bottom: -40px;
+            left: -40px;
+            width: 180px;
+            height: 180px;
             border-radius: 50%;
             background: rgba(255,255,255,0.05);
         }
@@ -79,13 +88,20 @@
         }
 
         .brand-icon {
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             background: rgba(255,255,255,0.2);
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .brand-icon svg { width: 22px; height: 22px; fill: white; }
+        .brand-icon svg {
+            width: 22px;
+            height: 22px;
+            fill: white;
+        }
 
         .brand-name {
             font-size: 1.25rem;
@@ -133,13 +149,13 @@
         }
 
         .role-dot {
-            width: 6px; height: 6px;
+            width: 6px;
+            height: 6px;
             border-radius: 50%;
             background: rgba(255,255,255,0.7);
             flex-shrink: 0;
         }
 
-        /* RIGHT PANEL */
         .panel-right {
             padding: 2.5rem 2rem;
             display: flex;
@@ -232,7 +248,8 @@
         }
 
         .remember-me input[type="checkbox"] {
-            width: 15px; height: 15px;
+            width: 15px;
+            height: 15px;
             accent-color: var(--primary);
             cursor: pointer;
         }
@@ -244,7 +261,9 @@
             font-weight: 500;
         }
 
-        .forgot-link:hover { text-decoration: underline; }
+        .forgot-link:hover {
+            text-decoration: underline;
+        }
 
         .btn-primary {
             width: 100%;
@@ -260,8 +279,13 @@
             transition: background 0.15s, transform 0.1s;
         }
 
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-primary:active { transform: scale(0.99); }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
 
         .divider {
             display: flex;
@@ -272,7 +296,8 @@
             font-size: 0.78rem;
         }
 
-        .divider::before, .divider::after {
+        .divider::before,
+        .divider::after {
             content: '';
             flex: 1;
             height: 1px;
@@ -291,21 +316,32 @@
             text-decoration: none;
         }
 
-        .register-prompt a:hover { text-decoration: underline; }
+        .register-prompt a:hover {
+            text-decoration: underline;
+        }
 
         @media (max-width: 640px) {
-            .wrapper { grid-template-columns: 1fr; }
-            .panel-left { display: none; }
-            .panel-right { padding: 2rem 1.5rem; }
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-left {
+                display: none;
+            }
+
+            .panel-right {
+                padding: 2rem 1.5rem;
+            }
         }
     </style>
 </head>
+
 <body>
 
 <div class="wrapper">
 
-    {{-- LEFT PANEL --}}
     <div class="panel-left">
+
         <div class="brand">
             <div class="brand-icon">
                 <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -313,6 +349,7 @@
                     <polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/>
                 </svg>
             </div>
+
             <span class="brand-name">RuangKita</span>
         </div>
 
@@ -322,15 +359,31 @@
         </div>
 
         <div class="roles-list">
-            <div class="role-badge"><span class="role-dot"></span> Admin — kelola seluruh sistem</div>
-            <div class="role-badge"><span class="role-dot"></span> Guru — booking & jadwal</div>
-            <div class="role-badge"><span class="role-dot"></span> Siswa — cek fasilitas</div>
-            <div class="role-badge"><span class="role-dot"></span> Tamu — akses terbatas</div>
+            <div class="role-badge">
+                <span class="role-dot"></span>
+                Admin — kelola seluruh sistem
+            </div>
+
+            <div class="role-badge">
+                <span class="role-dot"></span>
+                Guru — booking & jadwal
+            </div>
+
+            <div class="role-badge">
+                <span class="role-dot"></span>
+                Siswa — cek fasilitas
+            </div>
+
+            <div class="role-badge">
+                <span class="role-dot"></span>
+                Tamu — akses terbatas
+            </div>
         </div>
+
     </div>
 
-    {{-- RIGHT PANEL --}}
     <div class="panel-right">
+
         <div class="form-header">
             <h2>Masuk ke akun</h2>
             <p>Gunakan email dan password yang terdaftar</p>
@@ -347,6 +400,7 @@
 
             <div class="form-group">
                 <label for="email">Email</label>
+
                 <input
                     type="email"
                     id="email"
@@ -357,13 +411,17 @@
                     autocomplete="email"
                     class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
                 >
+
                 @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 
             <div class="form-group">
                 <label for="password">Password</label>
+
                 <input
                     type="password"
                     id="password"
@@ -373,30 +431,53 @@
                     autocomplete="current-password"
                     class="{{ $errors->has('password') ? 'is-invalid' : '' }}"
                 >
+
                 @error('password')
-                    <div class="invalid-feedback">{{ $message }}</div>
+                    <div class="invalid-feedback">
+                        {{ $message }}
+                    </div>
                 @enderror
             </div>
 
             <div class="form-options">
+
                 <label class="remember-me">
-                    <input type="checkbox" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                    <input
+                        type="checkbox"
+                        name="remember"
+                        {{ old('remember') ? 'checked' : '' }}
+                    >
+
                     Ingat saya
                 </label>
+
                 @if (Route::has('password.request'))
-                    <a class="forgot-link" href="{{ route('password.request') }}">Lupa password?</a>
+                    <a class="forgot-link" href="{{ route('password.request') }}">
+                        Lupa password?
+                    </a>
                 @endif
+
             </div>
 
-            <button type="submit" class="btn-primary">Masuk</button>
+            <button type="submit" class="btn-primary">
+                Masuk
+            </button>
+
         </form>
 
         @if (Route::has('register'))
+
             <div class="divider">atau</div>
+
             <div class="register-prompt">
-                Belum punya akun? <a href="{{ route('register') }}">Daftar sekarang</a>
+                Belum punya akun?
+                <a href="{{ route('register') }}">
+                    Daftar sekarang
+                </a>
             </div>
+
         @endif
+
     </div>
 
 </div>

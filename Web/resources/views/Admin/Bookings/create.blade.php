@@ -380,7 +380,7 @@
 
                 <p style="font-size:.68rem;color:rgba(255,255,255,.25);margin-top:14px;line-height:1.5">
                     * Siswa &amp; guru mendapat fasilitas gratis.
-                      Harga tamu dihitung dari durasi pemakaian.
+                      Harga penggunjung dihitung dari durasi pemakaian.
                 </p>
             </div>
         </div>
@@ -402,7 +402,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const roleMsg = {
         siswa : { text:'✓ Siswa mendapatkan fasilitas secara gratis.', color:'var(--green)',  bg:'var(--green-light)',  tc:'#065F46' },
         guru  : { text:'✓ Guru mendapatkan fasilitas secara gratis.',  color:'var(--green)',  bg:'var(--green-light)',  tc:'#065F46' },
-        tamu  : { text:'💳 Tamu dikenakan tarif sesuai durasi pemakaian.', color:'var(--orange)', bg:'var(--orange-light)', tc:'#92400E' },
+        pengunjung  : { text:'💳 Pengunjung dikenakan tarif sesuai durasi pemakaian.', color:'var(--orange)', bg:'var(--orange-light)', tc:'#92400E' },
     };
 
     function updateRoleUI() {
@@ -420,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
             roleInfoBox.style.display = 'none';
         }
 
-        const labels = { siswa:'Siswa (Gratis)', guru:'Guru (Gratis)', tamu:'Tamu (Berbayar)' };
+        const labels = { siswa:'Siswa (Gratis)', guru:'Guru (Gratis)', penggunjung:'Tamu (Berbayar)' };
         if (summaryRole) summaryRole.textContent = labels[role] ?? '—';
 
         recalc();

@@ -62,7 +62,7 @@ class Booking extends Model
     /**
      * Apakah user pemesan adalah tamu? (wajib bayar)
      */
-    public function isTamu(): bool
+    public function isPengunjung(): bool
     {
         return $this->user?->role === 'tamu';
     }

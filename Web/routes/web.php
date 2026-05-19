@@ -49,28 +49,38 @@ Route::prefix('admin')
     ->middleware(['auth', 'admin'])
     ->group(function () {
 
-    // DASHBOARD
+    // Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
-    // ─── BOOKING ──────────────────────────────────────────────
-    Route::prefix('bookings')->name('bookings.')->group(function () {
+    // ─── BOOKING ───────────────────────────────────────────────
+  Route::prefix('bookings')->name('bookings.')->group(function () {
 
-        Route::get('/',    [BookingController::class, 'index'])->name('index');
-        Route::get('/create', [BookingController::class, 'create'])->name('create');
-        Route::post('/',   [BookingController::class, 'store'])->name('store');
-        Route::get('/{id}', [BookingController::class, 'show'])->name('show');
+    Route::get('/', [BookingController::class, 'index'])->name('index');
 
-        // Konfirmasi / aksi status
-        Route::patch('/{id}/approve',   [BookingController::class, 'approve'])->name('approve');
-        Route::patch('/{id}/cancel',    [BookingController::class, 'cancel'])->name('cancel');
-        Route::patch('/{id}/selesai',   [BookingController::class, 'selesai'])->name('selesai');
+    Route::get('/create', [BookingController::class, 'create'])->name('create');
 
-        // Pembayaran (tamu)
-        Route::post('/{id}/catat-dp',        [BookingController::class, 'catatDP'])->name('catat_dp');
-        Route::post('/{id}/catat-pelunasan', [BookingController::class, 'catatPelunasan'])->name('catat_pelunasan');
+    Route::post('/', [BookingController::class, 'store'])->name('store');
 
-        Route::delete('/{id}', [BookingController::class, 'destroy'])->name('destroy');
-    });
+    Route::get('/{id}', [BookingController::class, 'show'])->name('show');
+
+    Route::get('/{id}/edit', [BookingController::class, 'edit'])->name('edit');
+
+    Route::put('/{id}', [BookingController::class, 'update'])->name('update');
+
+    // Konfirmasi / aksi status
+    Route::patch('/{id}/approve', [BookingController::class, 'approve'])->name('approve');
+
+    Route::patch('/{id}/cancel', [BookingController::class, 'cancel'])->name('cancel');
+
+    Route::patch('/{id}/selesai', [BookingController::class, 'selesai'])->name('selesai');
+
+    // Pembayaran (tamu)
+    Route::post('/{id}/catat-dp', [BookingController::class, 'catatDP'])->name('catat_dp');
+
+    Route::post('/{id}/catat-pelunasan', [BookingController::class, 'catatPelunasan'])->name('catat_pelunasan');
+
+    Route::delete('/{id}', [BookingController::class, 'destroy'])->name('destroy');
+});
 
     // ─── FASILITAS ────────────────────────────────────────────
     Route::prefix('fasilitas')->name('fasilitas.')->group(function () {

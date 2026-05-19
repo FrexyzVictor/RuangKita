@@ -239,8 +239,8 @@
             </div>
         </div>
 
-        {{-- Riwayat Pembayaran (hanya tamu) --}}
-        @if($booking->isTamu())
+        {{-- Riwayat Pembayaran (hanya pengunjung) --}}
+        @if($booking->isPengunjung())
         <div class="card animate-up-2">
             <div class="card-header">
                 <div class="card-title">

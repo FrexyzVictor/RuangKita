@@ -6,9 +6,17 @@
 
 <div class="card">
 
-    <div class="card-header">
-        <h3>Daftar Fasilitas</h3>
-    </div>
+<div class="card-header"
+     style="display:flex;justify-content:space-between;align-items:center;">
+
+    <h3>Daftar Fasilitas</h3>
+
+    <a href="{{ route('admin.fasilitas.create') }}"
+       class="btn btn-primary">
+        + Tambah Fasilitas
+    </a>
+
+</div>
 
     <div class="card-body">
 

@@ -2,10 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class AdminSeeder extends Seeder
 {
@@ -23,10 +22,10 @@ class AdminSeeder extends Seeder
             'alamat' => 'none',
             'email_verified_at' => now(),
             'created_at' => now(),
-            "updated_at" => now(),
+            'updated_at' => now(),
         ]);
-        
-         DB::table('users')->insert([
+
+        DB::table('users')->insert([
             'nama' => 'Guru RuangKita',
             'email' => 'guru@ruangkita.com',
             'password' => Hash::make('guru'),
@@ -35,7 +34,7 @@ class AdminSeeder extends Seeder
             'alamat' => 'none',
             'email_verified_at' => now(),
             'created_at' => now(),
-            "updated_at" => now(),
+            'updated_at' => now(),
         ]);
 
         DB::table('users')->insert([
@@ -47,8 +46,7 @@ class AdminSeeder extends Seeder
             'alamat' => 'none',
             'email_verified_at' => now(),
             'created_at' => now(),
-            "updated_at" => now(),
+            'updated_at' => now(),
         ]);
-
     }
 }

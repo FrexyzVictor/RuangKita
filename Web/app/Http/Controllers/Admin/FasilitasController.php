@@ -38,8 +38,9 @@ class FasilitasController extends Controller
         $request->validate([
             'id_kategori'    => 'required',
             'nama_fasilitas' => 'required',
-            'harga'          => 'required',
+            'harga'          => 'required|numeric|min:1',
             'lokasi'         => 'required',
+            'kapasitas'      => 'required|integer|min:1',
             'status'         => 'required',
         ]);
     
@@ -55,7 +56,9 @@ class FasilitasController extends Controller
             'updated_at'      => now(),
         ]);
     
-        return redirect()->route('admin.fasilitas.index');
+        return redirect()
+        ->route('admin.fasilitas.index')
+        ->with('success', 'Fasilitas berhasil ditambahkan');
     }
 
     public function show($id)
@@ -93,6 +96,15 @@ class FasilitasController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'id_kategori'    => 'required',
+            'nama_fasilitas' => 'required',
+            'harga'          => 'required|numeric|min:1',
+            'lokasi'         => 'required',
+            'kapasitas'      => 'required|integer|min:1',
+            'status'         => 'required',
+        ]);
+    
         DB::table('fasilitas')
             ->where('id_fasilitas', $id)
             ->update([
@@ -105,8 +117,8 @@ class FasilitasController extends Controller
                 'status'          => $request->status,
                 'updated_at'      => now(),
             ]);
-
-        return redirect()
+    
+            return redirect()
             ->route('admin.fasilitas.index')
             ->with('success', 'Fasilitas berhasil diupdate');
     }
@@ -116,12 +128,11 @@ class FasilitasController extends Controller
         DB::table('fasilitas')
             ->where('id_fasilitas', $id)
             ->delete();
-
-        return redirect()
-            ->route('admin.fasilitas.index')
+    
+        return back()
             ->with('success', 'Fasilitas berhasil dihapus');
     }
-
+    
     public function toggleStatus($id)
     {
         $fasilitas = DB::table('fasilitas')
@@ -139,7 +150,7 @@ class FasilitasController extends Controller
         DB::table('fasilitas')
             ->where('id_fasilitas', $id)
             ->update([
-                'status' => $statusBaru,
+                'status' => $statusBaru,   
                 'updated_at' => now(),
             ]);
 

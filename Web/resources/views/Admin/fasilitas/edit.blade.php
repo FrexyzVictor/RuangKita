@@ -1,24 +1,32 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Fasilitas')
+@section('title', 'Edit Fasilitas')
 
 @section('content')
 
 <div class="container-fluid py-4">
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
+<div class="d-flex justify-content-between align-items-center mb-4">
 
-        <div>
+<div>
 
-            <h2 class="fw-bold mb-1">
-                Tambah Fasilitas
-            </h2>
+    <div class="small text-muted mb-1"
+         style="font-size: 12px;">
 
-            <p class="text-muted mb-0">
-                Tambahkan data fasilitas baru
-            </p>
+        <a href="/dashboard"
+           class="text-decoration-none text-secondary">
 
-        </div>
+            Dashboard
+
+        </a>
+
+        <span class="mx-1">›</span>
+
+        <span class="text-dark">
+            Fasilitas
+        </span>
+
+    </div>
 
         <a href="{{ route('admin.fasilitas.index') }}"
            class="btn btn-light border rounded-3 px-4">
@@ -33,10 +41,11 @@
 
         <div class="card-body p-4">
 
-            <form action="{{ route('admin.fasilitas.store') }}"
+            <form action="{{ route('admin.fasilitas.update', $fasilitas->id_fasilitas) }}"
                   method="POST">
 
                 @csrf
+                @method('PUT')
 
                 <div class="row">
 
@@ -50,14 +59,13 @@
                                 class="form-select modern-input modern-select-small"
                                 required>
 
-                            <option value="">
-                                Pilih kategori
-                            </option>
-
                             @foreach($kategori as $item)
 
-                                <option value="{{ $item->id_kategori }}">
+                                <option value="{{ $item->id_kategori }}"
+                                    {{ $fasilitas->id_kategori == $item->id_kategori ? 'selected' : '' }}>
+
                                     {{ $item->nama_kategori }}
+
                                 </option>
 
                             @endforeach
@@ -75,7 +83,7 @@
                         <input type="text"
                                name="nama_fasilitas"
                                class="form-control modern-input"
-                               placeholder="Masukkan nama fasilitas"
+                               value="{{ $fasilitas->nama_fasilitas }}"
                                required>
 
                     </div>
@@ -89,7 +97,7 @@
                         <input type="number"
                                name="harga"
                                class="form-control modern-input"
-                               placeholder="Masukkan harga"
+                               value="{{ $fasilitas->harga }}"
                                min="1"
                                required>
 
@@ -104,7 +112,7 @@
                         <input type="text"
                                name="lokasi"
                                class="form-control modern-input"
-                               placeholder="Masukkan lokasi"
+                               value="{{ $fasilitas->lokasi }}"
                                required>
 
                     </div>
@@ -118,7 +126,7 @@
                         <input type="number"
                                name="kapasitas"
                                class="form-control modern-input"
-                               placeholder="Minimal 1"
+                               value="{{ $fasilitas->kapasitas }}"
                                min="1"
                                required>
 
@@ -134,16 +142,25 @@
                                 class="form-select modern-input modern-select-small"
                                 required>
 
-                            <option value="tersedia">
+                            <option value="tersedia"
+                                {{ $fasilitas->status == 'tersedia' ? 'selected' : '' }}>
+
                                 Tersedia
+
                             </option>
 
-                            <option value="maintenance">
+                            <option value="maintenance"
+                                {{ $fasilitas->status == 'maintenance' ? 'selected' : '' }}>
+
                                 Maintenance
+
                             </option>
 
-                            <option value="tidak_tersedia">
+                            <option value="tidak_tersedia"
+                                {{ $fasilitas->status == 'tidak_tersedia' ? 'selected' : '' }}>
+
                                 Tidak tersedia
+
                             </option>
 
                         </select>
@@ -159,19 +176,19 @@
                         <textarea name="deskripsi"
                                   rows="5"
                                   class="form-control modern-textarea"
-                                  placeholder="Masukkan deskripsi fasilitas"></textarea>
+                                  placeholder="Masukkan deskripsi fasilitas">{{ $fasilitas->deskripsi }}</textarea>
 
                     </div>
 
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end gap-3">
 
                     <button type="submit"
                             class="btn btn-primary modern-button px-5"
-                            onclick="return confirm('Simpan fasilitas baru?')">
+                            onclick="return confirm('Yakin ingin update fasilitas ini?')">
 
-                        Simpan Fasilitas
+                        Update Fasilitas
 
                     </button>
 

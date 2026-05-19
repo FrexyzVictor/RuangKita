@@ -1,6 +1,6 @@
 @extends('admin.layouts.app')
 
-@section('title', 'Tambah Fasilitas')
+@section('title', 'Edit Fasilitas')
 
 @section('content')
 
@@ -9,13 +9,33 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
 
         <div>
+
+            <div class="small text-muted mb-1"
+                 style="font-size: 12px;">
+
+                <a href="/dashboard"
+                   class="text-decoration-none text-secondary">
+
+                    Dashboard
+
+                </a>
+
+                <span class="mx-1">›</span>
+
+                <span class="text-dark">
+                   Edit Fasilitas
+                </span>
+
+            </div>
+
             <h2 class="fw-bold mb-1">
-                Tambah Fasilitas
+                Edit Fasilitas
             </h2>
 
             <p class="text-muted mb-0">
-                Tambahkan data fasilitas baru
+                Perbarui data fasilitas
             </p>
+
         </div>
 
         <a href="{{ route('admin.fasilitas.index') }}"
@@ -31,11 +51,12 @@
 
         <div class="card-body p-4">
 
-            <form action="{{ route('admin.fasilitas.store') }}"
+            <form action="{{ route('admin.fasilitas.update', $fasilitas->id_fasilitas) }}"
                   method="POST"
                   enctype="multipart/form-data">
 
                 @csrf
+                @method('PUT')
 
                 <div class="row">
 
@@ -49,14 +70,13 @@
                                 class="form-select modern-input modern-select-small"
                                 required>
 
-                            <option value="">
-                                Pilih kategori
-                            </option>
-
                             @foreach($kategori as $item)
 
-                                <option value="{{ $item->id_kategori }}">
+                                <option value="{{ $item->id_kategori }}"
+                                    {{ $fasilitas->id_kategori == $item->id_kategori ? 'selected' : '' }}>
+
                                     {{ $item->nama_kategori }}
+
                                 </option>
 
                             @endforeach
@@ -74,7 +94,7 @@
                         <input type="text"
                                name="nama_fasilitas"
                                class="form-control modern-input"
-                               placeholder="Masukkan nama fasilitas"
+                               value="{{ $fasilitas->nama_fasilitas }}"
                                required>
 
                     </div>
@@ -88,7 +108,7 @@
                         <input type="number"
                                name="harga"
                                class="form-control modern-input"
-                               placeholder="Masukkan harga"
+                               value="{{ $fasilitas->harga }}"
                                min="1"
                                required>
 
@@ -103,7 +123,7 @@
                         <input type="text"
                                name="lokasi"
                                class="form-control modern-input"
-                               placeholder="Masukkan lokasi"
+                               value="{{ $fasilitas->lokasi }}"
                                required>
 
                     </div>
@@ -117,7 +137,7 @@
                         <input type="number"
                                name="kapasitas"
                                class="form-control modern-input"
-                               placeholder="Minimal 1"
+                               value="{{ $fasilitas->kapasitas }}"
                                min="1"
                                required>
 
@@ -133,16 +153,25 @@
                                 class="form-select modern-input modern-select-small"
                                 required>
 
-                            <option value="tersedia">
+                            <option value="tersedia"
+                                {{ $fasilitas->status == 'tersedia' ? 'selected' : '' }}>
+
                                 Tersedia
+
                             </option>
 
-                            <option value="maintenance">
+                            <option value="maintenance"
+                                {{ $fasilitas->status == 'maintenance' ? 'selected' : '' }}>
+
                                 Maintenance
+
                             </option>
 
-                            <option value="tidak_tersedia">
+                            <option value="tidak_tersedia"
+                                {{ $fasilitas->status == 'tidak_tersedia' ? 'selected' : '' }}>
+
                                 Tidak tersedia
+
                             </option>
 
                         </select>
@@ -163,9 +192,21 @@
                                onchange="previewImage(event)">
 
                         <div class="mt-3">
-                            <img id="preview"
-                                 src=""
-                                 class="preview-image d-none">
+
+                            @if($fasilitas->gambar)
+
+                                <img id="preview"
+                                     src="{{ asset('storage/' . $fasilitas->gambar) }}"
+                                     class="preview-image">
+
+                            @else
+
+                                <img id="preview"
+                                     src=""
+                                     class="preview-image d-none">
+
+                            @endif
+
                         </div>
 
                     </div>
@@ -179,19 +220,19 @@
                         <textarea name="deskripsi"
                                   rows="5"
                                   class="form-control modern-textarea"
-                                  placeholder="Masukkan deskripsi fasilitas"></textarea>
+                                  placeholder="Masukkan deskripsi fasilitas">{{ $fasilitas->deskripsi }}</textarea>
 
                     </div>
 
                 </div>
 
-                <div class="d-flex justify-content-end">
+                <div class="d-flex justify-content-end gap-3">
 
                     <button type="submit"
                             class="btn btn-primary modern-button px-5"
-                            onclick="return confirm('Simpan fasilitas baru?')">
+                            onclick="return confirm('Yakin ingin update fasilitas ini?')">
 
-                        Simpan Fasilitas
+                        Update Fasilitas
 
                     </button>
 
@@ -216,6 +257,7 @@ body {
 }
 
 .modern-label {
+
     font-size: 14px;
     font-weight: 600;
     color: #374151;
@@ -237,6 +279,7 @@ body {
 }
 
 .modern-textarea {
+
     min-height: 140px;
     resize: none;
 }
@@ -270,8 +313,8 @@ body {
 
 /* Preview Gambar */
 .preview-image{
-    width: 220px;
-    height: 150px;
+    width: 240px;
+    height: 160px;
     object-fit: cover;
     border-radius: 16px;
     border: 2px solid #e5e7eb;

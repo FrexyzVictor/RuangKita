@@ -4,143 +4,393 @@
 
 @section('content')
 
-<div class="card">
+<div class="container-fluid py-4">
 
-<div class="card-header"
-     style="display:flex;justify-content:space-between;align-items:center;">
+@if(session('success'))
 
-    <h3>Daftar Fasilitas</h3>
+<div id="alertSuccess"
+     class="alert alert-success border-0 shadow-sm rounded-4 mb-4">
 
-    <a href="{{ route('admin.fasilitas.create') }}"
-       class="btn btn-primary">
-        + Tambah Fasilitas
-    </a>
+    {{ session('success') }}
 
 </div>
 
-    <div class="card-body">
+@endif
 
-        <table class="data-table">
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nama</th>
-                    <th>Kategori</th>
-                    <th>Harga</th>
-                    <th>Lokasi</th>
-                    <th>Kapasitas</th>
-                    <th>Status</th>
-                    <th>Aksi</th>
-                </tr>
-            </thead>
+    <div class="page-header">
+    <div class="breadcrumb">
+        <a href="{{ route('admin.dashboard') }}">Dashboard</a>
+        <span class="breadcrumb-sep">›</span>
+        <span class="breadcrumb-current">Fasilitas</span>
+</div>
+     <h2 class="fw-bold mb-1">
+                Daftar Fasilitas
+            </h2>
 
-            <tbody>
+            <p class="page-header-sub">
+                Total {{ $fasilitas->count() }} fasilitas ditemukan
+            </p>
+</div>
 
-                @forelse($fasilitas as $item)
+           
 
-                <tr>
+        </div>
 
-                    <td>#{{ $item->id_fasilitas }}</td>
+        <a href="{{ route('admin.fasilitas.create') }}"
+           class="btn btn-primary rounded-3 px-4 py-2">
 
-                    <td>
-                        <div style="font-weight:600">
-                            {{ $item->nama_fasilitas }}
-                        </div>
+            + Tambah Fasilitas
 
-                        <div style="font-size:.75rem;color:gray">
-                            {{ $item->deskripsi }}
-                        </div>
-                    </td>
+        </a>
 
-                    <td>
-                        {{ $item->nama_kategori }}
-                    </td>
+    </div>
 
-                    <td>
-                        Rp {{ number_format($item->harga,0,',','.') }}
-                    </td>
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden">
 
-                    <td>
-                        {{ $item->lokasi }}
-                    </td>
+        <div class="card-body p-4">
 
-                    <td>
-                        {{ $item->kapasitas }}
-                    </td>
+            <div class="table-responsive">
 
-                    <td>
+                <table class="table modern-table align-middle">
 
-                        @if($item->status == 'tersedia')
+                    <thead>
 
-                            <span class="status-badge status-success">
-                                Tersedia
-                            </span>
+                        <tr>
 
-                        @elseif($item->status == 'maintenance')
+                            <th>ID</th>
+                            <th>Gambar</th>
+                            <th>Nama Fasilitas</th>
+                            <th>Kategori</th>
+                            <th>Harga</th>
+                            <th>Lokasi</th>
+                            <th>Kapasitas</th>
+                            <th>Status</th>
+                            <th class="text-center">
+                                Aksi
+                            </th>
 
-                            <span class="status-badge status-warning">
-                                Maintenance
-                            </span>
+                        </tr>
 
-                        @else
+                    </thead>
 
-                            <span class="status-badge status-danger">
-                                Tidak Tersedia
-                            </span>
+                    <tbody>
 
-                        @endif
+                        @forelse($fasilitas as $item)
 
-                    </td>
+                            <tr>
 
-                    <td>
+                                <td class="fw-semibold text-muted">
+                                    #{{ $loop->iteration }}
+                                </td>
+                                <td>
+                                 @if($item->gambar)
+                                         <img src="{{ asset('storage/' . $item->gambar) }}"
+                                              alt="gambar fasilitas"
+                                              class="facility-image">
+                                     @else
+                                         <div class="no-image">
+                                             No Image
+                                         </div>
+                                     @endif
+                                    </td>
+                                <td>
 
-                        <div style="display:flex;gap:5px">
+                                    <div class="fw-semibold text-dark mb-1">
+                                        {{ $item->nama_fasilitas }}
+                                    </div>
 
-                            <a href="{{ route('admin.fasilitas.show', $item->id_fasilitas) }}"
-                               class="btn btn-sm btn-outline">
-                                Detail
-                            </a>
+                                    <div class="small text-muted">
+                                        {{ $item->deskripsi }}
+                                    </div>
 
-                            <a href="{{ route('admin.fasilitas.edit', $item->id_fasilitas) }}"
-                               class="btn btn-sm btn-primary">
-                                Edit
-                            </a>
+                                </td>
 
-                            <form action="{{ route('admin.fasilitas.destroy', $item->id_fasilitas) }}"
-                                  method="POST">
+                                <td>
+                                    {{ $item->nama_kategori }}
+                                </td>
 
-                                @csrf
-                                @method('DELETE')
+                                <td class="fw-semibold text-primary">
+                                    Rp {{ number_format($item->harga,0,',','.') }}
+                                </td>
 
-                                <button class="btn btn-sm btn-danger">
-                                    Hapus
-                                </button>
+                                <td>
+                                    {{ $item->lokasi }}
+                                </td>
 
-                            </form>
+                                <td>
+                                    {{ $item->kapasitas }}
+                                </td>
 
-                        </div>
+                                <td>
 
-                    </td>
+                                    @if($item->status == 'tersedia')
 
-                </tr>
+                                        <span class="modern-badge badge-success">
+                                            Tersedia
+                                        </span>
 
-                @empty
+                                    @elseif($item->status == 'maintenance')
 
-                <tr>
-                    <td colspan="8" align="center">
-                        Belum ada fasilitas
-                    </td>
-                </tr>
+                                        <span class="modern-badge badge-warning">
+                                            Maintenance
+                                        </span>
 
-                @endforelse
+                                    @else
 
-            </tbody>
+                                        <span class="modern-badge badge-danger">
+                                            Tidak Tersedia
+                                        </span>
 
-        </table>
+                                    @endif
+
+                                </td>
+
+                                <td class="text-center">
+
+                                    <div class="aksi-wrapper">
+
+                                        <a href="{{ route('admin.fasilitas.show', $item->id_fasilitas) }}"
+                                           class="btn btn-light btn-sm rounded-3">
+
+                                            Detail
+
+                                        </a>
+
+                                        <a href="{{ route('admin.fasilitas.edit', $item->id_fasilitas) }}"
+                                           class="btn btn-primary btn-sm rounded-3">
+
+                                            Edit
+
+                                        </a>
+
+                                        <form action="{{ route('admin.fasilitas.destroy', $item->id_fasilitas) }}"
+                                              method="POST">
+
+                                            @csrf
+                                            @method('DELETE')
+
+                                            <button type="submit"
+                                                    class="btn btn-danger btn-sm rounded-3"
+                                                    onclick="return confirm('Yakin ingin menghapus fasilitas ini?')">
+
+                                                Hapus
+
+                                            </button>
+
+                                        </form>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        @empty
+
+                            <tr>
+
+                                <td colspan="8"
+                                    class="text-center py-5 text-muted">
+
+                                    Belum ada fasilitas
+
+                                </td>
+
+                            </tr>
+
+                        @endforelse
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </div>
 
     </div>
 
 </div>
+
+<style>
+
+body {
+
+    background: #f5f7fb;
+}
+
+.modern-table thead th {
+
+    border: none !important;
+
+    font-size: 13px;
+
+    color: #6b7280;
+
+    font-weight: 700;
+
+    padding-bottom: 18px;
+
+    white-space: nowrap;
+}
+
+.modern-table tbody tr {
+
+    border-top: 1px solid #f1f5f9;
+
+    transition: 0.2s ease;
+}
+
+.modern-table tbody tr:hover {
+
+    background: #f8fafc;
+}
+
+.modern-table tbody td {
+
+    border: none !important;
+
+    padding: 18px 10px;
+
+    vertical-align: middle;
+}
+
+.modern-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-width: 120px;
+
+    height: 38px;
+
+    border-radius: 999px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    letter-spacing: .2px;
+}
+
+.badge-success {
+
+    background: rgba(34,197,94,.12);
+
+    color: #16a34a;
+}
+
+.badge-warning {
+
+    background: rgba(245,158,11,.15);
+
+    color: #d97706;
+}
+
+.badge-danger {
+
+    background: rgba(239,68,68,.12);
+
+    color: #dc2626;
+}
+
+.btn {
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+.alert {
+
+    font-size: 14px;
+}
+
+.aksi-wrapper {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 8px;
+
+    white-space: nowrap;
+}
+
+.aksi-wrapper form {
+
+    margin: 0;
+}
+
+.aksi-wrapper .btn {
+
+    min-width: 70px;
+
+    height: 34px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+}
+
+.facility-image{
+    width: 80px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 2px solid #e5e7eb;
+}
+
+.no-image{
+    width: 80px;
+    height: 60px;
+    background: #f3f4f6;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #9ca3af;
+}
+</style>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function () {
+
+    const alertBox = document.getElementById('alertSuccess');
+
+    if(alertBox){
+
+        setTimeout(() => {
+
+            alertBox.style.transition = "all 0.5s ease";
+
+            alertBox.style.opacity = "0";
+
+            alertBox.style.transform = "translateY(-10px)";
+
+            setTimeout(() => {
+
+                alertBox.remove();
+
+            }, 500);
+
+        }, 2000);
+
+    }
+
+});
+
+</script>
 
 @endsection

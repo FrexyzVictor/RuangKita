@@ -13,7 +13,7 @@ return new class extends Migration
             $table->string('nama');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('role')->default('tamu');   // default 'tamu'
+            $table->string('role')->default('guest');   // default 'guest'
             $table->string('no_hp')->nullable();
             $table->text('alamat')->nullable();
             $table->timestamp('email_verified_at')->nullable();

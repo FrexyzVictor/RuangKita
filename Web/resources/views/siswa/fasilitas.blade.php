@@ -267,7 +267,12 @@
                         </div>
 
                         {{-- Button --}}
-                        <button onclick="openModal('{{ $item->nama }}', '{{ asset('storage/' . $item->gambar) }}', '{{ $item->deskripsi }}')"
+                        <button onclick="openModal(
+                                '{{ $item->id }}',
+                                '{{ $item->nama }}',
+                                '{{ asset('storage/' . $item->gambar) }}',
+                                '{{ $item->deskripsi }}'
+                                )"
                                 class="bg-sky-500 hover:bg-sky-600 text-white px-5 py-2 rounded-xl text-sm font-semibold transition">
 
                             Detail
@@ -318,12 +323,13 @@
                class="text-gray-500 leading-relaxed mb-6">
             </p>
 
-            <button class="bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-2xl font-semibold transition">
+            <a id="bookingLink"
+   href="#"
+   class="inline-block bg-sky-500 hover:bg-sky-600 text-white px-8 py-3 rounded-2xl font-semibold transition">
 
-                Booking Sekarang
+    Booking Sekarang
 
-            </button>
-
+</a>
         </div>
 
     </div>
@@ -406,15 +412,17 @@
 {{-- ================= SCRIPT ================= --}}
 <script>
 
-    function openModal(title, image, desc)
-    {
-        document.getElementById('modal').classList.remove('hidden');
-        document.getElementById('modal').classList.add('flex');
+    function openModal(id, title, image, desc)
+{
+    document.getElementById('modal').classList.remove('hidden');
+    document.getElementById('modal').classList.add('flex');
 
-        document.getElementById('modalTitle').innerText = title;
-        document.getElementById('modalImage').src = image;
-        document.getElementById('modalDesc').innerText = desc;
-    }
+    document.getElementById('modalTitle').innerText = title;
+    document.getElementById('modalImage').src = image;
+    document.getElementById('modalDesc').innerText = desc;
+
+    document.getElementById('bookingLink').href = `/booking/${id}/create`;
+}
 
     function closeModal()
     {

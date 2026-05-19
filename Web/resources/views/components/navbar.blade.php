@@ -35,7 +35,7 @@
                     Booking
                 </a>
 
-                <a href="#"
+                <a href="{{ route('contact') }}"
                    class="hover:text-cyan-300 transition">
                     Contact
                 </a>

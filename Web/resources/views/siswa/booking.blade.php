@@ -126,7 +126,35 @@
             </p>
 
         </div>
+{{-- Info Booking --}}
+<div class="mb-10 bg-amber-50 border border-amber-200 text-amber-700 rounded-3xl p-6 flex items-start gap-4">
 
+    <div class="w-14 h-14 rounded-2xl bg-amber-100 flex items-center justify-center shrink-0">
+
+        <i class="fas fa-circle-info text-amber-500 text-xl"></i>
+
+    </div>
+
+    <div>
+
+        <h3 class="font-bold text-lg mb-2">
+
+            Informasi Booking
+
+        </h3>
+
+        <p class="leading-relaxed text-sm">
+
+            Booking fasilitas hanya diperuntukkan untuk
+            kegiatan organisasi, ekskul, rapat, dan acara sekolah.
+            Pengajuan booking harus menggunakan nama organisasi
+            atau penanggung jawab kegiatan.
+
+        </p>
+
+    </div>
+
+</div>
         {{-- Grid --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
 
@@ -233,7 +261,7 @@
 
                         <i class="fas fa-calendar-check"></i>
 
-                        Booking Sekarang
+                        Ajukan Booking
 
                     </a>
 

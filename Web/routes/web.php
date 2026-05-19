@@ -165,6 +165,8 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/booking',             [HomeController::class, 'booking'])->name('booking');
     Route::get('/booking/{id}/create', [HomeController::class, 'createBooking'])->name('booking.create');
     Route::get('/jadwal',              [HomeController::class, 'jadwal'])->name('jadwal');
+    Route::get('/contact',             [HomeController::class, 'contact'])->name('contact');
+    Route::post('/booking/store',      [HomeController::class, 'storeBooking'])->name('booking.store');
 });
 
 // ============================================================

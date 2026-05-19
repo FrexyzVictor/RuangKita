@@ -25,5 +25,30 @@ class AdminSeeder extends Seeder
             'created_at' => now(),
             "updated_at" => now(),
         ]);
+        
+         DB::table('users')->insert([
+            'nama' => 'Guru RuangKita',
+            'email' => 'guru@ruangkita.com',
+            'password' => Hash::make('guru'),
+            'role' => 'Guru',
+            'no_hp' => '085220007279',
+            'alamat' => 'none',
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            "updated_at" => now(),
+        ]);
+
+        DB::table('users')->insert([
+            'nama' => 'Siswa RuangKita',
+            'email' => 'siswa@ruangkita.com',
+            'password' => Hash::make('siswa'),
+            'role' => 'Siswa',
+            'no_hp' => '085220007279',
+            'alamat' => 'none',
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            "updated_at" => now(),
+        ]);
+
     }
 }

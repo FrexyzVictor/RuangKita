@@ -14,7 +14,7 @@ class SiswaMiddleware
             return redirect()->route('login');
         }
 
-        if (auth()->user()->role !== 'siswa') {
+        if (!in_array(auth()->user()->role, ['siswa', 'pengunjung'])) {
             abort(403, 'Akses ditolak. Halaman ini hanya untuk Siswa.');
         }
 

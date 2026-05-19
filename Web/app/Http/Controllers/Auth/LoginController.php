@@ -24,7 +24,7 @@ class LoginController extends Controller
             'admin' => '/admin/dashboard',
             'guru'  => '/guru/dashboard',
             'siswa' => '/home-siswa',
-            default => '/tamu/dashboard',
+            default => '/pengunjung/home-siswa',
         };
     }
 

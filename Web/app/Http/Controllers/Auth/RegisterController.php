@@ -27,7 +27,7 @@ class RegisterController extends Controller
             'admin' => '/admin/dashboard',
             'guru'  => '/guru/dashboard',
             'siswa' => '/home-siswa',
-            default => '/tamu/dashboard',
+            default => '/pengunjung/home-siswa',
         };
     }
 
@@ -39,7 +39,7 @@ class RegisterController extends Controller
         return Validator::make($data, [
             'nama'     => ['required', 'string', 'max:255'],
             'email'    => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'role'     => ['required', 'string', 'in:admin,guru,siswa,tamu'],
+            'role'     => ['required', 'string', 'in:admin,guru,siswa,pengunjung'],  // validasi role sesuai pilihan di form
             'no_hp'    => ['nullable', 'string', 'max:20'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ], [

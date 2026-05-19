@@ -74,7 +74,7 @@ Route::prefix('admin')
 
     Route::patch('/{id}/selesai', [BookingController::class, 'selesai'])->name('selesai');
 
-    // Pembayaran (tamu)
+    // Pembayaran (pengunjung wajib bayar, siswa bebas bayar)
     Route::post('/{id}/catat-dp', [BookingController::class, 'catatDP'])->name('catat_dp');
 
     Route::post('/{id}/catat-pelunasan', [BookingController::class, 'catatPelunasan'])->name('catat_pelunasan');
@@ -158,12 +158,12 @@ Route::middleware(['auth', 'siswa'])->group(function () {
 });
 
 // ============================================================
-// TAMU ROUTES
+// PENGUNJUNG ROUTES
 // ============================================================
-Route::middleware(['auth'])->prefix('tamu')->name('tamu.')->group(function () {
+Route::middleware(['auth'])->prefix('pengunjung')->name('pengunjung.')->group(function () {
     Route::get('/dashboard', function () {
-        if (auth()->user()->role !== 'tamu') abort(403);
-        return view('tamu.dashboard');
+        if (auth()->user()->role !== 'pengunjung') abort(403);
+        return view('pengunjung.home-siswa');
     })->name('dashboard');
 });
 
@@ -180,7 +180,7 @@ Route::fallback(function () {
             'admin' => redirect('/admin/dashboard'),
             'guru'  => redirect('/guru/dashboard'),
             'siswa' => redirect('/home-siswa'),
-            default => redirect('/tamu/dashboard'),
+            default => redirect('/pengunjung/home-siswa'),
         };
     }
     return redirect()->route('login');

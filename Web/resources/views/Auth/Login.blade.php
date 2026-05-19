@@ -326,8 +326,7 @@
             <div class="role-badge"><span class="role-dot"></span> Guru — booking & jadwal</div>
             <div class="role-badge"><span class="role-dot"></span> Siswa — cek fasilitas</div>
             <div class="role-badge"><span class="role-dot"></span> Tamu — akses terbatas</div>
-        </div>
-    </div>
+
 
     {{-- RIGHT PANEL --}}
     <div class="panel-right">
@@ -403,3 +402,8 @@
 
 </body>
 </html>
+
+</div>
+
+@endsection
+

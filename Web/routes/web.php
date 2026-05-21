@@ -150,10 +150,27 @@ Route::prefix('users')->name('users.')->group(function () {
 // GURU ROUTES
 // ============================================================
 Route::prefix('guru')->middleware(['auth', 'guru'])->group(function () {
-    Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
-    Route::get('/status',    [GuruController::class, 'status'])->name('guru.status');
-    Route::get('/booking',   [GuruController::class, 'booking'])->name('guru.booking');
-    Route::get('/fasilitas', [GuruController::class, 'fasilitas'])->name('guru.fasilitas');
+
+    // Dashboard
+    Route::get('/dashboard', [GuruController::class, 'dashboard'])
+        ->name('guru.dashboard');
+
+    // Status Booking
+    Route::get('/status', [GuruController::class, 'status'])
+        ->name('guru.status');
+
+    // Halaman Booking
+    Route::get('/booking', [GuruController::class, 'booking'])
+        ->name('guru.booking');
+
+    // Simpan Booking
+    Route::post('/booking', [GuruController::class, 'storeBooking'])
+        ->name('guru.booking.store');
+
+    // Fasilitas
+    Route::get('/fasilitas', [GuruController::class, 'fasilitas'])
+        ->name('guru.fasilitas');
+
 });
 
 // ============================================================
@@ -185,13 +202,22 @@ Route::get('/siswa/dashboard', fn() => redirect()->route('home.siswa'))
 // FALLBACK
 // ============================================================
 Route::fallback(function () {
+
     if (auth()->check()) {
+
         return match (auth()->user()->role) {
-            'admin' => redirect('/admin/dashboard'),
-            'guru'  => redirect('/guru/dashboard'),
-            'siswa' => redirect('/home-siswa'),
-            default => redirect('/pengunjung/home-siswa'),
+
+            // 'admin'      => redirect('/admin/dashboard'),
+
+            // 'guru'       => redirect('/guru/dashboard'),
+
+            // 'siswa'      => redirect('/home-siswa'),
+
+            // 'pengunjung' => redirect('/pengunjung/dashboard'),
+
+            default      => redirect('/login'),
         };
     }
-    return redirect()->route('login');
+
+    return redirect('/login');
 });

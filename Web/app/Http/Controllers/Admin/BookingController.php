@@ -208,7 +208,7 @@ class BookingController extends Controller
             ->route('admin.bookings.show', $booking->id_booking)
             ->with('success', 'Booking berhasil diperbarui.');
     }
-    
+
     /* ═══════════════════════════════════════════════════════════
      * APPROVE — konfirmasi booking (pending → dikonfirmasi/lunas)
      * ═══════════════════════════════════════════════════════════ */
@@ -400,4 +400,4 @@ class BookingController extends Controller
             ->route('admin.bookings.index')
             ->with('success', "Booking #{$id} berhasil dihapus.");
     }
-}
+} // aa

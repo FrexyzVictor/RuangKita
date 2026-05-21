@@ -14,6 +14,9 @@ export default defineConfig({
                 'resources/css/admin/booking.css',
                 'resources/js/admin/booking.js',
                 //user
+                'resources/css/admin/users.css',
+                'resources/js/admin/users.js',
+                //guru
 
 
             ],

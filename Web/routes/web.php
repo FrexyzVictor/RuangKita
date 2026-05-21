@@ -131,6 +131,7 @@ Route::prefix('admin')
         Route::patch('/{id}/toggle', [JadwalController::class, 'toggle'])->name('toggle');
     });
 
+<<<<<<< HEAD
     // ─── USERS ────────────────────────────────────────────────
     Route::prefix('users')->name('users.')->group(function () {
 
@@ -144,6 +145,26 @@ Route::prefix('admin')
 
         Route::delete('/{id}',   [UserController::class, 'destroy'])->name('destroy');
     });
+=======
+   // ─── USERS ────────────────────────────────────────────────
+Route::prefix('users')->name('users.')->group(function () {
+
+    Route::get('/',          [UserController::class, 'index'])->name('index');
+
+    Route::get('/create',    [UserController::class, 'create'])->name('create');
+
+    Route::post('/',         [UserController::class, 'store'])->name('store');
+
+    Route::get('/{id}',      [UserController::class, 'show'])->name('show');
+
+    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
+
+    Route::put('/{id}',      [UserController::class, 'update'])->name('update');
+
+    Route::delete('/{id}',   [UserController::class, 'destroy'])->name('destroy');
+
+});
+>>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b
 
     // ─── EVALUASI ─────────────────────────────────────────────
     Route::prefix('evaluasi')->name('evaluasi.')->group(function () {
@@ -182,6 +203,7 @@ Route::prefix('admin')
 // ============================================================
 Route::prefix('guru')->middleware(['auth', 'guru'])->group(function () {
 
+<<<<<<< HEAD
     Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
 
     Route::get('/status', [GuruController::class, 'status'])->name('guru.status');
@@ -189,6 +211,28 @@ Route::prefix('guru')->middleware(['auth', 'guru'])->group(function () {
     Route::get('/booking', [GuruController::class, 'booking'])->name('guru.booking');
 
     Route::get('/fasilitas', [GuruController::class, 'fasilitas'])->name('guru.fasilitas');
+=======
+    // Dashboard
+    Route::get('/dashboard', [GuruController::class, 'dashboard'])
+        ->name('guru.dashboard');
+
+    // Status Booking
+    Route::get('/status', [GuruController::class, 'status'])
+        ->name('guru.status');
+
+    // Halaman Booking
+    Route::get('/booking', [GuruController::class, 'booking'])
+        ->name('guru.booking');
+
+    // Simpan Booking
+    Route::post('/booking', [GuruController::class, 'storeBooking'])
+        ->name('guru.booking.store');
+
+    // Fasilitas
+    Route::get('/fasilitas', [GuruController::class, 'fasilitas'])
+        ->name('guru.fasilitas');
+
+>>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b
 });
 
 // ============================================================
@@ -240,6 +284,7 @@ Route::fallback(function () {
 
         return match (auth()->user()->role) {
 
+<<<<<<< HEAD
             'admin' => redirect('/admin/dashboard'),
 
             'guru'  => redirect('/guru/dashboard'),
@@ -251,4 +296,19 @@ Route::fallback(function () {
     }
 
     return redirect()->route('login');
+=======
+            // 'admin'      => redirect('/admin/dashboard'),
+
+            // 'guru'       => redirect('/guru/dashboard'),
+
+            // 'siswa'      => redirect('/home-siswa'),
+
+            // 'pengunjung' => redirect('/pengunjung/dashboard'),
+
+            default      => redirect('/login'),
+        };
+    }
+
+    return redirect('/login');
+>>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b
 });

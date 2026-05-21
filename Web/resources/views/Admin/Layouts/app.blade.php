@@ -9,6 +9,7 @@
     {{-- Fonts & Vite Assets --}}
     @vite(['resources/css/admin/admin.css', 'resources/js/admin/admin.js'])
     @vite(['resources/css/admin/booking.css', 'resources/js/admin/booking.js'])
+    @vite(['resources/css/admin/users.css', 'resources/js/admin/users.js'])
 </head>
 <body>
 <div class="layout-wrapper">

@@ -150,4 +150,4 @@ class Booking extends Model
     {
         return $query->whereNotIn('status', ['selesai', 'dibatalkan']);
     }
-}
+} //

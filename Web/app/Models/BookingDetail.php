@@ -31,4 +31,4 @@ class BookingDetail extends Model
     {
         return $this->belongsTo(Fasilitas::class, 'id_fasilitas', 'id_fasilitas');
     }
-}
+} //aa

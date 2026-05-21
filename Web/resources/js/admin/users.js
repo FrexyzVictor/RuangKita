@@ -7,12 +7,9 @@ const UsersModule = (() => {
 
     /* ── Delete Modal ────────────────────────────────────────── */
     let pendingDeleteUrl = null;
-    let pendingDeleteName = '';
 
     function openDeleteModal(id, nama) {
         pendingDeleteUrl = `/admin/users/${id}`;
-        pendingDeleteName = nama;
-
         const el = document.getElementById('delete-modal');
         if (!el) return;
         el.querySelector('#delete-user-name').textContent = nama;
@@ -34,30 +31,67 @@ const UsersModule = (() => {
         }
     }
 
+    /* ── Live Search ─────────────────────────────────────────── */
+    function initLiveSearch() {
+        const input      = document.getElementById('search-input');
+        const spinner    = document.getElementById('search-spinner');
+        const filterForm = document.getElementById('filter-form');
+        if (!input || !filterForm) return;
+
+        let timer;
+
+        input.addEventListener('input', function () {
+            clearTimeout(timer);
+            if (spinner) spinner.style.display = 'block';
+
+            // Submit setelah berhenti mengetik 500ms
+            timer = setTimeout(() => {
+                filterForm.submit();
+            }, 500);
+        });
+
+        // Tekan Enter langsung submit tanpa tunggu debounce
+        input.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                clearTimeout(timer);
+                filterForm.submit();
+            }
+        });
+
+        // Fokus input otomatis jika ada query aktif
+        if (input.value.trim()) {
+            input.focus();
+            // Taruh kursor di akhir
+            const len = input.value.length;
+            input.setSelectionRange(len, len);
+        }
+    }
+
     /* ── Password Strength ───────────────────────────────────── */
     function initPasswordStrength() {
         const pwInput = document.getElementById('password');
-        const fillEl = document.getElementById('pw-fill');
-        const textEl = document.getElementById('pw-text');
+        const fillEl  = document.getElementById('pw-fill');
+        const textEl  = document.getElementById('pw-text');
         if (!pwInput || !fillEl) return;
 
         pwInput.addEventListener('input', function () {
             const v = this.value;
             let score = 0;
-            if (v.length >= 8) score++;
-            if (/[A-Z]/.test(v)) score++;
-            if (/[0-9]/.test(v)) score++;
-            if (/[^A-Za-z0-9]/.test(v)) score++;
+            if (v.length >= 8)           score++;
+            if (/[A-Z]/.test(v))         score++;
+            if (/[0-9]/.test(v))         score++;
+            if (/[^A-Za-z0-9]/.test(v))  score++;
 
             const levels = [
-                { w: '0%', bg: 'transparent', label: '' },
-                { w: '25%', bg: '#ef4444', label: 'Lemah' },
-                { w: '50%', bg: '#f59e0b', label: 'Cukup' },
-                { w: '75%', bg: '#3b82f6', label: 'Kuat' },
-                { w: '100%', bg: '#10b981', label: 'Sangat Kuat' },
+                { w: '0%',   bg: 'transparent', label: '' },
+                { w: '25%',  bg: '#ef4444',     label: 'Lemah' },
+                { w: '50%',  bg: '#f59e0b',     label: 'Cukup' },
+                { w: '75%',  bg: '#3b82f6',     label: 'Kuat' },
+                { w: '100%', bg: '#10b981',     label: 'Sangat Kuat' },
             ];
-            const lvl = v.length === 0 ? levels[0] : levels[score] || levels[1];
-            fillEl.style.width = lvl.w;
+            const lvl = v.length === 0 ? levels[0] : (levels[score] || levels[1]);
+            fillEl.style.width      = lvl.w;
             fillEl.style.background = lvl.bg;
             if (textEl) {
                 textEl.textContent = lvl.label;
@@ -68,60 +102,46 @@ const UsersModule = (() => {
 
     /* ── Role Color Preview ──────────────────────────────────── */
     function initRolePreview() {
-        const sel = document.getElementById('role');
-        const preview = document.getElementById('role-preview-dot');
-        const previewText = document.getElementById('role-preview-text');
+        const sel         = document.getElementById('role');
+        const dotEl       = document.getElementById('role-preview-dot');
+        const textEl      = document.getElementById('role-preview-text');
         if (!sel) return;
 
         const colors = {
-            admin: '#4f46e5',
-            guru: '#059669',
-            siswa: '#2563eb',
+            admin:      '#4f46e5',
+            guru:       '#059669',
+            siswa:      '#2563eb',
             pengunjung: '#d97706',
-            guest: '#6b7280',
+            guest:      '#6b7280',
         };
         const labels = {
-            admin: 'Akses penuh ke semua fitur',
-            guru: 'Dapat membuat & melihat booking',
-            siswa: 'Dapat booking fasilitas',
+            admin:      'Akses penuh ke semua fitur',
+            guru:       'Dapat membuat & melihat booking',
+            siswa:      'Dapat booking fasilitas',
             pengunjung: 'Akses terbatas, pembayaran wajib',
-            guest: 'Belum diverifikasi',
+            guest:      'Belum diverifikasi',
         };
 
-        function update() {
+        const update = () => {
             const v = sel.value;
-            const c = colors[v] || '#6b7280';
-            if (preview) preview.style.background = c;
-            if (previewText) previewText.textContent = labels[v] || '';
-        }
+            if (dotEl)  dotEl.style.background = colors[v] || '#6b7280';
+            if (textEl) textEl.textContent      = labels[v] || '';
+        };
 
         sel.addEventListener('change', update);
         update();
     }
 
-    /* ── Live Search Filter ──────────────────────────────────── */
-    function initLiveSearch() {
-        const input = document.getElementById('search-input');
-        if (!input) return;
-
-        let timer;
-        input.addEventListener('input', function () {
-            clearTimeout(timer);
-            timer = setTimeout(() => {
-                document.getElementById('filter-form')?.submit();
-            }, 500);
-        });
-    }
-
-    /* ── Row Hover Detail Preview ────────────────────────────── */
+    /* ── Klik baris → ke halaman detail ─────────────────────── */
     function initRowActions() {
-        document.querySelectorAll('[data-user-id]').forEach(row => {
+        document.querySelectorAll('tbody tr[data-user-id]').forEach(row => {
+            row.style.cursor = 'pointer';
             row.addEventListener('click', function (e) {
+                // Abaikan klik pada tombol/link/form
                 if (e.target.closest('button, a, form')) return;
                 const id = this.dataset.userId;
                 if (id) window.location.href = `/admin/users/${id}`;
             });
-            row.style.cursor = 'pointer';
         });
     }
 
@@ -129,10 +149,19 @@ const UsersModule = (() => {
     function copyText(text) {
         navigator.clipboard.writeText(text).then(() => {
             window.RuangKita?.toast('Disalin ke clipboard', 'success');
+        }).catch(() => {
+            // Fallback untuk browser lama
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand('copy');
+            ta.remove();
+            window.RuangKita?.toast('Disalin ke clipboard', 'success');
         });
     }
 
-    /* ── Toggle password visibility ──────────────────────────── */
+    /* ── Toggle lihat/sembunyikan password ──────────────────── */
     function initPasswordToggle() {
         document.querySelectorAll('[data-pw-toggle]').forEach(btn => {
             btn.addEventListener('click', function () {
@@ -150,7 +179,7 @@ const UsersModule = (() => {
         });
     }
 
-    /* ── Form Validation ─────────────────────────────────────── */
+    /* ── Validasi form (create & edit) ──────────────────────── */
     function initFormValidation() {
         const form = document.getElementById('user-form');
         if (!form) return;
@@ -158,6 +187,7 @@ const UsersModule = (() => {
         form.addEventListener('submit', function (e) {
             let valid = true;
 
+            // Required fields
             form.querySelectorAll('[required]').forEach(field => {
                 const errEl = document.getElementById(`err-${field.name}`);
                 if (!field.value.trim()) {
@@ -170,6 +200,7 @@ const UsersModule = (() => {
                 }
             });
 
+            // Format email
             const email = form.querySelector('[type="email"]');
             if (email && email.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.value)) {
                 email.classList.add('input-has-error');
@@ -178,7 +209,8 @@ const UsersModule = (() => {
                 valid = false;
             }
 
-            const pw = document.getElementById('password');
+            // Konfirmasi password
+            const pw     = document.getElementById('password');
             const pwConf = document.getElementById('password_confirmation');
             if (pw && pwConf && pw.value && pw.value !== pwConf.value) {
                 pwConf.classList.add('input-has-error');
@@ -190,7 +222,7 @@ const UsersModule = (() => {
             if (!valid) e.preventDefault();
         });
 
-        // Clear error on input
+        // Hapus error saat field diubah
         form.querySelectorAll('input, select, textarea').forEach(field => {
             field.addEventListener('input', function () {
                 this.classList.remove('input-has-error');
@@ -202,19 +234,19 @@ const UsersModule = (() => {
 
     /* ── Init ────────────────────────────────────────────────── */
     function init() {
+        initLiveSearch();
         initPasswordStrength();
         initRolePreview();
-        initLiveSearch();
         initRowActions();
         initPasswordToggle();
         initFormValidation();
 
-        // Close modal on overlay click
+        // Tutup modal klik di luar box
         document.getElementById('delete-modal')?.addEventListener('click', function (e) {
             if (e.target === this) closeDeleteModal();
         });
 
-        // Escape key to close modal
+        // Tutup modal tekan Escape
         document.addEventListener('keydown', e => {
             if (e.key === 'Escape') closeDeleteModal();
         });

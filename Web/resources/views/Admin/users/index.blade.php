@@ -34,8 +34,7 @@
     <div class="stat-card" style="animation-delay:.10s">
         <div class="stat-icon purple">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12 8 12 12 14 14"/>
+                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
             </svg>
         </div>
         <div class="stat-info">
@@ -90,6 +89,8 @@
     <div class="card-body">
         <form method="GET" action="{{ route('admin.users.index') }}" id="filter-form"
               class="users-filter-bar">
+
+            {{-- Search dengan live search --}}
             <div class="search-wrap">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
@@ -97,8 +98,18 @@
                 <input type="text" name="search" id="search-input"
                        value="{{ request('search') }}"
                        placeholder="Cari nama, email, atau nomor HP..."
-                       class="form-input">
+                       class="form-input"
+                       autocomplete="off">
+                {{-- Spinner muncul saat mengetik --}}
+                <div id="search-spinner" style="display:none;position:absolute;right:10px;top:50%;transform:translateY(-50%)">
+                    <svg class="spin-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                         width="14" height="14" style="animation:spin .7s linear infinite">
+                        <path d="M21 12a9 9 0 1 1-6.219-8.56"/>
+                    </svg>
+                </div>
             </div>
+
+            {{-- Filter Role --}}
             <select name="role" class="form-select" style="width:160px;margin:0"
                     onchange="document.getElementById('filter-form').submit()">
                 <option value="">Semua Role</option>
@@ -108,15 +119,23 @@
                 <option value="pengunjung" {{ request('role') === 'pengunjung' ? 'selected' : '' }}>Pengunjung</option>
                 <option value="guest"      {{ request('role') === 'guest'      ? 'selected' : '' }}>Guest</option>
             </select>
+
             <button type="submit" class="btn btn-primary">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
                     <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                 </svg>
-                Filter
+                Cari
             </button>
+
             @if(request()->hasAny(['search','role']))
-            <a href="{{ route('admin.users.index') }}" class="btn btn-ghost">Reset</a>
+            <a href="{{ route('admin.users.index') }}" class="btn btn-ghost">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14">
+                    <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+                Reset
+            </a>
             @endif
+
             <div style="margin-left:auto">
                 <a href="{{ route('admin.users.create') }}" class="btn btn-primary">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="15" height="15">
@@ -129,7 +148,7 @@
     </div>
 </div>
 
-{{-- Table --}}
+{{-- Tabel --}}
 <div class="card" style="animation: fadeSlideUp 0.5s ease 0.1s both;">
     <div class="card-header">
         <div class="card-title">
@@ -139,6 +158,10 @@
                 <path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>
             </svg>
             Semua Pengguna
+            {{-- Indikator: admin tampil pertama --}}
+            <span style="font-size:.68rem;color:var(--gray-400);font-weight:400;margin-left:4px">
+                · Admin ditampilkan paling atas
+            </span>
         </div>
         <span class="status-badge status-info">{{ $users->total() }} data</span>
     </div>
@@ -147,7 +170,8 @@
         <table class="data-table">
             <thead>
                 <tr>
-                    <th>#</th>
+                    {{-- Kolom No: nomor urut baris, BUKAN id_user --}}
+                    <th style="width:50px">No</th>
                     <th>Pengguna</th>
                     <th>Email</th>
                     <th>No. HP</th>
@@ -166,27 +190,41 @@
                         'siswa'      => 'role-siswa-av',
                         default      => 'role-other-av',
                     };
+                    // Nomor urut baris, mengikuti halaman pagination
+                    $rowNo = ($users->currentPage() - 1) * $users->perPage() + $loop->iteration;
                 @endphp
                 <tr data-user-id="{{ $user->id_user }}"
-                    style="animation: fadeSlideUp 0.3s ease {{ $loop->index * 0.04 }}s both">
-                    <td style="color:var(--gray-400);font-size:.75rem">
-                        #{{ $user->id_user }}
+                    style="animation: fadeSlideUp 0.3s ease {{ $loop->index * 0.04 }}s both
+                           {{ $user->role === 'admin' ? ';border-left:3px solid #6366f1' : '' }}">
+
+                    {{-- Nomor urut baris (1, 2, 3...) — bukan id DB --}}
+                    <td style="color:var(--gray-500);font-size:.8rem;font-weight:700;text-align:center">
+                        {{ $rowNo }}
                     </td>
+
                     <td>
                         <div class="user-cell">
                             <div class="user-avatar-sm {{ $avClass }}">
                                 {{ strtoupper(substr($user->nama, 0, 2)) }}
                             </div>
                             <div>
-                                <div style="font-weight:600;font-size:.82rem;color:var(--gray-700)">
+                                <div style="font-weight:600;font-size:.82rem;color:var(--gray-700);display:flex;align-items:center;gap:5px">
                                     {{ $user->nama }}
+                                    @if($user->role === 'admin')
+                                    <svg viewBox="0 0 24 24" fill="currentColor" width="11" height="11"
+                                         style="color:#6366f1;flex-shrink:0" title="Admin">
+                                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                                    </svg>
+                                    @endif
                                 </div>
-                                <div style="font-size:.7rem;color:var(--gray-400)">
-                                    ID #{{ $user->id_user }}
+                                {{-- Tampilkan ID asli DB sebagai info kecil, tapi nomor tabel = urutan --}}
+                                <div style="font-size:.68rem;color:var(--gray-400)">
+                                    UID #{{ $user->id_user }}
                                 </div>
                             </div>
                         </div>
                     </td>
+
                     <td style="font-size:.8rem;color:var(--gray-600)">
                         {{ $user->email }}
                     </td>
@@ -319,11 +357,30 @@
 @push('scripts')
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Highlight admin rows
-    document.querySelectorAll('tbody tr[data-user-id]').forEach(row => {
-        const badge = row.querySelector('.role-admin');
-        if (badge) row.style.borderLeft = '3px solid #6366f1';
-    });
+    // Live search — submit otomatis setelah berhenti mengetik 500ms
+    const searchInput = document.getElementById('search-input');
+    const spinner     = document.getElementById('search-spinner');
+    const filterForm  = document.getElementById('filter-form');
+
+    if (searchInput && filterForm) {
+        let timer;
+        searchInput.addEventListener('input', function () {
+            clearTimeout(timer);
+            if (spinner) spinner.style.display = 'block';
+            timer = setTimeout(() => {
+                filterForm.submit();
+            }, 500);
+        });
+
+        // Tekan Enter langsung submit
+        searchInput.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                clearTimeout(timer);
+                filterForm.submit();
+            }
+        });
+    }
 });
 </script>
 @endpush

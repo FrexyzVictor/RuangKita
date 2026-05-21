@@ -1,12 +1,20 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar — RuangKita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
 
         :root {
             --primary: #1a56db;
@@ -39,7 +47,7 @@
             background: var(--white);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
         }
 
         /* LEFT = FORM */
@@ -49,6 +57,7 @@
             flex-direction: column;
             justify-content: center;
         }
+
         .form-header p {
             font-size: 0.85rem;
             color: var(--text-muted);
@@ -92,14 +101,21 @@
             cursor: pointer;
         }
 
-        textarea { resize: vertical; min-height: 70px; }
-
-        input:focus, select:focus, textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
+        textarea {
+            resize: vertical;
+            min-height: 70px;
         }
 
-        input.is-invalid, select.is-invalid, textarea.is-invalid {
+        input:focus,
+        select:focus,
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
+        }
+
+        input.is-invalid,
+        select.is-invalid,
+        textarea.is-invalid {
             border-color: var(--danger);
         }
 
@@ -130,8 +146,13 @@
             margin-top: 0.5rem;
         }
 
-        .btn-primary:hover { background: var(--primary-dark); }
-        .btn-primary:active { transform: scale(0.99); }
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.99);
+        }
 
         .login-prompt {
             text-align: center;
@@ -146,7 +167,47 @@
             text-decoration: none;
         }
 
-        .login-prompt a:hover { text-decoration: underline; }
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        .login-prompt a:hover {
+            text-decoration: underline;
+        }
+
+        /* QR SCANNER */
+        .qr-section {
+            margin-top: 1.5rem;
+        }
+
+        .qr-button {
+            width: 100%;
+            padding: 11px;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            background: var(--white);
+            font-size: 0.9rem;
+            font-weight: 600;
+            font-family: inherit;
+            color: var(--text);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .qr-button:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        #reader {
+            width: 100%;
+            margin-top: 1rem;
+            overflow: hidden;
+            border-radius: 12px;
+            border: 1.5px solid var(--border);
+            background: #000;
+            display: none;
+        }
 
         /* RIGHT = INFO PANEL */
         .panel-info {
@@ -162,10 +223,12 @@
         .panel-info::before {
             content: '';
             position: absolute;
-            top: -80px; right: -80px;
-            width: 260px; height: 260px;
+            top: -80px;
+            right: -80px;
+            width: 260px;
+            height: 260px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.06);
+            background: rgba(255, 255, 255, 0.06);
         }
 
         .brand {
@@ -176,13 +239,19 @@
         }
 
         .brand-icon {
-            width: 40px; height: 40px;
-            background: rgba(255,255,255,0.2);
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 10px;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        .brand-icon svg { width: 22px; height: 22px; }
+        .brand-icon svg {
+            width: 22px;
+            height: 22px;
+        }
 
         .brand-name {
             font-size: 1.25rem;
@@ -204,7 +273,7 @@
 
         .info-copy p {
             font-size: 0.875rem;
-            color: rgba(255,255,255,0.72);
+            color: rgba(255, 255, 255, 0.72);
             line-height: 1.65;
         }
 
@@ -222,20 +291,23 @@
         }
 
         .step-num {
-            width: 26px; height: 26px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.15);
-            border: 1px solid rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             color: white;
             font-size: 0.78rem;
             font-weight: 700;
-            display: flex; align-items: center; justify-content: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             flex-shrink: 0;
         }
 
         .step-text {
             font-size: 0.82rem;
-            color: rgba(255,255,255,0.82);
+            color: rgba(255, 255, 255, 0.82);
             line-height: 1.5;
             padding-top: 3px;
         }
@@ -248,181 +320,232 @@
         }
 
         @media (max-width: 640px) {
-            .wrapper { grid-template-columns: 1fr; }
-            .panel-info { display: none; }
-            .panel-form { padding: 2rem 1.5rem; }
-            .form-row { grid-template-columns: 1fr; }
+            .wrapper {
+                grid-template-columns: 1fr;
+            }
+
+            .panel-info {
+                display: none;
+            }
+
+            .panel-form {
+                padding: 2rem 1.5rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+    <script src="https://unpkg.com/html5-qrcode"></script>
 </head>
+
 <body>
 
-<div class="wrapper">
+    <div class="wrapper">
 
-    {{-- LEFT = FORM --}}
-    <div class="panel-form">
-        <div class="form-header">
-            <h2>Buat akun baru</h2>
-            <p>Isi data diri untuk mendaftar ke RuangKita</p>
-        </div>
-
-        <form method="POST" action="{{ route('register') }}">
-            @csrf
-
-            {{-- Nama --}}
-            <div class="form-group">
-                <label for="nama">Nama Lengkap</label>
-                <input
-                    type="text"
-                    id="nama"
-                    name="nama"
-                    value="{{ old('nama') }}"
-                    placeholder="Nama lengkap Anda"
-                    required
-                    autocomplete="name"
-                    class="{{ $errors->has('nama') ? 'is-invalid' : '' }}"
-                >
-                @error('nama')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
+        {{-- LEFT = FORM --}}
+        <div class="panel-form">
+            <div class="form-header">
+                <h2>Buat akun baru</h2>
+                <p>Isi data diri untuk mendaftar ke RuangKita</p>
             </div>
 
-            {{-- Email --}}
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    placeholder="nama@sekolah.sch.id"
-                    required
-                    autocomplete="email"
-                    class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
-                >
-                @error('email')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
+            <form method="POST" action="{{ route('register') }}">
+                @csrf
 
-            {{-- Role --}}
-            <div class="form-group">
-                <label for="role">Role / Jabatan</label>
-                <select
-                    id="role"
-                    name="role"
-                    required
-                    class="{{ $errors->has('role') ? 'is-invalid' : '' }}"
-                >
-                    <option value="" disabled {{ old('role') ? '' : 'selected' }}>Pilih role Anda</option>
-                    <option value="admin"  {{ old('role') == 'admin'  ? 'selected' : '' }}>Admin</option>
-                    <option value="guru"   {{ old('role') == 'guru'   ? 'selected' : '' }}>Guru</option>
-                    <option value="siswa"  {{ old('role') == 'siswa'  ? 'selected' : '' }}>Siswa</option>
-                    <option value="pengunjung"   {{ old('role') == 'pengunjung'   ? 'selected' : '' }}>Pengunjung</option>
-                </select>
-                @error('role')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            {{-- No HP --}}
-            <div class="form-group">
-                <label for="no_hp">No. HP <span style="font-weight:400;color:var(--text-muted)">(opsional)</span></label>
-                <input
-                    type="tel"
-                    id="no_hp"
-                    name="no_hp"
-                    value="{{ old('no_hp') }}"
-                    placeholder="08xxxxxxxxxx"
-                    class="{{ $errors->has('no_hp') ? 'is-invalid' : '' }}"
-                >
-                @error('no_hp')
-                    <div class="invalid-feedback">{{ $message }}</div>
-                @enderror
-            </div>
-
-            {{-- Password --}}
-            <div class="form-row">
+                {{-- Nama --}}
                 <div class="form-group">
-                    <label for="password">Password</label>
-                    <input
-                        type="password"
-                        id="password"
-                        name="password"
-                        placeholder="Min. 8 karakter"
-                        required
-                        autocomplete="new-password"
-                        class="{{ $errors->has('password') ? 'is-invalid' : '' }}"
-                    >
-                    @error('password')
+                    <label for="nama">Nama Lengkap</label>
+                    <input type="text" id="nama" name="nama" value="{{ old('nama') }}"
+                        placeholder="Nama lengkap Anda" required autocomplete="name"
+                        class="{{ $errors->has('nama') ? 'is-invalid' : '' }}">
+                    @error('nama')
                         <div class="invalid-feedback">{{ $message }}</div>
                     @enderror
                 </div>
 
+                {{-- Email --}}
                 <div class="form-group">
-                    <label for="password_confirmation">Konfirmasi Password</label>
-                    <input
-                        type="password"
-                        id="password_confirmation"
-                        name="password_confirmation"
-                        placeholder="Ulangi password"
-                        required
-                        autocomplete="new-password"
-                    >
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}"
+                        placeholder="nama@sekolah.sch.id" required autocomplete="email"
+                        class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+                    @error('email')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
                 </div>
+
+                {{-- Role --}}
+                <div class="form-group">
+                    <label for="role">Role / Jabatan</label>
+                    <select id="role" name="role" required
+                        class="{{ $errors->has('role') ? 'is-invalid' : '' }}">
+                        <option value="" disabled {{ old('role') ? '' : 'selected' }}>Pilih role Anda</option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                        <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
+                        <option value="siswa" {{ old('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
+                        <option value="pengunjung" {{ old('role') == 'pengunjung' ? 'selected' : '' }}>Pengunjung
+                        </option>
+                    </select>
+                    @error('role')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- No HP --}}
+                <div class="form-group">
+                    <label for="no_hp">No. HP <span
+                            style="font-weight:400;color:var(--text-muted)">(opsional)</span></label>
+                    <input type="tel" id="no_hp" name="no_hp" value="{{ old('no_hp') }}"
+                        placeholder="08xxxxxxxxxx" class="{{ $errors->has('no_hp') ? 'is-invalid' : '' }}">
+                    @error('no_hp')
+                        <div class="invalid-feedback">{{ $message }}</div>
+                    @enderror
+                </div>
+
+                {{-- Password --}}
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Min. 8 karakter" required
+                            autocomplete="new-password" class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
+                        @error('password')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password_confirmation">Konfirmasi Password</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation"
+                            placeholder="Ulangi password" required autocomplete="new-password">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Buat Akun</button>
+            </form>
+            <div class="qr-section">
+
+                <button type="button" class="qr-button" onclick="startScanner()">
+                    Scan QR untuk Masuk
+                </button>
+
+                <div id="reader" style="display:none;"></div>
+
             </div>
 
-            <button type="submit" class="btn-primary">Buat Akun</button>
-        </form>
-
-        <div class="login-prompt">
-            Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
+            <div class="login-prompt">
+                Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
+            </div>
         </div>
+
+        {{-- RIGHT = INFO --}}
+        <div class="panel-info">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="rgba(255,255,255,0.9)" />
+                        <polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="rgba(26,86,219,0.8)"
+                            stroke-width="1.5" />
+                    </svg>
+                </div>
+                <span class="brand-name">RuangKita</span>
+            </div>
+
+            <div class="info-copy">
+                <h3>Mulai kelola fasilitas sekolah dengan mudah</h3>
+                <p>Platform booking dan manajemen ruang terpadu untuk seluruh civitas akademika.</p>
+            </div>
+
+            <div class="steps">
+                <div class="step">
+                    <div class="step-num">1</div>
+                    <div class="step-text">
+                        <strong>Daftar akun</strong>
+                        Isi data diri dan pilih role sesuai jabatan
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">2</div>
+                    <div class="step-text">
+                        <strong>Masuk ke dashboard</strong>
+                        Akses fitur sesuai hak akses role Anda
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-num">3</div>
+                    <div class="step-text">
+                        <strong>Mulai booking</strong>
+                        Pesan fasilitas, cek jadwal, kelola evaluasi
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
+    <script>
 
-    {{-- RIGHT = INFO --}}
-    <div class="panel-info">
-        <div class="brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="rgba(255,255,255,0.9)"/>
-                    <polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="rgba(26,86,219,0.8)" stroke-width="1.5"/>
-                </svg>
-            </div>
-            <span class="brand-name">RuangKita</span>
-        </div>
+    let scannerStarted = false;
 
-        <div class="info-copy">
-            <h3>Mulai kelola fasilitas sekolah dengan mudah</h3>
-            <p>Platform booking dan manajemen ruang terpadu untuk seluruh civitas akademika.</p>
-        </div>
+    function startScanner() {
 
-        <div class="steps">
-            <div class="step">
-                <div class="step-num">1</div>
-                <div class="step-text">
-                    <strong>Daftar akun</strong>
-                    Isi data diri dan pilih role sesuai jabatan
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">2</div>
-                <div class="step-text">
-                    <strong>Masuk ke dashboard</strong>
-                    Akses fitur sesuai hak akses role Anda
-                </div>
-            </div>
-            <div class="step">
-                <div class="step-num">3</div>
-                <div class="step-text">
-                    <strong>Mulai booking</strong>
-                    Pesan fasilitas, cek jadwal, kelola evaluasi
-                </div>
-            </div>
-        </div>
-    </div>
+        const reader = document.getElementById('reader');
 
-</div>
+        reader.style.display = 'block';
+
+        if(scannerStarted) return;
+
+        scannerStarted = true;
+
+        const html5QrcodeScanner = new Html5QrcodeScanner(
+            "reader",
+            {
+                fps: 10,
+                qrbox: 250
+            }
+        );
+
+        html5QrcodeScanner.render(onScanSuccess);
+
+    }
+
+    function onScanSuccess(decodedText) {
+
+        fetch("{{ route('qr.login') }}", {
+
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+
+            body: JSON.stringify({
+                qr_code: decodedText
+            })
+
+        })
+
+        .then(response => response.json())
+
+        .then(data => {
+
+            if(data.success){
+
+                window.location.href = data.redirect;
+
+            } else {
+
+                alert('QR tidak valid');
+
+            }
+
+        });
+
+    }
+
+</script>
 
 </body>
+
 </html>

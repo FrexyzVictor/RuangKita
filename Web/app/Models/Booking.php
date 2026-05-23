@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use App\Models\Fasilitas;
+
 
 class Booking extends Model
 {
@@ -46,7 +48,12 @@ class Booking extends Model
     {
         return $this->belongsTo(User::class, 'confirmed_by', 'id_user');
     }
+    protected $table = 'bookings';
 
+    public function fasilitas()
+    {
+        return $this->belongsTo(Fasilitas::class, 'id_fasilitas');
+    }
     public function details(): HasMany
     {
         return $this->hasMany(BookingDetail::class, 'id_booking', 'id_booking');

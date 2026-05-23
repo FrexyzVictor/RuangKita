@@ -119,7 +119,7 @@
 
                         <p class="text-gray-500">
 
-                            SMKN 1 Kota Serang
+                            SMKN 1 Kota Cirebon
 
                         </p>
 

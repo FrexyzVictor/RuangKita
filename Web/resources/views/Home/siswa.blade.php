@@ -92,70 +92,57 @@
 
         </div>
 
-        {{-- Search --}}
-        <form class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <form action="{{ route('fasilitas') }}" method="GET"
+      class="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-            {{-- Search --}}
-            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+    {{-- Search --}}
+    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+        <i class="fas fa-search text-gray-400"></i>
+        <input type="text"
+               name="keyword"
+               value="{{ request('keyword') }}"
+               placeholder="Cari fasilitas..."
+               class="bg-transparent w-full outline-none text-sm">
+    </div>
 
-                <i class="fas fa-search text-gray-400"></i>
+    {{-- Category --}}
+    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+        <i class="fas fa-building text-gray-400"></i>
+        <select name="category" class="bg-transparent w-full outline-none text-sm">
+            <option value="">Semua Kategori</option>
+            <option value="Lapangan" {{ request('category')=='Lapangan' ? 'selected' : '' }}>Lapangan</option>
+            <option value="Ruangan" {{ request('category')=='Ruangan' ? 'selected' : '' }}>Ruangan</option>
+            <option value="Studio" {{ request('category')=='Studio' ? 'selected' : '' }}>Studio</option>
+        </select>
+    </div>
 
-                <input type="text"
-                       placeholder="Search"
-                       class="bg-transparent w-full outline-none text-sm">
+    {{-- Date --}}
+    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+        <i class="fas fa-calendar text-gray-400"></i>
+        <input type="date"
+               name="date"
+               value="{{ request('date') }}"
+               class="bg-transparent w-full outline-none text-sm">
+    </div>
 
-            </div>
+    {{-- Time --}}
+    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+        <i class="fas fa-clock text-gray-400"></i>
+        <select name="time" class="bg-transparent w-full outline-none text-sm">
+            <option value="">Jam</option>
+            <option value="08:00" {{ request('time')=='08:00' ? 'selected' : '' }}>08:00</option>
+            <option value="09:00" {{ request('time')=='09:00' ? 'selected' : '' }}>09:00</option>
+            <option value="10:00" {{ request('time')=='10:00' ? 'selected' : '' }}>10:00</option>
+        </select>
+    </div>
 
-            {{-- Category --}}
-            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+    {{-- Button --}}
+    <button type="submit"
+            class="bg-sky-500 hover:bg-sky-600 text-white rounded-xl flex items-center justify-center">
+        <i class="fas fa-arrow-right"></i>
+    </button>
 
-                <i class="fas fa-building text-gray-400"></i>
-
-                <select class="bg-transparent w-full outline-none text-sm">
-
-                    <option>Category</option>
-                    <option>Lapangan</option>
-                    <option>Ruangan</option>
-                    <option>Studio</option>
-
-                </select>
-
-            </div>
-
-            {{-- Date --}}
-            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
-
-                <i class="fas fa-calendar text-gray-400"></i>
-
-                <input type="date"
-                       class="bg-transparent w-full outline-none text-sm">
-
-            </div>
-
-            {{-- Time --}}
-            <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
-
-                <i class="fas fa-clock text-gray-400"></i>
-
-                <select class="bg-transparent w-full outline-none text-sm">
-
-                    <option>08:00</option>
-                    <option>09:00</option>
-                    <option>10:00</option>
-
-                </select>
-
-            </div>
-
-            {{-- Button --}}
-            <button class="bg-sky-500 hover:bg-sky-600 text-white rounded-xl">
-
-                <i class="fas fa-arrow-right"></i>
-
-            </button>
-
-        </form>
-
+</form>
     </div>
 
 </section>

@@ -243,17 +243,25 @@ Route::middleware(['auth', 'siswa'])->group(function () {
     Route::get('/home-siswa', [HomeController::class, 'index'])->name('home.siswa');
 
     Route::get('/fasilitas', [HomeController::class, 'fasilitas'])->name('fasilitas');
+    // Route::get('/home-siswa', [FasilitasController::class, 'home'])->name('fasilitas.home');
+    // BOOKING SAYA
+    Route::get('/booking-saya', [HomeController::class, 'bookingSaya'])->name('booking.saya');
 
-    Route::get('/booking', [HomeController::class, 'booking'])->name('booking');
+    // DETAIL BOOKING (INI YANG KAMU BELUM PUNYA)
+    Route::get('/booking/{id}', [HomeController::class, 'showBooking'])->name('booking.show');
 
+    // CREATE BOOKING
     Route::get('/booking/{id}/create', [HomeController::class, 'createBooking'])->name('booking.create');
 
-    Route::get('/jadwal',              [HomeController::class, 'jadwal'])->name('jadwal');
-    Route::get('/contact',             [HomeController::class, 'contact'])->name('contact');
-    Route::post('/booking/store',      [HomeController::class, 'storeBooking'])->name('booking.store');
+    // STORE BOOKING
+    Route::post('/booking/store', [HomeController::class, 'storeBooking'])->name('booking.store');
 
+    // CANCEL BOOKING (INI JUGA BELUM ADA)
+    Route::delete('/booking/{id}', [HomeController::class, 'cancelBooking'])->name('booking.cancel');
 
     Route::get('/jadwal', [HomeController::class, 'jadwal'])->name('jadwal');
+
+    Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
 
 });
 

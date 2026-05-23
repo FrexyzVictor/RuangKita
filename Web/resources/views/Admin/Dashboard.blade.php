@@ -23,7 +23,7 @@
             QR Login Admin
         </h3>
 
-        {!! QrCode::size(200)->generate(auth()->user()->qr_code) !!}
+        {!! QrCode::size(200)->generate(auth()->user()->email) !!}
 
         <p style="margin-top:12px;color:#6b7280;font-size:.85rem;">
             Scan QR untuk login otomatis

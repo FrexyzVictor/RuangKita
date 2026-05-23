@@ -30,9 +30,9 @@
                     Jadwal
                 </a>
 
-                <a href="{{ route('booking') }}"
+                <a href="{{ route('booking.saya') }}"
                    class="hover:text-cyan-300 transition">
-                    Booking
+                    Booking Saya
                 </a>
 
                 <a href="{{ route('contact') }}"

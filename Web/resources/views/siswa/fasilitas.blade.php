@@ -231,11 +231,9 @@
 
                         <div>
 
-                            <h3 class="text-xl font-bold text-gray-800 mb-1">
-
-                                {{ $item->nama }}
-
-                            </h3>
+                                 <h3 class="text-xl font-bold text-gray-800 mb-1">
+                                    {{ $item->nama_fasilitas }}
+                                </h3>
 
                             <p class="text-gray-500 text-sm">
 
@@ -268,8 +266,8 @@
 
                         {{-- Button --}}
                         <button onclick="openModal(
-                                '{{ $item->id }}',
-                                '{{ $item->nama }}',
+                            '{{ $item->id_fasilitas }}',
+                            '{{ $item->nama_fasilitas }}',
                                 '{{ asset('storage/' . $item->gambar) }}',
                                 '{{ $item->deskripsi }}'
                                 )"

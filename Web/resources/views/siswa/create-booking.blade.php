@@ -57,7 +57,7 @@
 
         <h1 class="text-5xl font-extrabold text-white mb-4">
 
-            {{ $fasilitas->nama }}
+            {{ $fasilitas->nama_fasilitas }}
 
         </h1>
 
@@ -88,7 +88,7 @@
 
                     <h2 class="text-2xl font-extrabold text-slate-800 mb-3">
 
-                        {{ $fasilitas->nama }}
+                        {{ $fasilitas->nama_fasilitas }}
 
                     </h2>
 
@@ -190,7 +190,7 @@
 
                     @csrf
 
-                <input type="hidden" name="id_fasilitas" value="{{ $fasilitas->id }}">
+                <input type="hidden" name="id_fasilitas" value="{{ $fasilitas->id_fasilitas }}">
 
                     {{-- Organisasi --}}
                     <div>

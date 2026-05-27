@@ -3,137 +3,425 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Booking Saya - RuangKita</title>
 
+    {{-- Tailwind --}}
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    {{-- Font --}}
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+          rel="stylesheet">
 
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {{-- Font Awesome --}}
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * { font-family: 'Inter', sans-serif; }
-        body { background: #f8fafc; }
+
+        *{
+            font-family: 'Inter', sans-serif;
+        }
+
+        body{
+            background: #f8fafc;
+        }
+
+        .hero-overlay{
+            background: linear-gradient(
+                to bottom,
+                rgba(0,0,0,.55),
+                rgba(0,0,0,.35)
+            );
+        }
+
+        .card-hover{
+            transition: .35s ease;
+        }
+
+        .card-hover:hover{
+            transform: translateY(-10px);
+            box-shadow: 0 25px 40px rgba(0,0,0,.12);
+        }
+
     </style>
+
 </head>
 
 <body>
 
 @include('components.navbar')
 
-{{-- HERO --}}
-<section class="relative h-[260px] overflow-hidden">
-    <div class="absolute inset-0 bg-gradient-to-r from-sky-500 to-cyan-500"></div>
+{{-- ================= HERO ================= --}}
+<section class="relative h-[350px] overflow-hidden">
 
+    {{-- Background --}}
+    <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=1600"
+         class="w-full h-full object-cover">
+
+    {{-- Overlay --}}
+    <div class="absolute inset-0 hero-overlay"></div>
+
+    {{-- Content --}}
     <div class="absolute inset-0 flex flex-col justify-center items-center text-center px-4">
-        <h1 class="text-4xl font-extrabold text-white mb-2">
+
+        <h1 class="text-5xl md:text-7xl font-extrabold text-white mb-5">
+
             Booking Saya
+
         </h1>
-        <p class="text-white/80">
-            Riwayat semua booking fasilitas kamu
+
+        <p class="text-white/80 text-lg max-w-2xl">
+
+            Lihat semua riwayat booking fasilitas sekolahmu
+            dengan mudah dan cepat.
+
         </p>
+
     </div>
+
 </section>
 
-{{-- CONTENT --}}
-<section class="py-16 px-4">
-    <div class="max-w-6xl mx-auto">
+{{-- ================= CONTENT ================= --}}
+<section class="py-24 px-4">
 
+    <div class="max-w-7xl mx-auto">
+
+        {{-- TITLE --}}
+        <div class="flex justify-between items-center mb-14">
+
+            <div>
+
+                <h2 class="text-4xl font-bold text-slate-800 mb-2">
+
+                    Riwayat Booking
+
+                </h2>
+
+                <p class="text-slate-500">
+
+                    Semua aktivitas booking fasilitas kamu.
+
+                </p>
+
+            </div>
+
+        </div>
+
+        {{-- GRID --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
 
             @forelse($bookings as $booking)
 
-                <div class="bg-white rounded-[25px] shadow-sm border border-slate-100 overflow-hidden hover:shadow-lg transition">
+            <div class="bg-white rounded-[30px] overflow-hidden shadow-sm card-hover">
 
-                    {{-- HEADER CARD --}}
-                    <div class="p-5 border-b">
-                        <h3 class="text-lg font-bold text-slate-800">
-                            {{ $booking->fasilitas->nama_fasilitas ?? '-' }}
-                        </h3>
+                {{-- TOP --}}
+                <div class="p-6 border-b border-slate-100">
 
-                        <p class="text-xs text-slate-400">
-                            ID: {{ $booking->id_booking }}
-                        </p>
-                    </div>
+                    <div class="flex justify-between items-center mb-5">
 
-                    {{-- BODY --}}
-                    <div class="p-5 space-y-3 text-sm">
+                        <span class="text-xs text-slate-400">
 
-                        <div class="flex justify-between">
-                            <span class="text-slate-400">Tanggal</span>
-                            <span class="font-semibold text-slate-700">
-                                {{ $booking->tanggal }}
-                            </span>
-                        </div>
+                            #{{ $booking->id_booking }}
 
-                        <div class="flex justify-between">
-                            <span class="text-slate-400">Jam</span>
-                            <span class="font-semibold text-slate-700">
-                                {{ $booking->jam_mulai }} - {{ $booking->jam_selesai }}
-                            </span>
-                        </div>
-
-                        <div class="flex justify-between">
-                            <span class="text-slate-400">Organisasi</span>
-                            <span class="font-semibold text-slate-700">
-                                {{ $booking->organisasi }}
-                            </span>
-                        </div>
+                        </span>
 
                         {{-- STATUS --}}
-                        <div class="pt-2">
-                            @if($booking->status == 'pending')
-                                <span class="px-3 py-1 text-xs rounded-full bg-yellow-100 text-yellow-700">
-                                    Menunggu
-                                </span>
-                            @elseif($booking->status == 'disetujui')
-                                <span class="px-3 py-1 text-xs rounded-full bg-green-100 text-green-700">
-                                    Disetujui
-                                </span>
-                            @elseif($booking->status == 'ditolak')
-                                <span class="px-3 py-1 text-xs rounded-full bg-red-100 text-red-700">
-                                    Ditolak
-                                </span>
-                            @endif
+                        @if($booking->status == 'pending')
+
+                            <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-semibold">
+
+                                Pending
+
+                            </span>
+
+                        @elseif($booking->status == 'disetujui')
+
+                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-semibold">
+
+                                Disetujui
+
+                            </span>
+
+                        @elseif($booking->status == 'ditolak')
+
+                            <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-semibold">
+
+                                Ditolak
+
+                            </span>
+
+                        @endif
+
+                    </div>
+
+                    <h2 class="text-2xl font-bold text-slate-800 mb-2">
+
+                        {{ $booking->fasilitas->nama_fasilitas ?? '-' }}
+
+                    </h2>
+
+                    <p class="text-slate-400 text-sm">
+
+                        Booking fasilitas sekolah
+
+                    </p>
+
+                </div>
+
+                {{-- BODY --}}
+                <div class="p-6">
+
+                    <div class="space-y-5">
+
+                        {{-- TANGGAL --}}
+                        <div class="flex items-center gap-4">
+
+                            <div class="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center">
+
+                                <i class="fas fa-calendar text-sky-500"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-slate-400 mb-1">
+
+                                    Tanggal
+
+                                </p>
+
+                                <p class="font-semibold text-slate-700">
+
+                                    {{ $booking->tanggal }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        {{-- JAM --}}
+                        <div class="flex items-center gap-4">
+
+                            <div class="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center">
+
+                                <i class="fas fa-clock text-sky-500"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-slate-400 mb-1">
+
+                                    Jam Booking
+
+                                </p>
+
+                                <p class="font-semibold text-slate-700">
+
+                                    {{ $booking->jam_mulai }}
+                                    -
+                                    {{ $booking->jam_selesai }}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        {{-- ORGANISASI --}}
+                        <div class="flex items-center gap-4">
+
+                            <div class="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center">
+
+                                <i class="fas fa-users text-sky-500"></i>
+
+                            </div>
+
+                            <div>
+
+                                <p class="text-xs text-slate-400 mb-1">
+
+                                    Organisasi
+
+                                </p>
+
+                                <p class="font-semibold text-slate-700">
+
+                                    {{ $booking->organisasi }}
+
+                                </p>
+
+                            </div>
+
                         </div>
 
                     </div>
 
-                    {{-- ACTION --}}
-                    <div class="p-5 flex gap-3">
+                    {{-- BUTTON --}}
+                    <div class="flex gap-3 mt-8">
 
                         <a href="{{ route('booking.show', $booking->id_booking) }}"
-                           class="flex-1 text-center bg-sky-500 hover:bg-sky-600 text-white text-sm py-2 rounded-xl font-semibold">
+                           class="flex-1 bg-sky-500 hover:bg-sky-600
+                                  text-white text-center py-3 rounded-2xl
+                                  font-semibold transition">
+
                             Detail
+
                         </a>
 
                         @if($booking->status == 'pending')
-                            <form action="{{ route('booking.cancel', $booking->id_booking) }}" method="POST" class="flex-1">
-                                @csrf
-                                @method('DELETE')
 
-                                <button class="w-full bg-gray-500 hover:bg-gray-600 text-white text-sm py-2 rounded-xl font-semibold">
-                                    Cancel
-                                </button>
-                            </form>
+                        <form action="{{ route('booking.cancel', $booking->id_booking) }}"
+                              method="POST"
+                              class="flex-1">
+
+                            @csrf
+                            @method('DELETE')
+
+                            <button class="w-full bg-slate-200 hover:bg-slate-300
+                                           text-slate-700 py-3 rounded-2xl
+                                           font-semibold transition">
+
+                                Cancel
+
+                            </button>
+
+                        </form>
+
                         @endif
 
                     </div>
 
                 </div>
 
+            </div>
+
             @empty
 
-                <div class="col-span-full text-center py-20 text-slate-400">
-                    Belum ada booking
+            {{-- EMPTY --}}
+            <div class="col-span-full">
+
+                <div class="bg-white rounded-[40px] p-16 text-center shadow-sm">
+
+                    <div class="w-24 h-24 bg-sky-100 rounded-full
+                                flex items-center justify-center mx-auto mb-6">
+
+                        <i class="fas fa-calendar-xmark text-4xl text-sky-500"></i>
+
+                    </div>
+
+                    <h2 class="text-3xl font-bold text-slate-800 mb-3">
+
+                        Belum Ada Booking
+
+                    </h2>
+
+                    <p class="text-slate-500 mb-8 max-w-md mx-auto">
+
+                        Kamu belum melakukan booking fasilitas.
+                        Yuk booking sekarang.
+
+                    </p>
+
+                    <a href="{{ route('fasilitas') }}"
+                       class="inline-block bg-sky-500 hover:bg-sky-600
+                              text-white px-8 py-4 rounded-2xl
+                              font-semibold transition">
+
+                        Explore Facilities
+
+                    </a>
+
                 </div>
+
+            </div>
 
             @endforelse
 
         </div>
 
     </div>
+
 </section>
+
+{{-- ================= FOOTER ================= --}}
+<footer class="bg-slate-950 text-white py-14 mt-20">
+
+    <div class="max-w-7xl mx-auto px-4">
+
+        <div class="flex flex-col md:flex-row justify-between gap-10">
+
+            {{-- Logo --}}
+            <div>
+
+                <h1 class="text-3xl font-bold mb-4">
+
+                    RUANGKITA
+
+                </h1>
+
+                <p class="text-gray-400 max-w-md leading-relaxed">
+
+                    Sistem booking fasilitas sekolah modern
+                    untuk mendukung aktivitas belajar,
+                    olahraga, meeting, dan kegiatan siswa.
+
+                </p>
+
+            </div>
+
+            {{-- Navigation --}}
+            <div>
+
+                <h3 class="font-semibold mb-5">
+
+                    Navigation
+
+                </h3>
+
+                <div class="space-y-3 text-gray-400">
+
+                    <p>Home</p>
+                    <p>Facilities</p>
+                    <p>Booking</p>
+                    <p>Contact</p>
+
+                </div>
+
+            </div>
+
+            {{-- Social --}}
+            <div>
+
+                <h3 class="font-semibold mb-5">
+
+                    Social Media
+
+                </h3>
+
+                <div class="flex gap-5 text-2xl">
+
+                    <i class="fab fa-instagram hover:text-sky-400 transition"></i>
+                    <i class="fab fa-facebook hover:text-sky-400 transition"></i>
+                    <i class="fab fa-whatsapp hover:text-sky-400 transition"></i>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <div class="border-t border-white/10 mt-10 pt-6 text-center text-gray-500">
+
+            © 2026 RuangKita. All Rights Reserved.
+
+        </div>
+
+    </div>
+
+</footer>
 
 </body>
 </html>

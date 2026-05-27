@@ -6,46 +6,85 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\Fasilitas;
+use App\Models\KategoriFasilitas;
 use App\Models\Booking;
 use App\Models\JadwalTersedia;
 
 class HomeController extends Controller
 {
-    public function index()
-    {
-        $fasilitas = Fasilitas::all();
-
-        return view('home.siswa', compact('fasilitas'));
-    }
-    public function fasilitas()
-    {
-        $fasilitas = Fasilitas::latest()->get();
-
-        return view('siswa.fasilitas', compact('fasilitas'));
-    }
-    public function home(Request $request)
+    
+    
+    public function fasilitas(Request $request)
 {
     $query = Fasilitas::query();
 
-    // 🔍 keyword search (Shopee-style utama)
+    // SEARCH
     if ($request->keyword) {
-        $query->where('nama', 'like', '%' . $request->keyword . '%');
+
+        $query->where('nama_fasilitas', 'like', '%' . $request->keyword . '%');
+
     }
 
-    // 🏷️ kategori filter
+    // CATEGORY
     if ($request->category) {
-        $query->where('kategori', $request->category);
+
+        if ($request->category == 'Lapangan') {
+            $query->where('id_kategori', 1);
+        }
+
+        if ($request->category == 'Ruangan') {
+            $query->where('id_kategori', 2);
+        }
+
+        if ($request->category == 'Studio') {
+            $query->where('id_kategori', 3);
+        }
+
     }
 
-    // 📅 filter tanggal (kalau kamu punya field booking/date)
-    if ($request->date) {
-        $query->whereDate('created_at', $request->date);
+    // KAPASITAS
+    if ($request->kapasitas) {
+
+        $query->where('kapasitas', '>=', $request->kapasitas);
+
     }
 
     $fasilitas = $query->latest()->get();
 
-    return view('siswa.home', compact('fasilitas'));
+    return view('siswa.fasilitas', compact('fasilitas'));
 }
+
+    public function index(Request $request)
+{
+    $query = Fasilitas::query();
+
+    // SEARCH
+    if ($request->keyword) {
+        $query->where('nama_fasilitas', 'like', '%' . $request->keyword . '%');
+    }
+
+    // FILTER KATEGORI
+    if ($request->category) {
+
+        if ($request->category == 'Lapangan') {
+            $query->where('id_kategori', 1);
+        }
+
+        if ($request->category == 'Ruangan') {
+            $query->where('id_kategori', 2);
+        }
+
+        if ($request->category == 'Studio') {
+            $query->where('id_kategori', 3);
+        }
+    }
+
+   $fasilitas = $query->latest()->take(5)->get();
+
+    return view('home.siswa', compact('fasilitas'));
+}
+
+
 public function bookingSaya()
 {
     $bookings = Booking::where('id_user', auth()->id())

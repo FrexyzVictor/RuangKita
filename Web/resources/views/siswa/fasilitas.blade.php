@@ -50,6 +50,14 @@
             backdrop-filter: blur(14px);
             background: rgba(255,255,255,.12);
         }
+        .no-scrollbar::-webkit-scrollbar{
+    display: none;
+}
+
+.no-scrollbar{
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
 
     </style>
 
@@ -98,60 +106,85 @@
 
     <div class="max-w-6xl mx-auto glass rounded-[30px] p-6 shadow-2xl">
 
-        <form class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <form action="{{ route('fasilitas') }}"
+      method="GET"
+      class="grid grid-cols-1 md:grid-cols-5 gap-4">
 
-            {{-- Search --}}
-            <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
+    {{-- Search --}}
+    <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
 
-                <i class="fas fa-search text-gray-400"></i>
+        <i class="fas fa-search text-gray-400"></i>
 
-                <input type="text"
-                       placeholder="Cari fasilitas..."
-                       class="w-full outline-none text-sm">
+        <input type="text"
+               name="keyword"
+               value="{{ request('keyword') }}"
+               placeholder="Cari fasilitas..."
+               class="w-full outline-none text-sm">
 
-            </div>
+    </div>
 
-            {{-- Category --}}
-            <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
+    {{-- Category --}}
+    <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
 
-                <i class="fas fa-building text-gray-400"></i>
+        <i class="fas fa-building text-gray-400"></i>
 
-                <select class="w-full outline-none text-sm bg-transparent">
+        <select name="category"
+                class="w-full outline-none text-sm bg-transparent">
 
-                    <option>Semua Kategori</option>
-                    <option>Lapangan</option>
-                    <option>Ruangan</option>
-                    <option>Studio</option>
+            <option value="">Semua Kategori</option>
 
-                </select>
+            <option value="Lapangan"
+                {{ request('category') == 'Lapangan' ? 'selected' : '' }}>
+                Lapangan
+            </option>
 
-            </div>
+            <option value="Ruangan"
+                {{ request('category') == 'Ruangan' ? 'selected' : '' }}>
+                Ruangan
+            </option>
 
-            {{-- Capacity --}}
-            <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
+            <option value="Studio"
+                {{ request('category') == 'Studio' ? 'selected' : '' }}>
+                Studio
+            </option>
 
-                <i class="fas fa-users text-gray-400"></i>
+        </select>
 
-                <select class="w-full outline-none text-sm bg-transparent">
+    </div>
 
-                    <option>Kapasitas</option>
-                    <option>10 Orang</option>
-                    <option>20 Orang</option>
-                    <option>50 Orang</option>
+    {{-- Kapasitas --}}
+    <div class="bg-white rounded-2xl px-5 py-4 flex items-center gap-3">
 
-                </select>
+        <i class="fas fa-users text-gray-400"></i>
 
-            </div>
+        <input type="number"
+               name="kapasitas"
+               value="{{ request('kapasitas') }}"
+               placeholder="Masukkan kapasitas"
+               class="w-full outline-none text-sm">
 
-            {{-- Button --}}
-            <button class="bg-sky-500 hover:bg-sky-600 text-white rounded-2xl font-semibold transition">
+    </div>
 
-                Cari Sekarang
+    {{-- Button Cari --}}
+<button type="submit"
+        class="bg-sky-500 hover:bg-sky-600 text-white
+               rounded-2xl font-semibold transition
+               px-6 py-4 flex items-center justify-center">
 
-            </button>
+    Cari Sekarang
 
-        </form>
+</button>
 
+{{-- Button Reset --}}
+<a href="{{ route('fasilitas') }}"
+   class="bg-gray-200 hover:bg-gray-300 text-gray-700
+          rounded-2xl font-semibold transition
+          px-6 py-4 flex items-center justify-center">
+
+    Reset
+
+</a>
+</form>
     </div>
 
 </section>
@@ -182,13 +215,15 @@
 
             <div class="hidden md:flex gap-3">
 
-                <button class="w-12 h-12 rounded-full bg-white shadow">
+                <button onclick="slideLeft()"
+        class="w-12 h-12 rounded-full bg-white shadow">
 
                     <i class="fas fa-chevron-left"></i>
 
                 </button>
 
-                <button class="w-12 h-12 rounded-full bg-sky-500 text-white shadow">
+                <button onclick="slideRight()"
+        class="w-12 h-12 rounded-full bg-sky-500 text-white shadow">
 
                     <i class="fas fa-chevron-right"></i>
 
@@ -199,11 +234,12 @@
         </div>
 
         {{-- Grid --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div id="facilitySlider"
+     class="flex gap-8 overflow-x-auto scroll-smooth pb-4 no-scrollbar">
 
             @foreach($fasilitas as $item)
 
-            <div class="bg-white rounded-[30px] overflow-hidden shadow-sm card-hover">
+            <div class="min-w-[320px] bg-white rounded-[30px] overflow-hidden shadow-sm card-hover flex-shrink-0">
 
                 {{-- Image --}}
                 <div class="relative overflow-hidden">
@@ -427,7 +463,23 @@
         document.getElementById('modal').classList.remove('flex');
         document.getElementById('modal').classList.add('hidden');
     }
+function slideRight()
+{
+    document.getElementById('facilitySlider')
+        .scrollBy({
+            left: 350,
+            behavior: 'smooth'
+        });
+}
 
+function slideLeft()
+{
+    document.getElementById('facilitySlider')
+        .scrollBy({
+            left: -350,
+            behavior: 'smooth'
+        });
+}
 </script>
 
 </body>

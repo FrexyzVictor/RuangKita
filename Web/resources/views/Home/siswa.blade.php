@@ -91,58 +91,73 @@
             </p>
 
         </div>
-
-        <form action="{{ route('fasilitas') }}" method="GET"
-      class="grid grid-cols-1 md:grid-cols-5 gap-4">
+<form action="{{ route('home.siswa') }}"
+      method="GET"
+      class="grid grid-cols-1 md:grid-cols-4 gap-4 items-center">
 
     {{-- Search --}}
-    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+    <div class="bg-gray-100 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm">
         <i class="fas fa-search text-gray-400"></i>
+
         <input type="text"
                name="keyword"
                value="{{ request('keyword') }}"
                placeholder="Cari fasilitas..."
-               class="bg-transparent w-full outline-none text-sm">
+               class="bg-transparent w-full outline-none text-sm text-gray-700 placeholder-gray-400">
     </div>
 
     {{-- Category --}}
-    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
+    <div class="bg-gray-100 rounded-2xl px-4 py-3 flex items-center gap-3 shadow-sm">
         <i class="fas fa-building text-gray-400"></i>
-        <select name="category" class="bg-transparent w-full outline-none text-sm">
+
+        <select name="category"
+                class="bg-transparent w-full outline-none text-sm text-gray-700">
+
             <option value="">Semua Kategori</option>
-            <option value="Lapangan" {{ request('category')=='Lapangan' ? 'selected' : '' }}>Lapangan</option>
-            <option value="Ruangan" {{ request('category')=='Ruangan' ? 'selected' : '' }}>Ruangan</option>
-            <option value="Studio" {{ request('category')=='Studio' ? 'selected' : '' }}>Studio</option>
+
+            <option value="Lapangan"
+                {{ request('category') == 'Lapangan' ? 'selected' : '' }}>
+                Lapangan
+            </option>
+
+            <option value="Ruangan"
+                {{ request('category') == 'Ruangan' ? 'selected' : '' }}>
+                Ruangan
+            </option>
+
+            <option value="Studio"
+                {{ request('category') == 'Studio' ? 'selected' : '' }}>
+                Studio
+            </option>
+
         </select>
     </div>
 
-    {{-- Date --}}
-    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
-        <i class="fas fa-calendar text-gray-400"></i>
-        <input type="date"
-               name="date"
-               value="{{ request('date') }}"
-               class="bg-transparent w-full outline-none text-sm">
-    </div>
+    {{-- Button Cari --}}
+<button type="submit"
+        class="bg-sky-500 hover:bg-sky-600 transition duration-300
+               text-white rounded-2xl px-6 py-3
+               flex items-center justify-center gap-2 shadow-md">
 
-    {{-- Time --}}
-    <div class="bg-gray-100 rounded-xl px-4 py-3 flex items-center gap-3">
-        <i class="fas fa-clock text-gray-400"></i>
-        <select name="time" class="bg-transparent w-full outline-none text-sm">
-            <option value="">Jam</option>
-            <option value="08:00" {{ request('time')=='08:00' ? 'selected' : '' }}>08:00</option>
-            <option value="09:00" {{ request('time')=='09:00' ? 'selected' : '' }}>09:00</option>
-            <option value="10:00" {{ request('time')=='10:00' ? 'selected' : '' }}>10:00</option>
-        </select>
-    </div>
+    <i class="fas fa-search"></i>
+    <span>Cari</span>
 
-    {{-- Button --}}
-    <button type="submit"
-            class="bg-sky-500 hover:bg-sky-600 text-white rounded-xl flex items-center justify-center">
-        <i class="fas fa-arrow-right"></i>
-    </button>
+</button>
+
+{{-- Button Reset --}}
+<a href="{{ route('home.siswa') }}"
+   class="bg-gray-200 hover:bg-gray-300 transition duration-300
+          text-gray-700 rounded-2xl px-6 py-3
+          flex items-center justify-center gap-2 shadow-md">
+
+    <i class="fas fa-rotate-left"></i>
+    <span>Reset</span>
+
+</a>
 
 </form>
+
+ 
     </div>
 
 </section>
@@ -243,7 +258,7 @@
 
         {{-- Grid --}}
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-5">
-
+@if($fasilitas->count() > 0)
             @foreach($fasilitas as $item)
 
             <div class="bg-white rounded-2xl overflow-hidden card-hover">
@@ -259,7 +274,7 @@
 
                         <h3 class="font-semibold text-gray-800 text-sm">
 
-                            {{ $item->nama }}
+                            {{ $item->nama_fasilitas }}
 
                         </h3>
 
@@ -289,7 +304,17 @@
             </div>
 
             @endforeach
+@else
 
+    <div class="col-span-full text-center py-10">
+
+        <h1 class="text-gray-400 text-lg font-semibold">
+            Fasilitas tidak ditemukan
+        </h1>
+
+    </div>
+
+@endif
         </div>
 
     </div>

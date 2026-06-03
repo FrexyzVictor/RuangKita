@@ -16,8 +16,12 @@ export default defineConfig({
                 //user
                 'resources/css/admin/users.css',
                 'resources/js/admin/users.js',
-                //guru
+                //auth                  
+                'resources/css/auth/login.css',
+                'resources/js/auth/login.js',
 
+                'resources/css/auth/register.css',
+                'resources/js/auth/register.js',
 
             ],
             refresh: true,

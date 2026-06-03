@@ -14,7 +14,7 @@ class GuruMiddleware
             return redirect()->route('login');
         }
 
-        if (auth()->user()->role !== 'guru') {
+        if (strtolower(auth()->user()->role) !== 'guru') {
             abort(403, 'Akses ditolak. Halaman ini hanya untuk Guru.');
         }
 

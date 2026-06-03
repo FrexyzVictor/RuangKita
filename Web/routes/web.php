@@ -32,24 +32,32 @@ use App\Http\Controllers\QrLoginController;
 |--------------------------------------------------------------------------
 */
 
-// ROOT — redirect ke login
+// ============================================================
+// ROOT
+// ============================================================
 Route::get('/', fn() => redirect()->route('login'));
 
 // ============================================================
 // AUTH ROUTES
 // ============================================================
-Route::get('/login',    [LoginController::class, 'showLoginForm'])->name('login')->middleware('guest');
+Route::middleware('guest')->group(function () {
 
-Route::post('/login',   [LoginController::class, 'login'])->middleware('guest');
+    Route::get('/login', [LoginController::class, 'showLoginForm'])
+        ->name('login');
 
-Route::post('/logout',  [LoginController::class, 'logout'])->name('logout');
+    Route::post('/login', [LoginController::class, 'login']);
 
-Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register')->middleware('guest');
+    Route::get('/register', [RegisterController::class, 'showRegistrationForm'])
+        ->name('register');
 
-Route::post('/register',[RegisterController::class, 'register'])->middleware('guest');
+    Route::post('/register', [RegisterController::class, 'register']);
+});
+
+Route::post('/logout', [LoginController::class, 'logout'])
+    ->name('logout');
 
 // ============================================================
-// QR LOGIN ROUTE
+// QR LOGIN
 // ============================================================
 Route::post('/qr-login', [QrLoginController::class, 'login'])
     ->name('qr.login');
@@ -63,9 +71,10 @@ Route::prefix('admin')
     ->group(function () {
 
     // Dashboard
-    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
 
-    // ─── BOOKING ───────────────────────────────────────────────
+    // BOOKINGS
     Route::prefix('bookings')->name('bookings.')->group(function () {
 
         Route::get('/', [BookingController::class, 'index'])->name('index');
@@ -93,237 +102,156 @@ Route::prefix('admin')
         Route::delete('/{id}', [BookingController::class, 'destroy'])->name('destroy');
     });
 
-    // ─── FASILITAS ────────────────────────────────────────────
+    // FASILITAS
     Route::prefix('fasilitas')->name('fasilitas.')->group(function () {
 
-        Route::get('/',              [FasilitasController::class, 'index'])->name('index');
+        Route::get('/', [FasilitasController::class, 'index'])->name('index');
 
-        Route::get('/create',        [FasilitasController::class, 'create'])->name('create');
+        Route::get('/create', [FasilitasController::class, 'create'])->name('create');
 
-        Route::post('/',             [FasilitasController::class, 'store'])->name('store');
+        Route::post('/', [FasilitasController::class, 'store'])->name('store');
 
-        Route::get('/{id}',          [FasilitasController::class, 'show'])->name('show');
+        Route::get('/{id}', [FasilitasController::class, 'show'])->name('show');
 
-        Route::get('/{id}/edit',     [FasilitasController::class, 'edit'])->name('edit');
+        Route::get('/{id}/edit', [FasilitasController::class, 'edit'])->name('edit');
 
-        Route::put('/{id}',          [FasilitasController::class, 'update'])->name('update');
+        Route::put('/{id}', [FasilitasController::class, 'update'])->name('update');
 
-        Route::delete('/{id}',       [FasilitasController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [FasilitasController::class, 'destroy'])->name('destroy');
 
         Route::patch('/{id}/toggle', [FasilitasController::class, 'toggleStatus'])->name('toggle');
     });
 
-    // ─── JADWAL ───────────────────────────────────────────────
+    // JADWAL
     Route::prefix('jadwal')->name('jadwal.')->group(function () {
 
-        Route::get('/',              [JadwalController::class, 'index'])->name('index');
+        Route::get('/', [JadwalController::class, 'index'])->name('index');
 
-        Route::get('/create',        [JadwalController::class, 'create'])->name('create');
+        Route::get('/create', [JadwalController::class, 'create'])->name('create');
 
-        Route::post('/',             [JadwalController::class, 'store'])->name('store');
+        Route::post('/', [JadwalController::class, 'store'])->name('store');
 
-        Route::get('/{id}/edit',     [JadwalController::class, 'edit'])->name('edit');
+        Route::get('/{id}/edit', [JadwalController::class, 'edit'])->name('edit');
 
-        Route::put('/{id}',          [JadwalController::class, 'update'])->name('update');
+        Route::put('/{id}', [JadwalController::class, 'update'])->name('update');
 
-        Route::delete('/{id}',       [JadwalController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [JadwalController::class, 'destroy'])->name('destroy');
 
         Route::patch('/{id}/toggle', [JadwalController::class, 'toggle'])->name('toggle');
     });
 
-
-    // ─── USERS ────────────────────────────────────────────────
+    // USERS
     Route::prefix('users')->name('users.')->group(function () {
 
-        Route::get('/',          [UserController::class, 'index'])->name('index');
+        Route::get('/', [UserController::class, 'index'])->name('index');
 
-        Route::get('/{id}',      [UserController::class, 'show'])->name('show');
+        Route::get('/create', [UserController::class, 'create'])->name('create');
+
+        Route::post('/', [UserController::class, 'store'])->name('store');
+
+        Route::get('/{id}', [UserController::class, 'show'])->name('show');
 
         Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
 
-        Route::put('/{id}',      [UserController::class, 'update'])->name('update');
+        Route::put('/{id}', [UserController::class, 'update'])->name('update');
 
-        Route::delete('/{id}',   [UserController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [UserController::class, 'destroy'])->name('destroy');
     });
 
-   // ─── USERS ────────────────────────────────────────────────
-Route::prefix('users')->name('users.')->group(function () {
-
-    Route::get('/',          [UserController::class, 'index'])->name('index');
-
-    Route::get('/create',    [UserController::class, 'create'])->name('create');
-
-    Route::post('/',         [UserController::class, 'store'])->name('store');
-
-    Route::get('/{id}',      [UserController::class, 'show'])->name('show');
-
-    Route::get('/{id}/edit', [UserController::class, 'edit'])->name('edit');
-
-    Route::put('/{id}',      [UserController::class, 'update'])->name('update');
-
-    Route::delete('/{id}',   [UserController::class, 'destroy'])->name('destroy');
-
-});
-
-
-    // ─── EVALUASI ─────────────────────────────────────────────
+    // EVALUASI
     Route::prefix('evaluasi')->name('evaluasi.')->group(function () {
 
-        Route::get('/',        [EvaluasiController::class, 'index'])->name('index');
+        Route::get('/', [EvaluasiController::class, 'index'])->name('index');
 
-        Route::get('/{id}',    [EvaluasiController::class, 'show'])->name('show');
+        Route::get('/{id}', [EvaluasiController::class, 'show'])->name('show');
 
         Route::delete('/{id}', [EvaluasiController::class, 'destroy'])->name('destroy');
     });
 
-    // ─── KATEGORI ─────────────────────────────────────────────
+    // KATEGORI
     Route::prefix('kategori')->name('kategori.')->group(function () {
 
-        Route::get('/',          [KategoriController::class, 'index'])->name('index');
+        Route::get('/', [KategoriController::class, 'index'])->name('index');
 
-        Route::get('/create',    [KategoriController::class, 'create'])->name('create');
+        Route::get('/create', [KategoriController::class, 'create'])->name('create');
 
-        Route::post('/',         [KategoriController::class, 'store'])->name('store');
+        Route::post('/', [KategoriController::class, 'store'])->name('store');
 
         Route::get('/{id}/edit', [KategoriController::class, 'edit'])->name('edit');
 
-        Route::put('/{id}',      [KategoriController::class, 'update'])->name('update');
+        Route::put('/{id}', [KategoriController::class, 'update'])->name('update');
 
-        Route::delete('/{id}',   [KategoriController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}', [KategoriController::class, 'destroy'])->name('destroy');
     });
 
-    // ─── LAPORAN ──────────────────────────────────────────────
-    Route::get('/laporan/export', [LaporanController::class, 'export'])->name('laporan.export');
+    // LAPORAN
+    Route::get('/laporan', [LaporanController::class, 'index'])
+        ->name('laporan.index');
 
-    Route::get('/laporan', [LaporanController::class, 'index'])->name('laporan.index');
+    Route::get('/laporan/export', [LaporanController::class, 'export'])
+        ->name('laporan.export');
 });
 
 // ============================================================
 // GURU ROUTES
 // ============================================================
-Route::prefix('guru')->middleware(['auth', 'guru'])->group(function () {
+Route::prefix('guru')
+    ->name('guru.')
+    ->middleware(['auth', 'guru'])
+    ->group(function () {
 
-
-    Route::get('/dashboard', [GuruController::class, 'dashboard'])->name('guru.dashboard');
-
-    Route::get('/status', [GuruController::class, 'status'])->name('guru.status');
-
-    Route::get('/booking', [GuruController::class, 'booking'])->name('guru.booking');
-
-    Route::get('/fasilitas', [GuruController::class, 'fasilitas'])->name('guru.fasilitas');
-
-    // Dashboard
     Route::get('/dashboard', [GuruController::class, 'dashboard'])
-        ->name('guru.dashboard');
+        ->name('dashboard');
 
-    // Status Booking
     Route::get('/status', [GuruController::class, 'status'])
-        ->name('guru.status');
+        ->name('status');
 
-    // Halaman Booking
     Route::get('/booking', [GuruController::class, 'booking'])
-        ->name('guru.booking');
+        ->name('booking');
 
-    // Simpan Booking
     Route::post('/booking', [GuruController::class, 'storeBooking'])
-        ->name('guru.booking.store');
+        ->name('booking.store');
 
-    // Fasilitas
     Route::get('/fasilitas', [GuruController::class, 'fasilitas'])
-        ->name('guru.fasilitas');
-
-
+        ->name('fasilitas');
 });
 
 // ============================================================
-// SISWA ROUTES
+// SISWA + PENGUNJUNG ROUTES
 // ============================================================
 Route::middleware(['auth', 'siswa'])->group(function () {
 
-    Route::get('/home-siswa', [HomeController::class, 'index'])->name('home.siswa');
+    Route::get('/home-siswa', [HomeController::class, 'index'])
+        ->name('home.siswa');
 
-    Route::get('/fasilitas', [HomeController::class, 'fasilitas'])->name('fasilitas');
-    // Route::get('/home-siswa', [FasilitasController::class, 'home'])->name('fasilitas.home');
-    // BOOKING SAYA
-    Route::get('/booking-saya', [HomeController::class, 'bookingSaya'])->name('booking.saya');
+    Route::get('/fasilitas', [HomeController::class, 'fasilitas'])
+        ->name('fasilitas');
 
-    // DETAIL BOOKING (INI YANG KAMU BELUM PUNYA)
-    Route::get('/booking/{id}', [HomeController::class, 'showBooking'])->name('booking.show');
+    Route::get('/booking-saya', [HomeController::class, 'bookingSaya'])
+        ->name('booking.saya');
 
-    // CREATE BOOKING
-    Route::get('/booking/{id}/create', [HomeController::class, 'createBooking'])->name('booking.create');
+    Route::get('/booking/{id}', [HomeController::class, 'showBooking'])
+        ->name('booking.show');
 
-    // STORE BOOKING
-    Route::post('/booking/store', [HomeController::class, 'storeBooking'])->name('booking.store');
+    Route::get('/booking/{id}/create', [HomeController::class, 'createBooking'])
+        ->name('booking.create');
 
-    // CANCEL BOOKING (INI JUGA BELUM ADA)
-    Route::delete('/booking/{id}', [HomeController::class, 'cancelBooking'])->name('booking.cancel');
+    Route::post('/booking/store', [HomeController::class, 'storeBooking'])
+        ->name('booking.store');
 
-    Route::get('/jadwal', [HomeController::class, 'jadwal'])->name('jadwal');
+    Route::delete('/booking/{id}', [HomeController::class, 'cancelBooking'])
+        ->name('booking.cancel');
 
-    Route::get('/contact', [HomeController::class, 'contact'])->name('contact');
+    Route::get('/jadwal', [HomeController::class, 'jadwal'])
+        ->name('jadwal');
 
+    Route::get('/contact', [HomeController::class, 'contact'])
+        ->name('contact');
 });
 
 // ============================================================
-// PENGUNJUNG ROUTES
+// SISWA DASHBOARD ALIAS
 // ============================================================
-Route::middleware(['auth'])
-    ->prefix('pengunjung')
-    ->name('pengunjung.')
-    ->group(function () {
-
-    Route::get('/dashboard', function () {
-
-        if (auth()->user()->role !== 'pengunjung') {
-            abort(403);
-        }
-
-        return view('pengunjung.home-siswa');
-
-    })->name('dashboard');
-});
-
-// SISWA dashboard alias
-Route::get('/siswa/dashboard', fn() => redirect()->route('home.siswa'))
+Route::get('/siswa/dashboard', fn() => redirect('/home-siswa'))
     ->middleware(['auth', 'siswa'])
     ->name('siswa.dashboard');
-
-// ============================================================
-// FALLBACK
-// ============================================================
-Route::fallback(function () {
-
-    if (auth()->check()) {
-
-        return match (auth()->user()->role) {
-
-
-            'admin' => redirect('/admin/dashboard'),
-
-            'guru'  => redirect('/guru/dashboard'),
-
-            'siswa' => redirect('/home-siswa'),
-
-            default => redirect('/pengunjung/dashboard'),
-        };
-    }
-
-    Route::fallback(function () {
-
-    if (auth()->check()) {
-
-        return match (auth()->user()->role) {
-
-            'admin' => redirect('/admin/dashboard'),
-            'guru'  => redirect('/guru/dashboard'),
-            'siswa' => redirect('/home-siswa'),
-
-            default => redirect('/login'),
-        };
-    }
-
-    return redirect('/login');
-    });
-
-});

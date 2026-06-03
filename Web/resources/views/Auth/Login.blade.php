@@ -37,7 +37,7 @@
     <aside
     class="auth-panel-left"
     id="panelLeft"
-    style="background:url('/storage/login/NeperO.jpg') center center / cover no-repeat;"
+    style="background:url('/storage/login/Neper.jpg') center center / cover no-repeat;"
 >
 
         {{-- Glassmorphism overlay --}}
@@ -47,7 +47,7 @@
         <div class="brand" data-aos="fade-down" data-aos-delay="0">
            <div class="brand__icon">
     <img
-        src="{{ asset('storage/login/logoNeper.png') }}"
+        src="{{ asset('storage/login/logo.png') }}"
         alt="Logo RuangKita"
         class="brand__logo"
     >
@@ -152,7 +152,7 @@
     <div class="card-logo__ring"></div>
 
     <img
-        src="{{ asset('storage/login/logoNeper.png') }}"
+        src="{{ asset('storage/login/logo.png') }}"
         alt="Logo RuangKita"
         class="card-logo__img"
     >

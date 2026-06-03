@@ -48,7 +48,7 @@
         <div class="brand" data-aos="fade-down" data-aos-delay="0">
             <div class="brand__icon">
                 <img
-                    src="{{ asset('storage/login/logoNeper.png') }}"
+                    src="{{ asset('storage/login/logo.png') }}"
                     alt="Logo RuangKita"
                     class="brand__logo"
                 >
@@ -114,7 +114,7 @@
             <div class="card-logo" data-aos="pop" data-aos-delay="350" aria-label="Logo RuangKita">
                 <div class="card-logo__ring"></div>
                 <img
-                    src="{{ asset('storage/login/logoNeper.png') }}"
+                    src="{{ asset('storage/login/logo.png') }}"
                     alt="Logo RuangKita"
                     class="card-logo__img"
                 >

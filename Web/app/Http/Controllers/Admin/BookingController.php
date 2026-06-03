@@ -5,12 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\Fasilitas;
-use App\Models\User;
 use App\Models\KategoriFasilitas;
 use App\Models\Pembayaran;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Carbon\Carbon;
 
 class BookingController extends Controller
 {
@@ -26,12 +26,10 @@ class BookingController extends Controller
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
-                $q->whereHas('user', fn($u) =>
-                    $u->where('nama', 'like', "%{$search}%")
+                $q->whereHas('user', fn ($u) => $u->where('nama', 'like', "%{$search}%")
                       ->orWhere('email', 'like', "%{$search}%")
                 )
-                ->orWhereHas('details.fasilitas', fn($f) =>
-                    $f->where('nama_fasilitas', 'like', "%{$search}%")
+                ->orWhereHas('details.fasilitas', fn ($f) => $f->where('nama_fasilitas', 'like', "%{$search}%")
                 );
             });
         }
@@ -48,22 +46,22 @@ class BookingController extends Controller
 
         // Filter role user
         if ($request->filled('role')) {
-            $query->whereHas('user', fn($u) => $u->where('role', $request->role));
+            $query->whereHas('user', fn ($u) => $u->where('role', $request->role));
         }
 
         $bookings = $query->paginate(15)->withQueryString();
 
         // Stats untuk header cards
         $stats = [
-            'pending'      => Booking::where('status', 'pending')->count(),
-            'belum_lunas'  => Booking::whereIn('status', ['dp_dibayar', 'belum_lunas'])->count(),
-            'lunas'        => Booking::where('status', 'lunas')->count(),
-            'hari_ini'     => Booking::whereDate('tanggal_booking', today())->count(),
+            'pending' => Booking::where('status', 'pending')->count(),
+            'belum_lunas' => Booking::whereIn('status', ['dp_dibayar', 'belum_lunas'])->count(),
+            'lunas' => Booking::where('status', 'lunas')->count(),
+            'hari_ini' => Booking::whereDate('tanggal_booking', today())->count(),
         ];
 
-        $kategoris    = KategoriFasilitas::orderBy('nama_kategori')->get();
+        $kategoris = KategoriFasilitas::orderBy('nama_kategori')->get();
         $fasilitasList = Fasilitas::with('kategori')->orderBy('nama_fasilitas')->get();
-        $users         = User::whereIn('role', ['siswa', 'guru', 'tamu'])->orderBy('nama')->get();
+        $users = User::whereIn('role', ['siswa', 'guru', 'tamu'])->orderBy('nama')->get();
 
         return view('admin.bookings.index', compact(
             'bookings', 'kategoris', 'fasilitasList', 'users', 'stats'
@@ -80,7 +78,7 @@ class BookingController extends Controller
                                   ->orderBy('nama_fasilitas')
                                   ->get();
 
-        $users     = User::whereIn('role', ['siswa', 'guru', 'tamu'])
+        $users = User::whereIn('role', ['siswa', 'guru', 'tamu'])
                          ->orderBy('nama')
                          ->get();
 
@@ -95,46 +93,49 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'id_user'         => 'required|exists:users,id_user',
-            'id_fasilitas'    => 'required|exists:fasilitas,id_fasilitas',
+            'id_user' => 'required|exists:users,id_user',
+            'id_fasilitas' => 'required|exists:fasilitas,id_fasilitas',
             'tanggal_booking' => 'required|date',
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'catatan'         => 'nullable|string|max:1000',
+            'tanggal' => 'required|date',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'catatan' => 'nullable|string|max:1000',
         ]);
 
         $fasilitas = Fasilitas::findOrFail($validated['id_fasilitas']);
-        $user      = User::findOrFail($validated['id_user']);
+        $user = User::findOrFail($validated['id_user']);
 
         // Hitung durasi & harga
-        $mulai   = Carbon::parse($validated['tanggal_mulai']);
-        $selesai = Carbon::parse($validated['tanggal_selesai']);
-        $jam     = $mulai->diffInMinutes($selesai) / 60;
+        $mulai = Carbon::parse($validated['tanggal'].' '.$validated['jam_mulai']);
+        $selesai = Carbon::parse($validated['tanggal'].' '.$validated['jam_selesai']);
+        $jam = $mulai->diffInMinutes($selesai) / 60;
 
         // Tamu bayar, siswa & guru gratis
         $hargaSatuan = in_array($user->role, ['siswa', 'guru']) ? 0 : $fasilitas->harga;
-        $total       = $hargaSatuan * $jam;
+        $total = $hargaSatuan * $jam;
 
         // Jika gratis → langsung lunas; tamu → pending (nunggu konfirmasi)
         $statusAwal = in_array($user->role, ['siswa', 'guru']) ? 'lunas' : 'pending';
 
         DB::transaction(function () use ($validated, $fasilitas, $user, $total, $hargaSatuan, $statusAwal, &$booking) {
             $booking = Booking::create([
-                'id_user'          => $validated['id_user'],
-                'tanggal_booking'  => $validated['tanggal_booking'],
-                'tanggal_mulai'    => $validated['tanggal_mulai'],
-                'tanggal_selesai'  => $validated['tanggal_selesai'],
-                'total_harga'      => $total,
-                'status'           => $statusAwal,
-                'sisa_pembayaran'  => $user->role === 'tamu' ? $total : 0,
-                'catatan'          => $validated['catatan'] ?? null,
+                'id_user' => $validated['id_user'],
+                'id_fasilitas' => $validated['id_fasilitas'],
+                'tanggal_booking' => $validated['tanggal_booking'],
+                'tanggal' => $validated['tanggal'],
+                'jam_mulai' => $validated['jam_mulai'],
+                'jam_selesai' => $validated['jam_selesai'],
+                'total_harga' => $total,
+                'status' => $statusAwal,
+                'sisa_pembayaran' => $user->role === 'tamu' ? $total : 0,
+                'catatan' => $validated['catatan'] ?? null,
             ]);
 
             $booking->details()->create([
                 'id_fasilitas' => $fasilitas->id_fasilitas,
-                'qty'          => 1,
+                'qty' => 1,
                 'harga_satuan' => $hargaSatuan,
-                'subtotal'     => $total,
+                'subtotal' => $total,
             ]);
         });
 
@@ -158,14 +159,14 @@ class BookingController extends Controller
         return view('admin.bookings.show', compact('booking'));
     }
 
-        /* ═══════════════════════════════════════════════════════════
+    /* ═══════════════════════════════════════════════════════════
      * EDIT — form edit booking
      * ═══════════════════════════════════════════════════════════ */
     public function edit($id)
     {
         $booking = Booking::with([
             'user',
-            'details.fasilitas'
+            'details.fasilitas',
         ])->findOrFail($id);
 
         $fasilitasList = Fasilitas::with('kategori')
@@ -191,17 +192,18 @@ class BookingController extends Controller
         $booking = Booking::findOrFail($id);
 
         $validated = $request->validate([
-            'tanggal_booking' => 'required|date',
-            'tanggal_mulai'   => 'required|date',
-            'tanggal_selesai' => 'required|date|after:tanggal_mulai',
-            'catatan'         => 'nullable|string|max:1000',
+            'tanggal' => 'required|date',
+            'jam_mulai' => 'required',
+            'jam_selesai' => 'required',
+            'catatan' => 'nullable|string|max:1000',
         ]);
 
         $booking->update([
             'tanggal_booking' => $validated['tanggal_booking'],
-            'tanggal_mulai'   => $validated['tanggal_mulai'],
-            'tanggal_selesai' => $validated['tanggal_selesai'],
-            'catatan'         => $validated['catatan'] ?? null,
+            'tanggal' => $validated['tanggal'],
+            'jam_mulai' => $validated['jam_mulai'],
+            'jam_selesai' => $validated['jam_selesai'],
+            'catatan' => $validated['catatan'] ?? null,
         ]);
 
         return redirect()
@@ -227,7 +229,7 @@ class BookingController extends Controller
         $statusBaru = $booking->isFree() ? 'lunas' : 'dikonfirmasi';
 
         $booking->update([
-            'status'       => $statusBaru,
+            'status' => $statusBaru,
             'confirmed_by' => auth()->id(),
             'confirmed_at' => now(),
             'catatan_admin' => $catatan,
@@ -247,19 +249,19 @@ class BookingController extends Controller
     {
         $booking = Booking::with('user')->findOrFail($id);
 
-        if (! $booking->isTamu()) {
+        if (!$booking->isTamu()) {
             return back()->with('error', 'Fitur DP hanya untuk tamu.');
         }
 
-        if (! in_array($booking->status, ['dikonfirmasi', 'belum_lunas'])) {
+        if (!in_array($booking->status, ['dikonfirmasi', 'belum_lunas'])) {
             return back()->with('error', 'Status booking tidak memungkinkan pencatatan DP.');
         }
 
         $validated = $request->validate([
-            'jumlah_dp'  => 'required|numeric|min:1',
-            'metode'     => 'required|in:tunai,transfer,lainnya',
+            'jumlah_dp' => 'required|numeric|min:1',
+            'metode' => 'required|in:tunai,transfer,lainnya',
             'keterangan' => 'nullable|string|max:500',
-            'bukti'      => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         $buktiPath = null;
@@ -269,17 +271,17 @@ class BookingController extends Controller
 
         DB::transaction(function () use ($booking, $validated, $buktiPath) {
             Pembayaran::create([
-                'id_booking'   => $booking->id_booking,
-                'jenis'        => 'dp',
-                'jumlah'       => $validated['jumlah_dp'],
-                'metode'       => $validated['metode'],
+                'id_booking' => $booking->id_booking,
+                'jenis' => 'dp',
+                'jumlah' => $validated['jumlah_dp'],
+                'metode' => $validated['metode'],
                 'bukti_transfer' => $buktiPath,
                 'dicatat_oleh' => auth()->id(),
-                'keterangan'   => $validated['keterangan'] ?? null,
+                'keterangan' => $validated['keterangan'] ?? null,
             ]);
 
             $totalDibayar = $booking->totalDibayar();
-            $sisa         = max(0, $booking->total_harga - $totalDibayar);
+            $sisa = max(0, $booking->total_harga - $totalDibayar);
 
             // Tentukan status baru
             if ($sisa <= 0) {
@@ -289,9 +291,9 @@ class BookingController extends Controller
             }
 
             $booking->update([
-                'dp_amount'       => $totalDibayar,
+                'dp_amount' => $totalDibayar,
                 'sisa_pembayaran' => $sisa,
-                'status'          => $statusBaru,
+                'status' => $statusBaru,
             ]);
         });
 
@@ -305,19 +307,19 @@ class BookingController extends Controller
     {
         $booking = Booking::with('user')->findOrFail($id);
 
-        if (! $booking->isTamu()) {
+        if (!$booking->isTamu()) {
             return back()->with('error', 'Fitur pelunasan hanya untuk tamu.');
         }
 
-        if (! in_array($booking->status, ['dp_dibayar', 'belum_lunas', 'dikonfirmasi'])) {
+        if (!in_array($booking->status, ['dp_dibayar', 'belum_lunas', 'dikonfirmasi'])) {
             return back()->with('error', 'Status booking tidak bisa dilunasi.');
         }
 
         $validated = $request->validate([
             'jumlah_lunas' => 'required|numeric|min:1',
-            'metode'       => 'required|in:tunai,transfer,lainnya',
-            'keterangan'   => 'nullable|string|max:500',
-            'bukti'        => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'metode' => 'required|in:tunai,transfer,lainnya',
+            'keterangan' => 'nullable|string|max:500',
+            'bukti' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         $buktiPath = null;
@@ -327,24 +329,24 @@ class BookingController extends Controller
 
         DB::transaction(function () use ($booking, $validated, $buktiPath) {
             Pembayaran::create([
-                'id_booking'     => $booking->id_booking,
-                'jenis'          => 'pelunasan',
-                'jumlah'         => $validated['jumlah_lunas'],
-                'metode'         => $validated['metode'],
+                'id_booking' => $booking->id_booking,
+                'jenis' => 'pelunasan',
+                'jumlah' => $validated['jumlah_lunas'],
+                'metode' => $validated['metode'],
                 'bukti_transfer' => $buktiPath,
-                'dicatat_oleh'   => auth()->id(),
-                'keterangan'     => $validated['keterangan'] ?? null,
+                'dicatat_oleh' => auth()->id(),
+                'keterangan' => $validated['keterangan'] ?? null,
             ]);
 
             $totalDibayar = $booking->totalDibayar();
-            $sisa         = max(0, $booking->total_harga - $totalDibayar);
+            $sisa = max(0, $booking->total_harga - $totalDibayar);
 
             $statusBaru = $sisa <= 0 ? 'lunas' : 'belum_lunas';
 
             $booking->update([
-                'dp_amount'       => $totalDibayar,
+                'dp_amount' => $totalDibayar,
                 'sisa_pembayaran' => $sisa,
-                'status'          => $statusBaru,
+                'status' => $statusBaru,
             ]);
         });
 
@@ -358,7 +360,7 @@ class BookingController extends Controller
     {
         $booking = Booking::findOrFail($id);
 
-        if (! in_array($booking->status, ['lunas', 'dikonfirmasi'])) {
+        if (!in_array($booking->status, ['lunas', 'dikonfirmasi'])) {
             return back()->with('error', 'Booking harus berstatus lunas atau dikonfirmasi untuk ditandai selesai.');
         }
 
@@ -379,7 +381,7 @@ class BookingController extends Controller
         }
 
         $booking->update([
-            'status'        => 'dibatalkan',
+            'status' => 'dibatalkan',
             'catatan_admin' => $request->input('catatan_admin'),
         ]);
 

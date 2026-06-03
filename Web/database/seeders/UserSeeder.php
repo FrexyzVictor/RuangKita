@@ -14,7 +14,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
+<<<<<<< HEAD
+=======
 
+>>>>>>> e0f7c11e5622a9026bc2546c61da836cdde692c7
             [
                 'nama' => 'RuangKita',
                 'email' => 'ruangkitasmkn64@gmail.com',
@@ -76,6 +79,46 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
+<<<<<<< HEAD
+            [
+                'nama' => 'Pengunjung RuangKita',
+                'email' => 'pengunjung@ruangkita.com',
+                'password' => Hash::make('pengunjung'),
+                'role' => 'user',
+                'anggota' => 'PMR',
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'PENGUNJUNG-RUANGKITA',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+        ]);
+
+        DB::table('users')->insert([
+            'nama' => 'Guru RuangKita',
+            'email' => 'guru@gmail.com',
+            'password' => Hash::make('Guru'),
+            'role' => 'Guru',
+            'no_hp' => '085220007279',
+            'alamat' => 'none',
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('users')->insert([
+            'nama' => 'Siswa RuangKita',
+            'email' => 'siswa@gmail.com',
+            'password' => Hash::make('siswa'),
+            'role' => 'Siswa',
+            'no_hp' => '085220007279',
+            'alamat' => 'none',
+            'email_verified_at' => now(),
+            'created_at' => now(),
+            'updated_at' => now(),
+=======
             // [
             //     'nama' => 'Pengunjung RuangKita',
             //     'email' => 'pengunjung@ruangkita.com',
@@ -91,6 +134,7 @@ class UserSeeder extends Seeder
             //     'updated_at' => now(),
             // ]
 
+>>>>>>> e0f7c11e5622a9026bc2546c61da836cdde692c7
         ]);
     }
 }

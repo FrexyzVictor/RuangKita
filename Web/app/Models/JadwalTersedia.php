@@ -3,12 +3,9 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class JadwalTersedia extends Model
 {
-    use HasFactory;
-
     protected $table = 'jadwal_tersedia';
 
     protected $primaryKey = 'id_jadwal';
@@ -18,11 +15,15 @@ class JadwalTersedia extends Model
         'tanggal',
         'jam_mulai',
         'jam_selesai',
-        'status'
+        'status',
     ];
 
     public function fasilitas()
     {
-        return $this->belongsTo(Fasilitas::class, 'id_fasilitas');
+        return $this->belongsTo(
+            Fasilitas::class,
+            'id_fasilitas',
+            'id_fasilitas'
+        );
     }
 }

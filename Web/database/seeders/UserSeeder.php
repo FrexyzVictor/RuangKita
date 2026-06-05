@@ -14,6 +14,10 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
+<<<<<<< HEAD
+=======
+
+>>>>>>> e0f7c11e5622a9026bc2546c61da836cdde692c7
             [
                 'nama' => 'RuangKita',
                 'email' => 'ruangkitasmkn64@gmail.com',
@@ -29,12 +33,28 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
+
+            [
+                'nama' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('admin'),
+                'role' => 'admin',
+                'anggota' => null,
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'ADMIN',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
             [
                 'nama' => 'Guru RuangKita',
                 'email' => 'guru@ruangkita.com',
-                'password' => Hash::make('guru'),
+                'password' => Hash::make('Guru'),
                 'role' => 'user',
-                'anggota' => 'MPK',
+                'anggota' => null,
                 'no_hp' => '085220007279',
                 'alamat' => 'none',
                 'email_verified_at' => now(),
@@ -45,7 +65,7 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'nama' => 'Siswa RuangKita',
+                'nama' => 'Siswa RuangKita',                            
                 'email' => 'siswa@ruangkita.com',
                 'password' => Hash::make('siswa'),
                 'role' => 'user',
@@ -59,6 +79,7 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
+<<<<<<< HEAD
             [
                 'nama' => 'Pengunjung RuangKita',
                 'email' => 'pengunjung@ruangkita.com',
@@ -97,6 +118,23 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'created_at' => now(),
             'updated_at' => now(),
+=======
+            // [
+            //     'nama' => 'Pengunjung RuangKita',
+            //     'email' => 'pengunjung@ruangkita.com',
+            //     'password' => Hash::make('pengunjung'),
+            //     'role' => 'user',
+            //     'anggota' => 'PMR',
+            //     'no_hp' => '085220007279',
+            //     'alamat' => 'none',
+            //     'email_verified_at' => now(),
+            //     'phone_verified_at' => now(),
+            //     'qr_code' => 'PENGUNJUNG-RUANGKITA',
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]
+
+>>>>>>> e0f7c11e5622a9026bc2546c61da836cdde692c7
         ]);
     }
 }

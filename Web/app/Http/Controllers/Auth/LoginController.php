@@ -18,15 +18,21 @@ class LoginController extends Controller
     /**
      * Redirect setelah login berdasarkan role.
      */
-    protected function redirectTo()
-    {
-        return match (auth()->user()->role) {
-            'admin' => '/admin/dashboard',
-            'guru'  => '/guru/dashboard',
-            'siswa' => '/home-siswa',
-            default => '/pengunjung/dashboard',
-        };
-    }
+  protected function redirectTo()
+{
+    return match (strtolower(auth()->user()->role)) {
+
+        'admin' => '/admin/dashboard',
+
+        'guru'  => '/guru/dashboard',
+
+        'siswa' => '/home-siswa',
+
+        'pengunjung' => '/pengunjung/dashboard',
+
+        default => '/login',
+    };
+}
 
     /**
      * Field login yang dipakai — default Laravel 'email', sudah sesuai.

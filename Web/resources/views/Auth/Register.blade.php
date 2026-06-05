@@ -1,551 +1,470 @@
 <!DOCTYPE html>
-<html lang="id">
-
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Daftar — RuangKita</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
-    <style>
-        *,
-        *::before,
-        *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Buat akun RuangKita — Sistem Booking Ruangan Sekolah Modern">
 
-        :root {
-            --primary: #1a56db;
-            --primary-dark: #1347bf;
-            --primary-light: #e8f0fe;
-            --text: #111827;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --bg: #f9fafb;
-            --white: #ffffff;
-            --danger: #dc2626;
-            --danger-bg: #fef2f2;
-        }
+    {{-- Fonts --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
+    {{-- QR Scanner lib --}}
+    <script src="https://unpkg.com/html5-qrcode" defer></script>
 
-        .wrapper {
-            display: grid;
-            grid-template-columns: 420px 1fr;
-            max-width: 860px;
-            width: 100%;
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-        }
-
-        /* LEFT = FORM */
-        .panel-form {
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .form-header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .form-group {
-            margin-bottom: 0.875rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.4rem;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"],
-        input[type="tel"],
-        select,
-        textarea {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.875rem;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--white);
-            transition: border-color 0.15s, box-shadow 0.15s;
-            outline: none;
-        }
-
-        select {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 14px center;
-            cursor: pointer;
-        }
-
-        textarea {
-            resize: vertical;
-            min-height: 70px;
-        }
-
-        input:focus,
-        select:focus,
-        textarea:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26, 86, 219, 0.1);
-        }
-
-        input.is-invalid,
-        select.is-invalid,
-        textarea.is-invalid {
-            border-color: var(--danger);
-        }
-
-        .invalid-feedback {
-            font-size: 0.78rem;
-            color: var(--danger);
-            margin-top: 4px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 11px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-            margin-top: 0.5rem;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.99);
-        }
-
-        .login-prompt {
-            text-align: center;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            margin-top: 1rem;
-        }
-
-        .login-prompt a {
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .login-prompt a:hover {
-            text-decoration: underline;
-        }
-
-        .login-prompt a:hover {
-            text-decoration: underline;
-        }
-
-        /* QR SCANNER */
-        .qr-section {
-            margin-top: 1.5rem;
-        }
-
-        .qr-button {
-            width: 100%;
-            padding: 11px;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            background: var(--white);
-            font-size: 0.9rem;
-            font-weight: 600;
-            font-family: inherit;
-            color: var(--text);
-            cursor: pointer;
-            transition: 0.2s;
-        }
-
-        .qr-button:hover {
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        #reader {
-            width: 100%;
-            margin-top: 1rem;
-            overflow: hidden;
-            border-radius: 12px;
-            border: 1.5px solid var(--border);
-            background: #000;
-            display: none;
-        }
-
-        /* RIGHT = INFO PANEL */
-        .panel-info {
-            background: linear-gradient(150deg, #0f2d6e 0%, #1347bf 60%, #1a56db 100%);
-            padding: 3rem 2.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .panel-info::before {
-            content: '';
-            position: absolute;
-            top: -80px;
-            right: -80px;
-            width: 260px;
-            height: 260px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.06);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1;
-        }
-
-        .brand-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .brand-icon svg {
-            width: 22px;
-            height: 22px;
-        }
-
-        .brand-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: white;
-        }
-
-        .info-copy {
-            z-index: 1;
-        }
-
-        .info-copy h3 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: white;
-            line-height: 1.3;
-            margin-bottom: 0.75rem;
-        }
-
-        .info-copy p {
-            font-size: 0.875rem;
-            color: rgba(255, 255, 255, 0.72);
-            line-height: 1.65;
-        }
-
-        .steps {
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .step {
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-        }
-
-        .step-num {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            color: white;
-            font-size: 0.78rem;
-            font-weight: 700;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .step-text {
-            font-size: 0.82rem;
-            color: rgba(255, 255, 255, 0.82);
-            line-height: 1.5;
-            padding-top: 3px;
-        }
-
-        .step-text strong {
-            color: white;
-            display: block;
-            font-weight: 600;
-            margin-bottom: 1px;
-        }
-
-        @media (max-width: 640px) {
-            .wrapper {
-                grid-template-columns: 1fr;
-            }
-
-            .panel-info {
-                display: none;
-            }
-
-            .panel-form {
-                padding: 2rem 1.5rem;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    {{-- Vite: CSS + JS --}}
+    @vite(['resources/css/auth/register.css', 'resources/js/auth/register.js'])
 </head>
 
-<body>
+<body class="reg-body" id="regBody">
 
-    <div class="wrapper">
+{{-- ═══════════ SCENE BACKGROUND ═══════════ --}}
+<div class="scene-bg" aria-hidden="true">
+    <canvas id="noiseCanvas" class="noise-canvas"></canvas>
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+    <div class="grid-lines"></div>
+</div>
 
-        {{-- LEFT = FORM --}}
-        <div class="panel-form">
-            <div class="form-header">
-                <h2>Buat akun baru</h2>
-                <p>Isi data diri untuk mendaftar ke RuangKita</p>
+{{-- ═══════════ PARTICLES ═══════════ --}}
+<canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
+
+{{-- ═══════════ WRAPPER ═══════════ --}}
+<div class="auth-wrapper" id="authWrapper">
+
+    {{-- ─── LEFT PANEL ─── --}}
+    <aside class="auth-panel-left" id="panelLeft">
+
+        {{-- Background image layer (no looping, cover) --}}
+        <div class="left-bg-img" aria-hidden="true"></div>
+        <div class="left-overlay" aria-hidden="true"></div>
+        <div class="left-glass"  aria-hidden="true"></div>
+
+        {{-- Brand --}}
+        <div class="brand" data-aos="fade-down" data-aos-delay="0">
+            <div class="brand__icon">
+                <img
+                    src="{{ asset('storage/login/logoNeper.png') }}"
+                    alt="Logo RuangKita"
+                    class="brand__logo"
+                >
+            </div>
+            <span class="brand__name">RuangKita</span>
+        </div>
+
+        {{-- Hero Copy --}}
+        <div class="panel-hero" data-aos="fade-up" data-aos-delay="100">
+            <p class="panel-hero__eyebrow">
+                <span class="eyebrow-dot"></span>
+                Sistem Booking Ruangan
+            </p>
+            <h1 class="panel-hero__headline">
+                Ruang yang Tepat,<br>
+                <em class="panel-hero__accent">Waktu yang Pas</em>
+            </h1>
+            <p class="panel-hero__desc">
+                Daftar sekarang dan nikmati kemudahan booking ruangan sekolah kapan saja, di mana saja.
+            </p>
+        </div>
+
+        {{-- Feature Chips --}}
+        <div class="feature-strip" data-aos="fade-up" data-aos-delay="200">
+            <div class="feat-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Gratis Selamanya
+            </div>
+            <div class="feat-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                Aman &amp; Terenkripsi
+            </div>
+            <div class="feat-chip">
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+                Multi-Role
+            </div>
+        </div>
+
+        {{-- Live Clock (desktop only) --}}
+        <div class="panel-clock" id="panelClock" aria-label="Jam saat ini">
+            <span class="panel-clock__time" id="clockTime">--:--:--</span>
+            <span class="panel-clock__date" id="clockDate">-- --- ----</span>
+        </div>
+
+        <p class="panel-footer">© {{ date('Y') }} RuangKita · All Rights Reserved.</p>
+
+    </aside>
+    {{-- /auth-panel-left --}}
+
+    {{-- ─── RIGHT PANEL (Form) ─── --}}
+    <main class="auth-panel-right" id="panelRight">
+
+        <div class="register-card" id="registerCard"
+             data-aos="card-rise"
+             role="main"
+             aria-label="Form Registrasi RuangKita">
+
+            {{-- Card overlays --}}
+            <div class="card-glow"     aria-hidden="true"></div>
+            <div class="card-magnetic" id="cardMagnetic" aria-hidden="true"></div>
+
+            {{-- Logo --}}
+            <div class="card-logo" data-aos="pop" data-aos-delay="350" aria-label="Logo RuangKita">
+                <div class="card-logo__ring"></div>
+                <img
+                    src="{{ asset('storage/login/logoNeper.png') }}"
+                    alt="Logo RuangKita"
+                    class="card-logo__img"
+                >
             </div>
 
-            <form method="POST" action="{{ route('register') }}">
+            {{-- Header --}}
+            <div class="card-header" data-aos="fade-up" data-aos-delay="400">
+                <h2 class="card-header__title">Buat Akun Baru</h2>
+                <p  class="card-header__sub">Daftar untuk menggunakan RuangKita</p>
+            </div>
+
+            {{-- Server error(s) --}}
+            @if ($errors->any())
+                <div class="alert alert--error" role="alert" data-aos="fade-up" data-aos-delay="420">
+                    <div class="alert__icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                    </div>
+                    <span>{{ $errors->first() }}</span>
+                </div>
+            @endif
+
+            {{-- Session status --}}
+            @if (session('status'))
+                <div class="alert alert--success" role="alert" data-aos="fade-up">
+                    <div class="alert__icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span>{{ session('status') }}</span>
+                </div>
+            @endif
+
+            {{-- ══════════ REGISTRATION FORM ══════════ --}}
+            <form
+                id="registerForm"
+                method="POST"
+                action="{{ route('register') }}"
+                class="register-form"
+                novalidate
+                data-aos="fade-up"
+                data-aos-delay="450"
+            >
                 @csrf
 
-                {{-- Nama --}}
-                <div class="form-group">
-                    <label for="nama">Nama Lengkap</label>
-                    <input type="text" id="nama" name="nama" value="{{ old('nama') }}"
-                        placeholder="Nama lengkap Anda" required autocomplete="name"
-                        class="{{ $errors->has('nama') ? 'is-invalid' : '' }}">
+                {{-- Role default pengunjung (hidden) --}}
+                <input type="hidden" name="role" value="siswa">
+
+                {{-- Progress Bar --}}
+                <div class="form-progress"
+                     aria-label="Progress pendaftaran"
+                     role="progressbar"
+                     aria-valuenow="0"
+                     aria-valuemin="0"
+                     aria-valuemax="100">
+                    <div class="form-progress__track">
+                        <div class="form-progress__fill" id="progressFill" style="width:0%"></div>
+                    </div>
+                    <span class="form-progress__label" id="progressLabel">0 / 5 field terisi</span>
+                </div>
+
+                {{-- ── Nama Lengkap ── --}}
+                <div class="form-group" id="group-nama" data-field="nama">
+                    <label class="form-label" for="nama">
+                        Nama Lengkap
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </span>
+                        <input
+                            type="text"
+                            id="nama"
+                            name="nama"
+                            class="form-input @error('nama') is-invalid @enderror"
+                            value="{{ old('nama') }}"
+                            placeholder="Nama lengkap Anda"
+                            required
+                            autocomplete="name"
+                            aria-describedby="nama-error"
+                        >
+                        <span class="input-validity-icon" id="nama-validity" aria-hidden="true"></span>
+                    </div>
                     @error('nama')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <p class="field-error" id="nama-error" role="alert">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Email --}}
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" value="{{ old('email') }}"
-                        placeholder="nama@sekolah.sch.id" required autocomplete="email"
-                        class="{{ $errors->has('email') ? 'is-invalid' : '' }}">
+                {{-- ── Email ── --}}
+                <div class="form-group" id="group-email" data-field="email">
+                    <label class="form-label" for="email">
+                        Email
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                        </span>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input @error('email') is-invalid @enderror"
+                            value="{{ old('email') }}"
+                            placeholder="nama@sekolah.sch.id"
+                            required
+                            autocomplete="email"
+                            spellcheck="false"
+                            aria-describedby="email-error"
+                        >
+                        <span class="input-validity-icon" id="email-validity" aria-hidden="true"></span>
+                    </div>
                     @error('email')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <p class="field-error" id="email-error" role="alert">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Role --}}
-                <div class="form-group">
-                    <label for="role">Role / Jabatan</label>
-                    <select id="role" name="role" required
-                        class="{{ $errors->has('role') ? 'is-invalid' : '' }}">
-                        <option value="" disabled {{ old('role') ? '' : 'selected' }}>Pilih role Anda</option>
-                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                        <option value="guru" {{ old('role') == 'guru' ? 'selected' : '' }}>Guru</option>
-                        <option value="siswa" {{ old('role') == 'siswa' ? 'selected' : '' }}>Siswa</option>
-                        <option value="pengunjung" {{ old('role') == 'pengunjung' ? 'selected' : '' }}>Pengunjung
-                        </option>
-                    </select>
-                    @error('role')
-                        <div class="invalid-feedback">{{ $message }}</div>
-                    @enderror
-                </div>
-
-                {{-- No HP --}}
-                <div class="form-group">
-                    <label for="no_hp">No. HP <span
-                            style="font-weight:400;color:var(--text-muted)">(opsional)</span></label>
-                    <input type="tel" id="no_hp" name="no_hp" value="{{ old('no_hp') }}"
-                        placeholder="08xxxxxxxxxx" class="{{ $errors->has('no_hp') ? 'is-invalid' : '' }}">
+                {{-- ── No HP (opsional) ── --}}
+                <div class="form-group" id="group-no_hp" data-field="no_hp">
+                    <label class="form-label" for="no_hp">
+                        No. HP
+                        <span class="label-optional">(opsional)</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.8 19.79 19.79 0 0118.1 2.18 2 2 0 0120.26 2h0a2 2 0 012 2v3"/></svg>
+                        </span>
+                        <input
+                            type="tel"
+                            id="no_hp"
+                            name="no_hp"
+                            class="form-input @error('no_hp') is-invalid @enderror"
+                            value="{{ old('no_hp') }}"
+                            placeholder="08xxxxxxxxxx"
+                            autocomplete="tel"
+                        >
+                        <span class="input-validity-icon" id="no_hp-validity" aria-hidden="true"></span>
+                    </div>
                     @error('no_hp')
-                        <div class="invalid-feedback">{{ $message }}</div>
+                        <p class="field-error" role="alert">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Password --}}
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Min. 8 karakter" required
-                            autocomplete="new-password" class="{{ $errors->has('password') ? 'is-invalid' : '' }}">
-                        @error('password')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                {{-- ── Password ── --}}
+                <div class="form-group" id="group-password" data-field="password">
+                    <label class="form-label" for="password">
+                        Password
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        </span>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input @error('password') is-invalid @enderror"
+                            placeholder="Min. 8 karakter"
+                            required
+                            autocomplete="new-password"
+                            aria-describedby="password-error password-strength-label"
+                        >
+                        <button
+                            type="button"
+                            class="input-icon input-icon--right input-icon--btn"
+                            id="togglePassword"
+                            aria-label="Tampilkan password">
+                            <svg class="eye-open"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                        </button>
                     </div>
 
-                    <div class="form-group">
-                        <label for="password_confirmation">Konfirmasi Password</label>
-                        <input type="password" id="password_confirmation" name="password_confirmation"
-                            placeholder="Ulangi password" required autocomplete="new-password">
+                    {{-- Password Strength Meter --}}
+                    <div class="password-strength" id="passwordStrength" aria-live="polite">
+                        <div class="strength-bars">
+                            <div class="strength-bar" id="sbar1"></div>
+                            <div class="strength-bar" id="sbar2"></div>
+                            <div class="strength-bar" id="sbar3"></div>
+                            <div class="strength-bar" id="sbar4"></div>
+                        </div>
+                        <span class="strength-label" id="strengthLabel" aria-label="Kekuatan password"></span>
                     </div>
+
+                    {{-- Password Rules --}}
+                    <div class="password-rules" id="passwordRules">
+                        <div class="rule" id="rule-len">
+                            <span class="rule-icon"></span> Min. 8 karakter
+                        </div>
+                        <div class="rule" id="rule-upper">
+                            <span class="rule-icon"></span> Huruf besar
+                        </div>
+                        <div class="rule" id="rule-lower">
+                            <span class="rule-icon"></span> Huruf kecil
+                        </div>
+                        <div class="rule" id="rule-num">
+                            <span class="rule-icon"></span> Angka
+                        </div>
+                    </div>
+
+                    @error('password')
+                        <p class="field-error" id="password-error" role="alert">{{ $message }}</p>
+                    @enderror
                 </div>
 
-                <button type="submit" class="btn-primary">Buat Akun</button>
-            </form>
-            <div class="qr-section">
+                {{-- ── Konfirmasi Password ── --}}
+                <div class="form-group" id="group-password_confirmation" data-field="password_confirmation">
+                    <label class="form-label" for="password_confirmation">
+                        Konfirmasi Password
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                        </span>
+                        <input
+                            type="password"
+                            id="password_confirmation"
+                            name="password_confirmation"
+                            class="form-input"
+                            placeholder="Ulangi password Anda"
+                            required
+                            autocomplete="new-password"
+                            aria-describedby="confirm-error"
+                        >
+                        <button
+                            type="button"
+                            class="input-icon input-icon--right input-icon--btn"
+                            id="toggleConfirm"
+                            aria-label="Tampilkan konfirmasi password">
+                            <svg class="eye-open"  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-close" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                        </button>
+                    </div>
+                    <p class="field-error" id="confirm-error" role="alert" hidden>Password tidak cocok</p>
+                </div>
 
-                <button type="button" class="qr-button" onclick="startScanner()">
-                    Scan QR untuk Masuk
+                {{-- ── Terms & Conditions ── --}}
+                <div class="terms-row" id="group-terms">
+                    <label class="checkbox-label" for="terms">
+                        <input type="checkbox" id="terms" name="terms" class="checkbox-native" required>
+                        <span class="checkbox-custom" aria-hidden="true">
+                            <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                        </span>
+                        <span class="checkbox-text">
+                            Saya setuju dengan
+                            <a href="#" class="terms-link" id="openTerms">Syarat dan Ketentuan</a>
+                        </span>
+                    </label>
+                    <p class="field-error" id="terms-error" role="alert" hidden>Harap setujui syarat dan ketentuan</p>
+                </div>
+
+                {{-- ── Submit ── --}}
+                <button type="submit" class="btn-submit" id="btnSubmit" aria-label="Buat akun baru">
+                    <span class="btn-submit__bg"     aria-hidden="true"></span>
+                    <span class="btn-submit__ripple" id="btnRipple" aria-hidden="true"></span>
+                    <span class="btn-submit__label"  id="btnLabel">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+                        Buat Akun
+                    </span>
+                    <span class="btn-submit__loader" id="btnLoader" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    </span>
                 </button>
 
-                <div id="reader" style="display:none;"></div>
+            </form>
+            {{-- /registerForm --}}
 
+            {{-- Social Divider --}}
+            <div class="social-divider" data-aos="fade-up" data-aos-delay="560">
+                <span aria-hidden="true"></span>
+                <span class="social-divider__text">atau daftar dengan</span>
+                <span aria-hidden="true"></span>
             </div>
 
-            <div class="login-prompt">
-                Sudah punya akun? <a href="{{ route('login') }}">Masuk di sini</a>
-            </div>
-        </div>
-
-        {{-- RIGHT = INFO --}}
-        <div class="panel-info">
-            <div class="brand">
-                <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
-                        <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z" fill="rgba(255,255,255,0.9)" />
-                        <polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="rgba(26,86,219,0.8)"
-                            stroke-width="1.5" />
+            {{-- Social Buttons --}}
+            <div class="social-row" data-aos="fade-up" data-aos-delay="600">
+                <button type="button" class="btn-social" id="btnGoogle" aria-label="Daftar dengan Google">
+                    <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
                     </svg>
-                </div>
-                <span class="brand-name">RuangKita</span>
+                    <span>Google</span>
+                </button>
+                <button type="button" class="btn-social" id="btnMicrosoft" aria-label="Daftar dengan Microsoft">
+                    <svg width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.4 2H2v9.4h9.4V2z"      fill="#F25022"/>
+                        <path d="M22 2h-9.4v9.4H22V2z"      fill="#7FBA00"/>
+                        <path d="M11.4 12.6H2V22h9.4v-9.4z" fill="#00A4EF"/>
+                        <path d="M22 12.6h-9.4V22H22v-9.4z"  fill="#FFB900"/>
+                    </svg>
+                    <span>Microsoft</span>
+                </button>
             </div>
 
-            <div class="info-copy">
-                <h3>Mulai kelola fasilitas sekolah dengan mudah</h3>
-                <p>Platform booking dan manajemen ruang terpadu untuk seluruh civitas akademika.</p>
+            {{-- QR Section --}}
+            <div class="qr-section" data-aos="fade-up" data-aos-delay="640">
+                <button type="button" class="btn-qr" id="btnQr" aria-label="Scan QR untuk masuk">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+                    Scan QR untuk Masuk
+                </button>
+                <div id="qrReader" class="qr-reader" style="display:none;" aria-live="polite"></div>
             </div>
 
-            <div class="steps">
-                <div class="step">
-                    <div class="step-num">1</div>
-                    <div class="step-text">
-                        <strong>Daftar akun</strong>
-                        Isi data diri dan pilih role sesuai jabatan
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">2</div>
-                    <div class="step-text">
-                        <strong>Masuk ke dashboard</strong>
-                        Akses fitur sesuai hak akses role Anda
-                    </div>
-                </div>
-                <div class="step">
-                    <div class="step-num">3</div>
-                    <div class="step-text">
-                        <strong>Mulai booking</strong>
-                        Pesan fasilitas, cek jadwal, kelola evaluasi
-                    </div>
-                </div>
-            </div>
+            {{-- Login Prompt --}}
+            <p class="login-prompt" data-aos="fade-up" data-aos-delay="680">
+                Sudah punya akun?
+                <a href="{{ route('login') }}" class="login-prompt__link">Masuk di sini</a>
+            </p>
+
         </div>
+        {{-- /register-card --}}
 
+    </main>
+    {{-- /auth-panel-right --}}
+
+</div>
+{{-- /auth-wrapper --}}
+
+{{-- ═══════════ TERMS MODAL ═══════════ --}}
+<div class="terms-modal"
+     id="termsModal"
+     role="dialog"
+     aria-modal="true"
+     aria-labelledby="termsModalTitle"
+     hidden>
+    <div class="terms-modal__backdrop" id="termsBackdrop"></div>
+    <div class="terms-modal__box">
+        <div class="terms-modal__header">
+            <h3 id="termsModalTitle">Syarat &amp; Ketentuan</h3>
+            <button class="terms-modal__close" id="termsClose" aria-label="Tutup modal">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+        </div>
+        <div class="terms-modal__body">
+            <p>Dengan mendaftar di RuangKita, Anda menyetujui bahwa:</p>
+            <ol>
+                <li>Data yang Anda masukkan adalah benar dan dapat dipertanggungjawabkan.</li>
+                <li>Anda akan menggunakan platform sesuai dengan peran yang diberikan.</li>
+                <li>Penyalahgunaan akun dapat mengakibatkan penangguhan atau penghapusan akun.</li>
+                <li>Data pribadi Anda disimpan secara aman dan tidak akan dibagikan kepada pihak ketiga.</li>
+                <li>RuangKita berhak memperbarui syarat dan ketentuan sewaktu-waktu.</li>
+            </ol>
+        </div>
+        <div class="terms-modal__footer">
+            <button class="btn-terms-accept" id="termsAccept">Saya Mengerti</button>
+        </div>
     </div>
-    <script>
-
-    let scannerStarted = false;
-
-    function startScanner() {
-
-        const reader = document.getElementById('reader');
-
-        reader.style.display = 'block';
-
-        if(scannerStarted) return;
-
-        scannerStarted = true;
-
-        const html5QrcodeScanner = new Html5QrcodeScanner(
-            "reader",
-            {
-                fps: 10,
-                qrbox: 250
-            }
-        );
-
-        html5QrcodeScanner.render(onScanSuccess);
-
-    }
-
-    function onScanSuccess(decodedText) {
-
-        fetch("{{ route('qr.login') }}", {
-
-            method: "POST",
-
-            headers: {
-                "Content-Type": "application/json",
-                "X-CSRF-TOKEN": "{{ csrf_token() }}"
-            },
-
-            body: JSON.stringify({
-                qr_code: decodedText
-            })
-
-        })
-
-        .then(response => response.json())
-
-        .then(data => {
-
-            if(data.success){
-
-                window.location.href = data.redirect;
-
-            } else {
-
-                alert('QR tidak valid');
-
-            }
-
-        });
-
-    }
-
-</script>
+</div>
 
 </body>
-
 </html>

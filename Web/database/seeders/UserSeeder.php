@@ -14,7 +14,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-<<<<<<< HEAD:Web/database/seeders/AdminSeeder.php
 
             [
                 'nama' => 'RuangKita',
@@ -31,12 +30,28 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
+
+            [
+                'nama' => 'Admin',
+                'email' => 'admin@gmail.com',
+                'password' => Hash::make('admin'),
+                'role' => 'admin',
+                'anggota' => null,
+                'no_hp' => '085220007279',
+                'alamat' => 'none',
+                'email_verified_at' => now(),
+                'phone_verified_at' => now(),
+                'qr_code' => 'ADMIN',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+
             [
                 'nama' => 'Guru RuangKita',
                 'email' => 'guru@ruangkita.com',
-                'password' => Hash::make('guru'),
+                'password' => Hash::make('Guru'),
                 'role' => 'user',
-                'anggota' => 'MPK',
+                'anggota' => null,
                 'no_hp' => '085220007279',
                 'alamat' => 'none',
                 'email_verified_at' => now(),
@@ -47,7 +62,7 @@ class UserSeeder extends Seeder
             ],
 
             [
-                'nama' => 'Siswa RuangKita',
+                'nama' => 'Siswa RuangKita',                            
                 'email' => 'siswa@ruangkita.com',
                 'password' => Hash::make('siswa'),
                 'role' => 'user',
@@ -61,56 +76,21 @@ class UserSeeder extends Seeder
                 'updated_at' => now(),
             ],
 
-            [
-                'nama' => 'Pengunjung RuangKita',
-                'email' => 'pengunjung@ruangkita.com',
-                'password' => Hash::make('pengunjung'),
-                'role' => 'user',
-                'anggota' => 'PMR',
-                'no_hp' => '085220007279',
-                'alamat' => 'none',
-                'email_verified_at' => now(),
-                'phone_verified_at' => now(),
-                'qr_code' => 'PENGUNJUNG-RUANGKITA',
-                'created_at' => now(),
-                'updated_at' => now(),
-            ]
+            // [
+            //     'nama' => 'Pengunjung RuangKita',
+            //     'email' => 'pengunjung@ruangkita.com',
+            //     'password' => Hash::make('pengunjung'),
+            //     'role' => 'user',
+            //     'anggota' => 'PMR',
+            //     'no_hp' => '085220007279',
+            //     'alamat' => 'none',
+            //     'email_verified_at' => now(),
+            //     'phone_verified_at' => now(),
+            //     'qr_code' => 'PENGUNJUNG-RUANGKITA',
+            //     'created_at' => now(),
+            //     'updated_at' => now(),
+            // ]
 
-=======
-            'nama' => 'Admin RuangKita',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
-            'role' => 'admin',
-            'no_hp' => '085220007279',
-            'alamat' => 'none',
-            'email_verified_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('users')->insert([
-            'nama' => 'Guru RuangKita',
-            'email' => 'guru@gmail.com',
-            'password' => Hash::make('Guru'),
-            'role' => 'Guru',
-            'no_hp' => '085220007279',
-            'alamat' => 'none',
-            'email_verified_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
-
-        DB::table('users')->insert([
-            'nama' => 'Siswa RuangKita',
-            'email' => 'siswa@gmail.com',
-            'password' => Hash::make('siswa'),
-            'role' => 'Siswa',
-            'no_hp' => '085220007279',
-            'alamat' => 'none',
-            'email_verified_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
->>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b:Web/database/seeders/UserSeeder.php
         ]);
     }
 }

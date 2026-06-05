@@ -1,486 +1,347 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Masuk — RuangKita</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="description" content="Sistem Booking Ruangan Sekolah yang memudahkan guru, siswa, dan staff dalam mengelola peminjaman ruangan secara efisien dan terorganisir.">
 
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    {{-- Google Fonts: Syne + DM Sans --}}
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&display=swap" rel="stylesheet">
 
-    <style>
-        *, *::before, *::after {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        :root {
-            --primary: #1a56db;
-            --primary-dark: #1347bf;
-            --primary-light: #e8f0fe;
-            --text: #111827;
-            --text-muted: #6b7280;
-            --border: #e5e7eb;
-            --bg: #f9fafb;
-            --white: #ffffff;
-            --danger: #dc2626;
-            --danger-bg: #fef2f2;
-        }
-
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background: var(--bg);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 1.5rem;
-        }
-
-        .wrapper {
-            display: grid;
-            grid-template-columns: 1fr 420px;
-            max-width: 860px;
-            width: 100%;
-            background: var(--white);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.08);
-        }
-
-        .panel-left {
-            background: linear-gradient(135deg, #1347bf 0%, #1a56db 50%, #2563eb 100%);
-            padding: 3rem 2.5rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .panel-left::before {
-            content: '';
-            position: absolute;
-            top: -60px;
-            right: -60px;
-            width: 240px;
-            height: 240px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.07);
-        }
-
-        .panel-left::after {
-            content: '';
-            position: absolute;
-            bottom: -40px;
-            left: -40px;
-            width: 180px;
-            height: 180px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-        }
-
-        .brand {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            z-index: 1;
-        }
-
-        .brand-icon {
-            width: 40px;
-            height: 40px;
-            background: rgba(255,255,255,0.2);
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .brand-icon svg {
-            width: 22px;
-            height: 22px;
-            fill: white;
-        }
-
-        .brand-name {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: white;
-            letter-spacing: -0.3px;
-        }
-
-        .panel-copy {
-            z-index: 1;
-        }
-
-        .panel-copy h1 {
-            font-size: 1.75rem;
-            font-weight: 700;
-            color: white;
-            line-height: 1.25;
-            margin-bottom: 0.75rem;
-        }
-
-        .panel-copy p {
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.75);
-            line-height: 1.6;
-        }
-
-        .roles-list {
-            z-index: 1;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .role-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            background: rgba(255,255,255,0.12);
-            border: 1px solid rgba(255,255,255,0.2);
-            border-radius: 8px;
-            padding: 8px 12px;
-            font-size: 0.8rem;
-            color: rgba(255,255,255,0.9);
-            font-weight: 500;
-        }
-
-        .role-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.7);
-            flex-shrink: 0;
-        }
-
-        .panel-right {
-            padding: 2.5rem 2rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-
-        .form-header {
-            margin-bottom: 1.75rem;
-        }
-
-        .form-header h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: var(--text);
-            margin-bottom: 0.3rem;
-        }
-
-        .form-header p {
-            font-size: 0.85rem;
-            color: var(--text-muted);
-        }
-
-        .alert-error {
-            background: var(--danger-bg);
-            border: 1px solid #fecaca;
-            border-radius: 10px;
-            padding: 10px 14px;
-            margin-bottom: 1.25rem;
-            font-size: 0.82rem;
-            color: var(--danger);
-        }
-
-        .form-group {
-            margin-bottom: 1rem;
-        }
-
-        label {
-            display: block;
-            font-size: 0.82rem;
-            font-weight: 600;
-            color: var(--text);
-            margin-bottom: 0.4rem;
-        }
-
-        input[type="email"],
-        input[type="password"],
-        input[type="text"] {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            font-size: 0.875rem;
-            font-family: inherit;
-            color: var(--text);
-            background: var(--white);
-            transition: border-color 0.15s, box-shadow 0.15s;
-            outline: none;
-        }
-
-        input:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(26,86,219,0.1);
-        }
-
-        input.is-invalid {
-            border-color: var(--danger);
-        }
-
-        .invalid-feedback {
-            font-size: 0.78rem;
-            color: var(--danger);
-            margin-top: 4px;
-        }
-
-        .form-options {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.25rem;
-        }
-
-        .remember-me {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-            cursor: pointer;
-        }
-
-        .remember-me input[type="checkbox"] {
-            width: 15px;
-            height: 15px;
-            accent-color: var(--primary);
-            cursor: pointer;
-        }
-
-        .forgot-link {
-            font-size: 0.82rem;
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .forgot-link:hover {
-            text-decoration: underline;
-        }
-
-        .btn-primary {
-            width: 100%;
-            padding: 11px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            font-weight: 600;
-            font-family: inherit;
-            cursor: pointer;
-            transition: background 0.15s, transform 0.1s;
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-        }
-
-        .btn-primary:active {
-            transform: scale(0.99);
-        }
-
-        .divider {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin: 1.25rem 0;
-            color: var(--text-muted);
-            font-size: 0.78rem;
-        }
-
-        .divider::before,
-        .divider::after {
-            content: '';
-            flex: 1;
-            height: 1px;
-            background: var(--border);
-        }
-
-        .register-prompt {
-            text-align: center;
-            font-size: 0.82rem;
-            color: var(--text-muted);
-        }
-
-        .register-prompt a {
-            color: var(--primary);
-            font-weight: 600;
-            text-decoration: none;
-        }
-
-        .register-prompt a:hover {
-            text-decoration: underline;
-        }
-
-        @media (max-width: 640px) {
-            .wrapper {
-                grid-template-columns: 1fr;
-            }
-
-            .panel-left {
-                display: none;
-            }
-
-            .panel-right {
-                padding: 2rem 1.5rem;
-            }
-        }
-    </style>
+    {{-- Vite CSS + JS --}}
+    @vite(['resources/css/auth/login.css', 'resources/js/auth/login.js'])
 </head>
 
-<body>
+<body class="auth-body" id="authBody">
 
-<div class="wrapper">
+{{-- ═══════════════════ SCENE BACKGROUND ═══════════════════ --}}
+<div class="scene-bg" aria-hidden="true">
+    <canvas id="noiseCanvas" class="noise-canvas"></canvas>
+    <div class="orb orb--1"></div>
+    <div class="orb orb--2"></div>
+    <div class="orb orb--3"></div>
+    <div class="grid-lines"></div>
+</div>
 
-    <div class="panel-left">
+{{-- ═══════════════════ FLOATING PARTICLES ═══════════════════ --}}
+<canvas id="particleCanvas" class="particle-canvas" aria-hidden="true"></canvas>
 
-        <div class="brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/>
-                    <polyline points="9 22 9 12 15 12 15 22" fill="none" stroke="white" stroke-width="1.5"/>
-                </svg>
-            </div>
+{{-- ═══════════════════ MAIN WRAPPER ═══════════════════ --}}
+<div class="auth-wrapper" id="authWrapper">
 
-            <span class="brand-name">RuangKita</span>
+    {{-- ─────────── LEFT PANEL ─────────── --}}
+    <aside
+    class="auth-panel-left"
+    id="panelLeft"
+    style="background:url('/storage/login/NeperO.jpg') center center / cover no-repeat;"
+>
+
+        {{-- Glassmorphism overlay --}}
+        <div class="left-glass" aria-hidden="true"></div>
+
+        {{-- Top Brand --}}
+        <div class="brand" data-aos="fade-down" data-aos-delay="0">
+           <div class="brand__icon">
+    <img
+        src="{{ asset('storage/login/logoNeper.png') }}"
+        alt="Logo RuangKita"
+        class="brand__logo"
+    >
+</div>
+            <span class="brand__name">RuangKita</span>
         </div>
 
-        <div class="panel-copy">
-            <h1>Selamat datang kembali</h1>
-            <p>Masuk untuk mengakses sistem manajemen fasilitas sekolah.</p>
-        </div>
-
-        <div class="roles-list">
-            <div class="role-badge">
-                <span class="role-dot"></span>
-                Admin — kelola seluruh sistem
+        {{-- Anti-gravity floating card preview --}}
+        <div class="ag-preview" aria-hidden="true" id="agPreview">
+            <div class="ag-card ag-card--main" data-depth="0.3">
+                <div class="ag-card__header">
+                    <span class="ag-dot ag-dot--green"></span>
+                    <span class="ag-card__title">Ruang Multimedia</span>
+                </div>
+                <div class="ag-card__row">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>
+                    <span>Selasa, 10 Juni 2025</span>
+                </div>
+                <div class="ag-card__row">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+                    <span>08:00 – 10:00 WIB</span>
+                </div>
+                <div class="ag-card__badge">Disetujui</div>
             </div>
 
-            <div class="role-badge">
-                <span class="role-dot"></span>
-                Guru — booking & jadwal
-            </div>
-
-            <div class="role-badge">
-                <span class="role-dot"></span>
-                Siswa — cek fasilitas
-            </div>
-
-            <div class="role-badge">
-                <span class="role-dot"></span>
-                Pengunjung — akses terbatas
-            </div>
-        </div>
-
-    </div>
-
-    <div class="panel-right">
-
-        <div class="form-header">
-            <h2>Masuk ke akun</h2>
-            <p>Gunakan email dan password yang terdaftar</p>
-        </div>
-
-        @if ($errors->any())
-            <div class="alert-error">
-                {{ $errors->first() }}
-            </div>
-        @endif
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <div class="form-group">
-                <label for="email">Email</label>
-
-                <input
-                    type="email"
-                    id="email"
-                    name="email"
-                    value="{{ old('email') }}"
-                    placeholder="nama@sekolah.sch.id"
-                    required
-                    autocomplete="email"
-                    class="{{ $errors->has('email') ? 'is-invalid' : '' }}"
-                >
-
-                @error('email')
-                    <div class="invalid-feedback">
-                        {{ $message }}
+            <div class="ag-card ag-card--secondary" data-depth="0.5">
+                <div class="ag-card__avatar-row">
+                    <div class="ag-avatar">GS</div>
+                    <div>
+                        <div class="ag-card__name">Guru Sains</div>
+                        <div class="ag-card__role">Guru</div>
                     </div>
-                @enderror
+                </div>
             </div>
 
-            <div class="form-group">
-                <label for="password">Password</label>
+            <div class="ag-card ag-card--stat" data-depth="0.7">
+                <div class="ag-stat__number">24</div>
+                <div class="ag-stat__label">Booking Aktif</div>
+                <div class="ag-stat__bar">
+                    <div class="ag-stat__fill" style="width:72%"></div>
+                </div>
+            </div>
 
-                <input
-                    type="password"
-                    id="password"
-                    name="password"
-                    placeholder="Masukkan password"
-                    required
-                    autocomplete="current-password"
-                    class="{{ $errors->has('password') ? 'is-invalid' : '' }}"
-                >
+            <div class="ag-notification" data-depth="0.9">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 01-3.46 0"/></svg>
+                <span>Booking baru menunggu</span>
+            </div>
+        </div>
 
-                @error('password')
-                    <div class="invalid-feedback">
-                        {{ $message }}
+        {{-- Hero Copy --}}
+        <div class="panel-hero" data-aos="fade-up" data-aos-delay="100">
+            <p class="panel-hero__eyebrow">
+                <span class="eyebrow-dot"></span>
+                Sistem Booking Ruangan Sekolah
+            </p>
+            <h1 class="panel-hero__headline">
+                Selamat<br>
+                Datang di<br>
+                <em class="panel-hero__accent">RuangKita</em>
+            </h1>
+            <p class="panel-hero__desc">
+                Booking ruangan sekolah lebih mudah,<br>
+                cepat, dan terorganisir dalam satu platform.
+            </p>
+        </div>
+
+        {{-- Role Badges --}}
+        <div class="role-strip" data-aos="fade-up" data-aos-delay="200">
+            <div class="role-chip role-chip--admin">
+                <span class="role-chip__dot"></span>Admin
+            </div>
+            <div class="role-chip role-chip--guru">
+                <span class="role-chip__dot"></span>Guru
+            </div>
+            <div class="role-chip role-chip--siswa">
+                <span class="role-chip__dot"></span>Siswa
+            </div>
+            <div class="role-chip role-chip--staff">
+                <span class="role-chip__dot"></span>Staff
+            </div>
+        </div>
+
+        {{-- Footer --}}
+        <p class="panel-footer">© {{ date('Y') }} RuangKita. All Rights Reserved.</p>
+
+    </aside>
+
+    {{-- ─────────── RIGHT PANEL ─────────── --}}
+    <main class="auth-panel-right" id="panelRight">
+
+        {{-- Floating Login Card --}}
+        <div class="login-card" id="loginCard" data-aos="card-rise" role="main" aria-label="Form Login RuangKita">
+
+            {{-- Card glow ring --}}
+            <div class="card-glow" aria-hidden="true"></div>
+
+            {{-- Magnetic cursor follower --}}
+            <div class="card-magnetic" id="cardMagnetic" aria-hidden="true"></div>
+
+            {{-- Logo --}}
+            <div class="card-logo" data-aos="pop" data-aos-delay="400">
+    <div class="card-logo__ring"></div>
+
+    <img
+        src="{{ asset('storage/login/logoNeper.png') }}"
+        alt="Logo RuangKita"
+        class="card-logo__img"
+    >
+</div>
+
+            {{-- Card Header --}}
+            <div class="card-header" data-aos="fade-up" data-aos-delay="450">
+                <h2 class="card-header__title">Masuk ke Akun</h2>
+                <p class="card-header__sub">Silakan masuk untuk melanjutkan</p>
+            </div>
+
+            {{-- Error / Success Alerts --}}
+            @if ($errors->any())
+                <div class="alert alert--error" role="alert" id="alertError">
+                    <div class="alert__icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
                     </div>
-                @enderror
+                    <span>{{ $errors->first() }}</span>
+                </div>
+            @endif
+
+            @if (session('status'))
+                <div class="alert alert--success" role="status" id="alertSuccess">
+                    <div class="alert__icon">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                    </div>
+                    <span>{{ session('status') }}</span>
+                </div>
+            @endif
+
+            {{-- Login Form --}}
+            <form
+                method="POST"
+                action="{{ route('login') }}"
+                id="loginForm"
+                class="login-form"
+                novalidate
+                data-aos="fade-up"
+                data-aos-delay="500"
+            >
+                @csrf
+
+                {{-- Email --}}
+                <div class="form-group" id="group-email" data-field="email">
+                    <label class="form-label" for="email">
+                        Email
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 7l10 7 10-7"/></svg>
+                        </span>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            class="form-input @error('email') is-invalid @enderror"
+                            value="{{ old('email') }}"
+                            placeholder="nama@sekolah.sch.id"
+                            required
+                            autocomplete="email"
+                            aria-describedby="email-error"
+                            aria-invalid="{{ $errors->has('email') ? 'true' : 'false' }}"
+                            spellcheck="false"
+                        >
+                        <span class="input-validity-icon" aria-hidden="true" id="email-validity"></span>
+                    </div>
+                    @error('email')
+                        <p class="field-error" id="email-error" role="alert">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Password --}}
+                <div class="form-group" id="group-password" data-field="password">
+                    <label class="form-label" for="password">
+                        Password
+                        <span class="label-required" aria-hidden="true">*</span>
+                    </label>
+                    <div class="input-wrap">
+                        <span class="input-icon input-icon--left" aria-hidden="true">
+                            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+                        </span>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            class="form-input @error('password') is-invalid @enderror"
+                            placeholder="Masukkan password Anda"
+                            required
+                            autocomplete="current-password"
+                            aria-describedby="password-error capslock-warn"
+                            aria-invalid="{{ $errors->has('password') ? 'true' : 'false' }}"
+                        >
+                        <button
+                            type="button"
+                            class="input-icon input-icon--right input-icon--btn"
+                            id="togglePassword"
+                            aria-label="Tampilkan password"
+                        >
+                            <svg class="eye-open" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            <svg class="eye-close" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24M1 1l22 22"/></svg>
+                        </button>
+                    </div>
+                    <p class="capslock-warn" id="capslock-warn" role="alert" aria-live="polite" hidden>
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 9v4M12 17h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
+                        Caps Lock aktif
+                    </p>
+                    @error('password')
+                        <p class="field-error" id="password-error" role="alert">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                {{-- Remember + Forgot --}}
+                <div class="form-options">
+                    <label class="checkbox-label" for="remember">
+                        <input
+                            type="checkbox"
+                            id="remember"
+                            name="remember"
+                            class="checkbox-native"
+                            {{ old('remember') ? 'checked' : '' }}
+                        >
+                        <span class="checkbox-custom" aria-hidden="true">
+                            <svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="2 6 5 9 10 3"/></svg>
+                        </span>
+                        <span class="checkbox-text">Ingat saya</span>
+                    </label>
+
+                    @if (Route::has('password.request'))
+                        <a href="{{ route('password.request') }}" class="forgot-link">Lupa password?</a>
+                    @endif
+                </div>
+
+                {{-- Submit --}}
+                <button type="submit" class="btn-submit" id="btnSubmit" aria-label="Masuk ke akun">
+                    <span class="btn-submit__bg" aria-hidden="true"></span>
+                    <span class="btn-submit__ripple" aria-hidden="true" id="btnRipple"></span>
+                    <span class="btn-submit__label" id="btnLabel">Masuk</span>
+                    <span class="btn-submit__loader" id="btnLoader" aria-hidden="true">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>
+                    </span>
+                </button>
+
+            </form>
+
+            {{-- Divider --}}
+            <div class="social-divider" data-aos="fade-up" data-aos-delay="580">
+                <span aria-hidden="true"></span>
+                <span class="social-divider__text">atau lanjutkan dengan</span>
+                <span aria-hidden="true"></span>
             </div>
 
-            <div class="form-options">
-
-                <label class="remember-me">
-                    <input
-                        type="checkbox"
-                        name="remember"
-                        {{ old('remember') ? 'checked' : '' }}
-                    >
-
-                    Ingat saya
-                </label>
-
-                @if (Route::has('password.request'))
-                    <a class="forgot-link" href="{{ route('password.request') }}">
-                        Lupa password?
-                    </a>
-                @endif
-
+            {{-- Social Buttons --}}
+            <div class="social-row" data-aos="fade-up" data-aos-delay="620">
+                <button type="button" class="btn-social" id="btnGoogle" aria-label="Masuk dengan Google">
+                    <svg width="19" height="19" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                        <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                        <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                        <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                    </svg>
+                    <span>Google</span>
+                </button>
+                <button type="button" class="btn-social" id="btnMicrosoft" aria-label="Masuk dengan Microsoft">
+                    <svg width="19" height="19" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11.4 2H2v9.4h9.4V2z" fill="#F25022"/>
+                        <path d="M22 2h-9.4v9.4H22V2z" fill="#7FBA00"/>
+                        <path d="M11.4 12.6H2V22h9.4v-9.4z" fill="#00A4EF"/>
+                        <path d="M22 12.6h-9.4V22H22v-9.4z" fill="#FFB900"/>
+                    </svg>
+                    <span>Microsoft</span>
+                </button>
             </div>
 
-            <button type="submit" class="btn-primary">
-                Masuk
-            </button>
+            {{-- Register prompt --}}
+            @if (Route::has('register'))
+                <p class="register-prompt" data-aos="fade-up" data-aos-delay="660">
+                    Belum punya akun?
+                    <a href="{{ route('register') }}" class="register-prompt__link">Daftar di sini</a>
+                </p>
+            @endif
 
-        </form>
+        </div>
+        {{-- /login-card --}}
 
-        @if (Route::has('register'))
-
-            <div class="divider">atau</div>
-
-            <div class="register-prompt">
-                Belum punya akun?
-                <a href="{{ route('register') }}">
-                    Daftar sekarang
-                </a>
-            </div>
-
-        @endif
-
-    </div>
+    </main>
 
 </div>
+{{-- /auth-wrapper --}}
 
 </body>
 </html>

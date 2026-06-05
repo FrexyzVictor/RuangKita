@@ -14,8 +14,6 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-<<<<<<< HEAD:Web/database/seeders/AdminSeeder.php
-
             [
                 'nama' => 'RuangKita',
                 'email' => 'ruangkitasmkn64@gmail.com',
@@ -74,18 +72,7 @@ class UserSeeder extends Seeder
                 'qr_code' => 'PENGUNJUNG-RUANGKITA',
                 'created_at' => now(),
                 'updated_at' => now(),
-            ]
-
-=======
-            'nama' => 'Admin RuangKita',
-            'email' => 'admin@gmail.com',
-            'password' => Hash::make('admin'),
-            'role' => 'admin',
-            'no_hp' => '085220007279',
-            'alamat' => 'none',
-            'email_verified_at' => now(),
-            'created_at' => now(),
-            'updated_at' => now(),
+            ],
         ]);
 
         DB::table('users')->insert([
@@ -110,7 +97,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
             'created_at' => now(),
             'updated_at' => now(),
->>>>>>> 5b6a0bf2aef5b5cdeda3c97a360be6224944e65b:Web/database/seeders/UserSeeder.php
         ]);
     }
 }
